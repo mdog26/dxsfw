@@ -46,7 +46,7 @@ public class UserServiceImp implements UserService {
 		UserExample example = new UserExample();
 		//建立条件
 		example.createCriteria().andMobileEqualTo(mobile).andPasswordEqualTo(password);
-		List<User> list = userDao.selectByExampleWithBLOBs(example);
+		List<User> list = userDao.selectByExample(example);
 		if (list.size() > 0) {
 			return list.get(0);
 		}
@@ -62,14 +62,6 @@ public class UserServiceImp implements UserService {
 	public User updateUser(User user) {
 		int userid = userDao.updateByPrimaryKeySelective(user);
 		return this.getUser(userid);
-	}
-
-	@Override
-	public User uploadUserPicture(int userid, byte[] picture) {
-		User user = this.getUser(userid);
-		user.setPicture(picture);
-		userDao.updateByPrimaryKeyWithBLOBs(user);
-		return user;
 	}
 
 }

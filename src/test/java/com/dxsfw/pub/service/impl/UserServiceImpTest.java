@@ -24,7 +24,10 @@ public class UserServiceImpTest {
 
 	@Test
 	public void testLogin() {
-		fail("Not yet implemented");
+		User user = userService.login("1", "2");
+		if(user == null){
+			fail("Not found user");
+		}
 	}
 
 	@Test

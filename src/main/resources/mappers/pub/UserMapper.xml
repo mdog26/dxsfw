@@ -11,13 +11,11 @@
     <result column="nickname" property="nickname" jdbcType="VARCHAR" />
     <result column="organization" property="organization" jdbcType="VARCHAR" />
     <result column="introduction" property="introduction" jdbcType="VARCHAR" />
-    <result column="card" property="card" jdbcType="INTEGER" />
+    <result column="card" property="card" jdbcType="VARCHAR" />
     <result column="sex" property="sex" jdbcType="VARCHAR" />
     <result column="weixin" property="weixin" jdbcType="VARCHAR" />
     <result column="zhifubao" property="zhifubao" jdbcType="VARCHAR" />
-  </resultMap>
-  <resultMap id="ResultMapWithBLOBs" type="com.dxsfw.pub.model.User" extends="BaseResultMap" >
-    <result column="picture" property="picture" jdbcType="LONGVARBINARY" />
+    <result column="picture" property="picture" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -79,27 +77,8 @@
   </sql>
   <sql id="Base_Column_List" >
     useid, type, name, password, email, mobile, nickname, organization, introduction, 
-    card, sex, weixin, zhifubao
+    card, sex, weixin, zhifubao, picture
   </sql>
-  <sql id="Blob_Column_List" >
-    picture
-  </sql>
-  <select id="selectByExampleWithBLOBs" resultMap="ResultMapWithBLOBs" parameterType="com.dxsfw.pub.model.UserExample" >
-    select
-    <if test="distinct" >
-      distinct
-    </if>
-    <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
-    from t_user
-    <if test="_parameter != null" >
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null" >
-      order by ${orderByClause}
-    </if>
-  </select>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.dxsfw.pub.model.UserExample" >
     select
     <if test="distinct" >
@@ -114,11 +93,9 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
     from t_user
     where useid = #{useid,jdbcType=INTEGER}
   </select>
@@ -141,8 +118,8 @@
     values (#{useid,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, 
       #{password,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, 
       #{nickname,jdbcType=VARCHAR}, #{organization,jdbcType=VARCHAR}, #{introduction,jdbcType=VARCHAR}, 
-      #{card,jdbcType=INTEGER}, #{sex,jdbcType=VARCHAR}, #{weixin,jdbcType=VARCHAR}, 
-      #{zhifubao,jdbcType=VARCHAR}, #{picture,jdbcType=LONGVARBINARY})
+      #{card,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR}, #{weixin,jdbcType=VARCHAR}, 
+      #{zhifubao,jdbcType=VARCHAR}, #{picture,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.dxsfw.pub.model.User" >
     insert into t_user
@@ -219,7 +196,7 @@
         #{introduction,jdbcType=VARCHAR},
       </if>
       <if test="card != null" >
-        #{card,jdbcType=INTEGER},
+        #{card,jdbcType=VARCHAR},
       </if>
       <if test="sex != null" >
         #{sex,jdbcType=VARCHAR},
@@ -231,7 +208,7 @@
         #{zhifubao,jdbcType=VARCHAR},
       </if>
       <if test="picture != null" >
-        #{picture,jdbcType=LONGVARBINARY},
+        #{picture,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -272,7 +249,7 @@
         introduction = #{record.introduction,jdbcType=VARCHAR},
       </if>
       <if test="record.card != null" >
-        card = #{record.card,jdbcType=INTEGER},
+        card = #{record.card,jdbcType=VARCHAR},
       </if>
       <if test="record.sex != null" >
         sex = #{record.sex,jdbcType=VARCHAR},
@@ -284,29 +261,9 @@
         zhifubao = #{record.zhifubao,jdbcType=VARCHAR},
       </if>
       <if test="record.picture != null" >
-        picture = #{record.picture,jdbcType=LONGVARBINARY},
+        picture = #{record.picture,jdbcType=VARCHAR},
       </if>
     </set>
-    <if test="_parameter != null" >
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByExampleWithBLOBs" parameterType="map" >
-    update t_user
-    set useid = #{record.useid,jdbcType=INTEGER},
-      type = #{record.type,jdbcType=INTEGER},
-      name = #{record.name,jdbcType=VARCHAR},
-      password = #{record.password,jdbcType=VARCHAR},
-      email = #{record.email,jdbcType=VARCHAR},
-      mobile = #{record.mobile,jdbcType=VARCHAR},
-      nickname = #{record.nickname,jdbcType=VARCHAR},
-      organization = #{record.organization,jdbcType=VARCHAR},
-      introduction = #{record.introduction,jdbcType=VARCHAR},
-      card = #{record.card,jdbcType=INTEGER},
-      sex = #{record.sex,jdbcType=VARCHAR},
-      weixin = #{record.weixin,jdbcType=VARCHAR},
-      zhifubao = #{record.zhifubao,jdbcType=VARCHAR},
-      picture = #{record.picture,jdbcType=LONGVARBINARY}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -322,10 +279,11 @@
       nickname = #{record.nickname,jdbcType=VARCHAR},
       organization = #{record.organization,jdbcType=VARCHAR},
       introduction = #{record.introduction,jdbcType=VARCHAR},
-      card = #{record.card,jdbcType=INTEGER},
+      card = #{record.card,jdbcType=VARCHAR},
       sex = #{record.sex,jdbcType=VARCHAR},
       weixin = #{record.weixin,jdbcType=VARCHAR},
-      zhifubao = #{record.zhifubao,jdbcType=VARCHAR}
+      zhifubao = #{record.zhifubao,jdbcType=VARCHAR},
+      picture = #{record.picture,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -358,7 +316,7 @@
         introduction = #{introduction,jdbcType=VARCHAR},
       </if>
       <if test="card != null" >
-        card = #{card,jdbcType=INTEGER},
+        card = #{card,jdbcType=VARCHAR},
       </if>
       <if test="sex != null" >
         sex = #{sex,jdbcType=VARCHAR},
@@ -370,26 +328,9 @@
         zhifubao = #{zhifubao,jdbcType=VARCHAR},
       </if>
       <if test="picture != null" >
-        picture = #{picture,jdbcType=LONGVARBINARY},
+        picture = #{picture,jdbcType=VARCHAR},
       </if>
     </set>
-    where useid = #{useid,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.dxsfw.pub.model.User" >
-    update t_user
-    set type = #{type,jdbcType=INTEGER},
-      name = #{name,jdbcType=VARCHAR},
-      password = #{password,jdbcType=VARCHAR},
-      email = #{email,jdbcType=VARCHAR},
-      mobile = #{mobile,jdbcType=VARCHAR},
-      nickname = #{nickname,jdbcType=VARCHAR},
-      organization = #{organization,jdbcType=VARCHAR},
-      introduction = #{introduction,jdbcType=VARCHAR},
-      card = #{card,jdbcType=INTEGER},
-      sex = #{sex,jdbcType=VARCHAR},
-      weixin = #{weixin,jdbcType=VARCHAR},
-      zhifubao = #{zhifubao,jdbcType=VARCHAR},
-      picture = #{picture,jdbcType=LONGVARBINARY}
     where useid = #{useid,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.dxsfw.pub.model.User" >
@@ -402,10 +343,11 @@
       nickname = #{nickname,jdbcType=VARCHAR},
       organization = #{organization,jdbcType=VARCHAR},
       introduction = #{introduction,jdbcType=VARCHAR},
-      card = #{card,jdbcType=INTEGER},
+      card = #{card,jdbcType=VARCHAR},
       sex = #{sex,jdbcType=VARCHAR},
       weixin = #{weixin,jdbcType=VARCHAR},
-      zhifubao = #{zhifubao,jdbcType=VARCHAR}
+      zhifubao = #{zhifubao,jdbcType=VARCHAR},
+      picture = #{picture,jdbcType=VARCHAR}
     where useid = #{useid,jdbcType=INTEGER}
   </update>
 </mapper>

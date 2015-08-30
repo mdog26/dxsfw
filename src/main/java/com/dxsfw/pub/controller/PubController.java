@@ -1,7 +1,7 @@
 package com.dxsfw.pub.controller;
 
-import java.io.File;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,7 +20,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.dxsfw.common.constants.GlobalValue;
 import com.dxsfw.common.util.RandomUtil;
+import com.dxsfw.pub.model.JianLi;
 import com.dxsfw.pub.model.User;
+import com.dxsfw.pub.service.JianLiService;
 import com.dxsfw.pub.service.UserService;
 
 @Controller
@@ -30,7 +32,10 @@ public class PubController {
 
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private JianLiService jianLiService;
 
+	// ---------------------------登录注册---------------------------start
 	/**
 	 * token登录
 	 * 
@@ -120,6 +125,7 @@ public class PubController {
 	 * @param request
 	 * @return
 	 */
+	@ResponseBody
 	@RequestMapping("getMobileCheckMsg")
 	public String getMobileCheckMsg(@RequestParam(value = "mobile") String mobile, HttpServletRequest request) {
 		String checkMsg = RandomUtil.general4Number();
@@ -132,34 +138,75 @@ public class PubController {
 		
 		return checkMsg;
 	}
-
+	// ---------------------------登录注册---------------------------end
+	
+	// ---------------------------个人---------------------------start
+	
+	/**
+	 * 更新个人信息
+	 * @param user
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("updateUser")
+	public User updateUser(@RequestBody User user) {
+		return userService.updateUser(user);
+	}
+	
 	@RequestMapping(value = "uploadUserPicture")
 	public String upload(@RequestParam(value = "file", required = false) MultipartFile file,
 			HttpServletRequest request, ModelMap model) {
-
-		System.out.println("开始");
-		String path = request.getSession().getServletContext().getRealPath("upload");
-		String fileName = file.getOriginalFilename();
-		// String fileName = new Date().getTime()+".jpg";
-		System.out.println(path);
-		File targetFile = new File(path, fileName);
-		if (!targetFile.exists()) {
-			targetFile.mkdirs();
-		}
-
-		// 保存
-		try {
-			file.transferTo(targetFile);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		model.addAttribute("fileUrl", request.getContextPath() + "/upload/" + fileName);
+		
+//		byte[] picture = file.getBytes();
+//		userService.uploadUserPicture(userid, picture)
+//		file.getBytes()
+//		String path = request.getSession().getServletContext().getRealPath("upload");
+//		String fileName = file.getOriginalFilename();
+//		File targetFile = new File(path, fileName);
+//		if (!targetFile.exists()) {
+//			targetFile.mkdirs();
+//		}
+//
+//		// 保存
+//		try {
+//			file.transferTo(targetFile);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		model.addAttribute("fileUrl", request.getContextPath() + "/upload/" + fileName);
 
 		return "result";
 	}
 
+	// ---------------------------个人---------------------------end
+	
+	// ---------------------------简历---------------------------start
 	/**
-	 * 通用返回json对象 ｛token，user｝
+	 * 新增简历
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("addJianLi")
+	public JianLi addJianLi(@RequestBody JianLi jianli) {
+		jianli = jianLiService.addJianLi(jianli);
+		return jianli;
+	}
+	
+	/**
+	 * 获取用户的所有简历
+	 * @param userid
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("getJianLiByUser")
+	public List<JianLi> getJianLiByUser(@RequestParam(value = "userid") int userid) {
+		return jianLiService.getJianLiByUser(userid);
+	}
+	
+	// ---------------------------简历---------------------------end
+	
+	/**
+	 * User通用返回json对象 ｛token，user｝
 	 * 
 	 * @return
 	 */

@@ -21,7 +21,7 @@ public class User extends AbstractVo {
 
     private String introduction;
 
-    private Integer card;
+    private String card;
 
     private String sex;
 
@@ -29,7 +29,7 @@ public class User extends AbstractVo {
 
     private String zhifubao;
 
-    private byte[] picture;
+    private String picture;
 
     public Integer getUseid() {
         return useid;
@@ -103,12 +103,12 @@ public class User extends AbstractVo {
         this.introduction = introduction == null ? null : introduction.trim();
     }
 
-    public Integer getCard() {
+    public String getCard() {
         return card;
     }
 
-    public void setCard(Integer card) {
-        this.card = card;
+    public void setCard(String card) {
+        this.card = card == null ? null : card.trim();
     }
 
     public String getSex() {
@@ -135,11 +135,11 @@ public class User extends AbstractVo {
         this.zhifubao = zhifubao == null ? null : zhifubao.trim();
     }
 
-    public byte[] getPicture() {
+    public String getPicture() {
         return picture;
     }
 
-    public void setPicture(byte[] picture) {
-        this.picture = picture;
+    public void setPicture(String picture) {
+        this.picture = picture == null ? null : picture.trim();
     }
 }

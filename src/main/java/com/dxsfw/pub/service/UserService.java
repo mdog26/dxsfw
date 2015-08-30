@@ -11,5 +11,4 @@ public interface UserService {
 	
 	public User updateUser(User user);
 	
-	public User uploadUserPicture(int userid, byte[] picture);
 }
