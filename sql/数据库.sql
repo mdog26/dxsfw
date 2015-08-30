@@ -1,0 +1,2 @@
+DROP DATABASE IF EXISTS `dxsfw`;
+CREATE DATABASE  `dxsfw`;

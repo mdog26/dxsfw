@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+          http://www.springframework.org/schema/tx
+          http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+          http://www.springframework.org/schema/context
+          http://www.springframework.org/schema/context/spring-context-3.0.xsd
+          http://www.springframework.org/schema/aop
+          http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+    
+    <bean id="propertyPlaceholderConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">  
+            <list>  
+                 <value>classpath:dataSource.properties</value>  
+                <value>classpath:sysConfig.properties</value> 
+            </list>  
+        </property>  
+    </bean> 
+    
+    
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+        <property name="driverClass" value="${jdbc.mysql.driver}" />
+        <property name="jdbcUrl" value="${jdbc.mysql.url}" />
+        <property name="user" value="${jdbc.mysql.username}" />
+        <property name="password" value="${jdbc.mysql.password}" />
+        <property name="minPoolSize" value="1" />
+        <property name="maxPoolSize" value="10" />
+        <property name="maxIdleTime" value="1800" />
+        <property name="initialPoolSize" value="1" />
+        <property name="checkoutTimeout" value="60000" />
+        <property name="unreturnedConnectionTimeout" value="120" />
+        <property name="debugUnreturnedConnectionStackTraces" value="true" />
+    </bean>
+
+    <!-- enable autowire -->
+    <context:annotation-config />
+
+    <aop:aspectj-autoproxy />
+
+    <!-- define the SqlSessionFactory -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="configLocation" value="classpath:mybatis-config.xml" />
+        <property name="mapperLocations" value="classpath:mappers/**/*.xml" />
+    </bean>
+
+    <!-- scan for mappers and let them be autowired -->
+    <bean id="mapperScanner" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.dxsfw.**.dao" />
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+    </bean>
+
+    <!-- transaction manager, use JtaTransactionManager for global tx -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+    <!-- enable transaction demarcation with annotations -->
+    <tx:annotation-driven transaction-manager="transactionManager" />
+    
+
+    <context:component-scan base-package="com.dxsfw" />
+
+    <bean id="springContextHolder" class="com.dxsfw.common.spring.SpringContextHolder" />
+
+</beans>

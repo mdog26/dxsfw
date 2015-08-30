@@ -10,12 +10,12 @@ CreateDate: 2013-7-10
 <generatorConfiguration>
 	<classPathEntry location="./mysql-connector-java-5.1.23.jar" />
 
-	<context id="CTTS_Tables" targetRuntime="MyBatis3">
+	<context id="DXSFW_Tables" targetRuntime="MyBatis3">
 		<commentGenerator>
 			<property name="suppressAllComments" value="true" />
 		</commentGenerator>
 		
-		<jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://10.0.118.208:3306/hssysdb8"
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://localhost:3306/dxsfw"
 			userId="root" password="root">
 		</jdbcConnection>
 
@@ -25,24 +25,24 @@ CreateDate: 2013-7-10
 
 
 
-        <javaModelGenerator targetPackage="com.dxsfw.task.model"
+        <javaModelGenerator targetPackage="com.dxsfw.pub.model"
                             targetProject="../src/main/java">
             <property name="enableSubPackages" value="true" />
             <property name="trimStrings" value="true" />
         </javaModelGenerator>
 
 
-        <sqlMapGenerator targetPackage="mappers.task"
+        <sqlMapGenerator targetPackage="mappers.pub"
                          targetProject="../src/main/resources">
             <property name="enableSubPackages" value="true" />
         </sqlMapGenerator>
 
         <javaClientGenerator type="XMLMAPPER"
-                             targetPackage="com.dxsfw.task.dao"
+                             targetPackage="com.dxsfw.pub.dao"
                              targetProject="../src/main/java">
             <property name="enableSubPackages" value="true" />
         </javaClientGenerator>
         
-        <table schema="" tableName="hscatsysdb" />
+        <table schema="" tableName="t_user"  domainObjectName="User"/>
 	</context>
 </generatorConfiguration>
