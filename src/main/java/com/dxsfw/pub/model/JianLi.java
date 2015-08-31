@@ -3,36 +3,51 @@ package com.dxsfw.pub.model;
 import java.util.Date;
 
 import com.dxsfw.common.base.AbstractVo;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 public class JianLi extends AbstractVo {
     private Integer jianliid;
 
     private Integer userid;
 
+    @JsonInclude(Include.NON_NULL)
     private String title;
 
+    @JsonInclude(Include.NON_NULL)
     private String name;
 
+    @JsonInclude(Include.NON_NULL)
     private String sex;
 
+    @JsonInclude(Include.NON_NULL)
     private Date birthdate;
 
+    @JsonInclude(Include.NON_NULL)
     private String mobile;
 
+    @JsonInclude(Include.NON_NULL)
     private String email;
 
+    @JsonInclude(Include.NON_NULL)
     private String card;
 
+    @JsonInclude(Include.NON_NULL)
     private String school;
 
+    @JsonInclude(Include.NON_NULL)
     private String education;
 
+    @JsonInclude(Include.NON_NULL)
     private String experience;
 
+    @JsonInclude(Include.NON_NULL)
     private String evaluation;
 
+    @JsonInclude(Include.NON_NULL)
     private String picture;
 
+    @JsonInclude(Include.NON_NULL)
     private String fujian;
 
     public Integer getJianliid() {

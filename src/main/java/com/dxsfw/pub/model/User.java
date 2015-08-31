@@ -1,34 +1,49 @@
 package com.dxsfw.pub.model;
 
 import com.dxsfw.common.base.AbstractVo;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 public class User extends AbstractVo {
     private Integer useid;
 
+    @JsonInclude(Include.NON_NULL)
     private Integer type;
 
+    @JsonInclude(Include.NON_NULL)
     private String name;
 
+    @JsonInclude(Include.NON_NULL)
     private String password;
 
+    @JsonInclude(Include.NON_NULL)
     private String email;
 
+    @JsonInclude(Include.NON_NULL)
     private String mobile;
 
+    @JsonInclude(Include.NON_NULL)
     private String nickname;
 
+    @JsonInclude(Include.NON_NULL)
     private String organization;
 
+    @JsonInclude(Include.NON_NULL)
     private String introduction;
 
+    @JsonInclude(Include.NON_NULL)
     private String card;
 
+    @JsonInclude(Include.NON_NULL)
     private String sex;
 
+    @JsonInclude(Include.NON_NULL)
     private String weixin;
 
+    @JsonInclude(Include.NON_NULL)
     private String zhifubao;
 
+    @JsonInclude(Include.NON_NULL)
     private String picture;
 
     public Integer getUseid() {

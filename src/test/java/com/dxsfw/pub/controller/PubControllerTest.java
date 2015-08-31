@@ -67,7 +67,7 @@ public class PubControllerTest {
     
     @Test
     public void testLogin() throws Exception {
-    	MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/pub/login?mobile=15207109571&password=pwd"))
+    	MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/pub/login?mobile=15207109571&password=pwd1"))
 //                .andExpect(MockMvcResultMatchers.view().name("user/view"))
 //                .andExpect(MockMvcResultMatchers.model().attributeExists("user"))
     			.andDo(MockMvcResultHandlers.print())
@@ -80,14 +80,21 @@ public class PubControllerTest {
   //---------------------------简历---------------------------start
     @Test
     public void testgetJianLiByUser() throws Exception {
-    	MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/pub/getJianLiByUser?userid=1"))
+    	MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/pub/getJianLiByUser?userid=2"))
+    			.andDo(MockMvcResultHandlers.print())
+    			.andReturn();
+    }
+    
+    @Test
+    public void testgetJianLiByJianliid() throws Exception {
+    	MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/pub/getJianLiByJianliid?jianliid=2"))
     			.andDo(MockMvcResultHandlers.print())
     			.andReturn();
     }
     
     @Test
     public void testaddJianLi() throws Exception {
-        String requestBody = "{\"jianliid\":2,\"userid\":1,\"title\":\"简历标题\",\"name\":\"name\",\"sex\":null,\"birthdate\":1438617600000,\"mobile\":null,\"email\":null,\"card\":null,\"school\":null,\"education\":null,\"experience\":null,\"evaluation\":null,\"picture\":null,\"fujian\":null}"; 
+        String requestBody = "{\"jianliid\":3,\"userid\":1,\"title\":\"简历标题\",\"name\":\"name\",\"sex\":null,\"birthdate\":1438617600000,\"mobile\":null,\"email\":null,\"card\":null,\"school\":null,\"education\":null,\"experience\":null,\"evaluation\":null,\"picture\":null,\"fujian\":null}"; 
         mockMvc.perform(MockMvcRequestBuilders.post("/pub/addJianLi")
                     .contentType(MediaType.APPLICATION_JSON).content(requestBody)
                     .accept(MediaType.APPLICATION_JSON)) //执行请求
@@ -114,7 +121,7 @@ public class PubControllerTest {
     public void tesupdateUser() throws Exception {
 //        String requestBody = "{\"useid\":1,\"type\":3,\"name\":\"开发人员\",\"password\":\"pwd\",\"email\":null,\"mobile\":\"15207109571\",\"nickname\":null,\"organization\":null,\"introduction\":null,\"card\":null,\"sex\":null,\"weixin\":null,\"zhifubao\":null}"; 
     	//没属性和null，将不更新。值""可以更新。
-        String requestBody = "{\"useid\":1,\"type\":null,\"name\":\"\",\"email\":\"email\"}";
+        String requestBody = "{\"useid\":1,\"type\":null,\"name\":\"开发人员\",\"email\":\"email2\"}";
         mockMvc.perform(MockMvcRequestBuilders.post("/pub/updateUser")
                     .contentType(MediaType.APPLICATION_JSON).content(requestBody)
                     .accept(MediaType.APPLICATION_JSON)) //执行请求

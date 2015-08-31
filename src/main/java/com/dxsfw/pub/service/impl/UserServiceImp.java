@@ -23,7 +23,7 @@ public class UserServiceImp implements UserService {
 	public User reg(String mobile, String password) {
 		UserExample example = new UserExample();
 		//建立条件
-		example.createCriteria().andMobileEqualTo(mobile).andPasswordEqualTo(password);
+		example.createCriteria().andMobileEqualTo(mobile);
 		List<User> list = userDao.selectByExample(example);
 		if (list.size() == 0) {
 			User record = new User();
