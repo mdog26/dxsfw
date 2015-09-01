@@ -10,6 +10,11 @@
         <param-value>dxsfw.root</param-value>
     </context-param>
 
+	<!-- 服务启动加载 -->
+	<listener>
+		<listener-class>com.dxsfw.common.listener.ServerContextListener</listener-class>
+	</listener>
+	
     <listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>

@@ -1,5 +1,9 @@
 package com.dxsfw.pub.controller;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,12 +15,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.dxsfw.common.base.Res;
 import com.dxsfw.common.constants.Constant;
@@ -59,7 +63,7 @@ public class PubController {
 			try {
 				user = userService.getUser(userid);
 				token = request.getSession().getId();
-				GlobalValue.USER_TOKEN_MAP.put(token, user.getUseid());
+				GlobalValue.USER_TOKEN_MAP.put(token, user.getUserid());
 				status = Constant.STATUS_OK_200;
 				msg = Constant.MSG_OK_TOKEN;
 			} catch (Exception e) {
@@ -91,7 +95,7 @@ public class PubController {
 		User user = userService.login(mobile, password);
 		if (user != null) {
 			token = request.getSession().getId();
-			GlobalValue.USER_TOKEN_MAP.put(token, user.getUseid());
+			GlobalValue.USER_TOKEN_MAP.put(token, user.getUserid());
 			status = Constant.STATUS_OK_200;
 			msg = Constant.MSG_OK_TOKEN;
 		}
@@ -129,7 +133,7 @@ public class PubController {
 			user = userService.reg(mobile, password);
 			if (user != null) {
 				token = request.getSession().getId();
-				GlobalValue.USER_TOKEN_MAP.put(token, user.getUseid());
+				GlobalValue.USER_TOKEN_MAP.put(token, user.getUserid());
 				status = Constant.STATUS_OK_200;
 				msg = Constant.MSG_OK_USER_REG;
 			} else {
@@ -195,29 +199,91 @@ public class PubController {
 		return responseJson;
 	}
 	
+	/**
+	 * 上传或更新个人头像
+	 * @param file
+	 * @param userid
+	 * @return
+	 */
+	@ResponseBody
 	@RequestMapping(value = "uploadUserPicture")
-	public String upload(@RequestParam(value = "file", required = false) MultipartFile file,
-			HttpServletRequest request, ModelMap model) {
-		
-//		byte[] picture = file.getBytes();
-//		userService.uploadUserPicture(userid, picture)
-//		file.getBytes()
-//		String path = request.getSession().getServletContext().getRealPath("upload");
-//		String fileName = file.getOriginalFilename();
-//		File targetFile = new File(path, fileName);
-//		if (!targetFile.exists()) {
-//			targetFile.mkdirs();
-//		}
-//
-//		// 保存
-//		try {
-//			file.transferTo(targetFile);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		model.addAttribute("fileUrl", request.getContextPath() + "/upload/" + fileName);
+	public Res uploadUserPicture(@RequestParam(value = "file") MultipartFile file,
+			@RequestParam(value = "userid") int userid, @RequestParam(value = "type") String type,
+			@RequestParam(value = "token") String token) {
+		Res responseJson = new Res();
+		try {
+			//文件名
+			String fileName = userid + "." + type;
+			//文件相对路径
+			String picture = userid + File.separator + fileName;
+			//文件夹绝对路径
+			String picturePath = GlobalValue.PATH_USER_PICTURE + userid + File.separator;
+			User user = new User();
+			user.setUserid(userid);
+			user.setPicture(picture);
+			user = userService.updateUser(user);
+			File targetFile = new File(picturePath);
+			if (!targetFile.exists()) {
+				targetFile.mkdirs();
+			}
+			// 保存
+			targetFile = new File(picturePath + fileName);
+			file.transferTo(targetFile);
+			responseJson.setMsg(Constant.UPDATE + Constant.USER_PICTURE + Constant.OK);
+		} catch (Exception e) {
+			log.error("/uploadUserPicture", e);
+			responseJson.setMsg(Constant.UPDATE + Constant.USER_PICTURE + Constant.ERROR);
+			responseJson.setStatus(Constant.STATUS_ERROR_500);
+		}
+		return responseJson;
+	}
 
-		return "result";
+	/**
+	 * 下载个人头像
+	 * @param file
+	 * @param userid
+	 * @param type
+	 * @param token
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "downloadUserPicture")
+	public ModelAndView downloadUserPicture(@RequestParam(value = "userid") int userid, HttpServletResponse response) throws Exception{
+
+		response.setContentType("multipart/form-data");
+		java.io.BufferedInputStream bis = null;
+		java.io.BufferedOutputStream bos = null;
+
+		try {
+			User user = userService.getUser(userid);
+			// 文件名
+			String fileName = user.getPicture().substring(
+					user.getPicture().indexOf(user.getUserid() + File.separator)
+							+ (user.getUserid() + File.separator).length());
+			// 文件夹绝对路径
+			String downLoadPath = GlobalValue.PATH_USER_PICTURE + user.getPicture();
+
+			long fileLength = new File(downLoadPath).length();
+			response.setContentType("multipart/form-data");
+			response.setHeader("Content-disposition", "attachment; filename=" + fileName);
+			response.setHeader("Content-Length", String.valueOf(fileLength));
+			bis = new BufferedInputStream(new FileInputStream(downLoadPath));
+			bos = new BufferedOutputStream(response.getOutputStream());
+			byte[] buff = new byte[1024];
+			int bytesRead;
+			while (-1 != (bytesRead = bis.read(buff, 0, buff.length))) {
+				bos.write(buff, 0, bytesRead);
+			}
+		} catch (Exception e) {
+			log.error("/downloadUserPicture", e);
+		} finally {
+			if (bis != null)
+				bis.close();
+			if (bos != null)
+				bos.close();
+		}
+		return null;
 	}
 
 	// ---------------------------个人---------------------------end
@@ -290,6 +356,128 @@ public class PubController {
 		return responseJson;
 	}
 	
+	/**
+	 * 删除简历
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("deleteJianLi")
+	public Res deleteJianLi(@RequestParam(value = "jianliid") int jianliid) {
+		Res responseJson = new Res();
+		try {
+			jianLiService.deleteJianLi(jianliid);
+			responseJson.setMsg(Constant.DELETE + Constant.JIANLI + Constant.OK);
+		} catch (Exception e) {
+			log.error("/getJianLiByUser", e);
+			responseJson.setMsg(Constant.DELETE + Constant.JIANLI + Constant.ERROR);
+			responseJson.setStatus(Constant.STATUS_ERROR_500);
+		}
+		return responseJson;
+	}
+	
+	/**
+	 * 更新简历
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("updateJianLi")
+	public Res updateJianLi(@RequestBody JianLi jianli) {
+		Res responseJson = new Res();
+		try {
+			jianli = jianLiService.updateJianLi(jianli);
+			if (jianli != null) {
+				responseJson.setMsg(Constant.UPDATE + Constant.JIANLI + Constant.OK);
+			}
+		} catch (Exception e) {
+			log.error("/addJianLi", e);
+			jianli = null;
+		}
+		if (jianli == null) {
+			responseJson.setMsg(Constant.UPDATE + Constant.JIANLI + Constant.ERROR);
+			responseJson.setStatus(Constant.STATUS_ERROR_500);
+		}
+		responseJson.setJianli(jianli);
+		return responseJson;
+	}
+	
+	/**
+	 * 上传或更新简历头像
+	 * @param file
+	 * @param jianliid
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "uploadJianLiPicture")
+	public Res uploadJianLiPicture(@RequestParam(value = "file") MultipartFile file,
+			@RequestParam(value = "jianliid") int jianliid, @RequestParam(value = "type") String type,
+			@RequestParam(value = "token") String token) {
+		Res responseJson = new Res();
+		try {
+			//文件名
+			String fileName = jianliid + "." + type;
+			//文件相对路径
+			String picture = jianliid + File.separator + fileName;
+			//文件夹绝对路径
+			String picturePath = GlobalValue.PATH_JIANLI_PICTURE + jianliid + File.separator;
+			JianLi jl = new JianLi();
+			jl.setJianliid(jianliid);
+			jl.setPicture(picture);
+			jianLiService.updateJianLi(jl);
+			File targetFile = new File(picturePath);
+			if (!targetFile.exists()) {
+				targetFile.mkdirs();
+			}
+			// 保存
+			targetFile = new File(picturePath + fileName);
+			file.transferTo(targetFile);
+			responseJson.setMsg(Constant.UPDATE + Constant.JIANLI_PICTURE + Constant.OK);
+		} catch (Exception e) {
+			log.error("/uploadJianLiPicture", e);
+			responseJson.setMsg(Constant.UPDATE + Constant.JIANLI_PICTURE + Constant.ERROR);
+			responseJson.setStatus(Constant.STATUS_ERROR_500);
+		}
+		return responseJson;
+	}
+	
+
+	/**
+	 * 上传或更新简历附件
+	 * @param file
+	 * @param jianliid
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "uploadJianLiFujian")
+	public Res uploadJianLiFujian(@RequestParam(value = "file") MultipartFile file,
+			@RequestParam(value = "jianliid") int jianliid, @RequestParam(value = "type") String type,
+			@RequestParam(value = "token") String token) {
+		Res responseJson = new Res();
+		try {
+			//文件名
+			String fileName = jianliid + "." + type;
+			//文件相对路径
+			String fujian = jianliid + File.separator + fileName;
+			//文件夹绝对路径
+			String picturePath = GlobalValue.PATH_JIANLI_FUJIAN + jianliid + File.separator;
+			JianLi jl = new JianLi();
+			jl.setJianliid(jianliid);
+			jl.setFujian(fujian);
+			jianLiService.updateJianLi(jl);
+			File targetFile = new File(picturePath);
+			if (!targetFile.exists()) {
+				targetFile.mkdirs();
+			}
+			// 保存
+			targetFile = new File(picturePath + fileName);
+			file.transferTo(targetFile);
+			responseJson.setMsg(Constant.UPDATE + Constant.JIANLI_FUJIAN + Constant.OK);
+		} catch (Exception e) {
+			log.error("/uploadJianLiFujian", e);
+			responseJson.setMsg(Constant.UPDATE + Constant.JIANLI_FUJIAN + Constant.ERROR);
+			responseJson.setStatus(Constant.STATUS_ERROR_500);
+		}
+		return responseJson;
+	}
 	// ---------------------------简历---------------------------end
 	
 }

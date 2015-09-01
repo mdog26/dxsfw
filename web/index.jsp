@@ -29,12 +29,20 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		<td></td>
     </tr>
     <tr>
-		<td>3</td>
+		<td>1</td>
 		<td></td>
 		<td></td>
-		<td><a href="#">测试链接</a></td>
+		<td><a href="pub/login?mobile=15207109571&password=pwd">登录链接</a></td>
     </tr>
     </table>
+    
+    <form method="post" action="pub/uploadUserPicture" enctype="multipart/form-data">
+		<input type="file" name="file" id="f2">
+		<input type="hidden" name="type" value="ico" />
+		<input type="text" name="token" value="" />
+		<input type="text" name="userid" value="1" />
+		<input type="submit" name="submit">
+	</form>
   </body>
 </html>
 <script type="text/javascript">

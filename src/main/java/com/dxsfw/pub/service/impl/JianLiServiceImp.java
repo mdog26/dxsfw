@@ -58,9 +58,8 @@ public class JianLiServiceImp implements JianLiService {
 	 */
 	@Override
 	public JianLi updateJianLi(JianLi jl) {
-		int r = jianLiDao.updateByPrimaryKeySelective(jl);
-		jl = r > 0 ? jl : null;
-		return jl;
+		jianLiDao.updateByPrimaryKeySelective(jl);
+		return this.getJianLi(jl.getJianliid());
 	}
 
 	/* 删除简历

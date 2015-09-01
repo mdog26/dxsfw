@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.dxsfw.pub.dao.UserDao" >
   <resultMap id="BaseResultMap" type="com.dxsfw.pub.model.User" >
-    <id column="useid" property="useid" jdbcType="INTEGER" />
+    <id column="userid" property="userid" jdbcType="INTEGER" />
     <result column="type" property="type" jdbcType="INTEGER" />
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="password" property="password" jdbcType="VARCHAR" />
@@ -76,7 +76,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    useid, type, name, password, email, mobile, nickname, organization, introduction, 
+    userid, type, name, password, email, mobile, nickname, organization, introduction, 
     card, sex, weixin, zhifubao, picture
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.dxsfw.pub.model.UserExample" >
@@ -97,11 +97,11 @@
     select 
     <include refid="Base_Column_List" />
     from t_user
-    where useid = #{useid,jdbcType=INTEGER}
+    where userid = #{userid,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from t_user
-    where useid = #{useid,jdbcType=INTEGER}
+    where userid = #{userid,jdbcType=INTEGER}
   </delete>
   <delete id="deleteByExample" parameterType="com.dxsfw.pub.model.UserExample" >
     delete from t_user
@@ -110,12 +110,12 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.dxsfw.pub.model.User" >
-    insert into t_user (useid, type, name, 
+    insert into t_user (userid, type, name, 
       password, email, mobile, 
       nickname, organization, introduction, 
       card, sex, weixin, 
       zhifubao, picture)
-    values (#{useid,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, 
+    values (#{userid,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, 
       #{password,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, 
       #{nickname,jdbcType=VARCHAR}, #{organization,jdbcType=VARCHAR}, #{introduction,jdbcType=VARCHAR}, 
       #{card,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR}, #{weixin,jdbcType=VARCHAR}, 
@@ -124,8 +124,8 @@
   <insert id="insertSelective" parameterType="com.dxsfw.pub.model.User" >
     insert into t_user
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="useid != null" >
-        useid,
+      <if test="userid != null" >
+        userid,
       </if>
       <if test="type != null" >
         type,
@@ -168,8 +168,8 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="useid != null" >
-        #{useid,jdbcType=INTEGER},
+      <if test="userid != null" >
+        #{userid,jdbcType=INTEGER},
       </if>
       <if test="type != null" >
         #{type,jdbcType=INTEGER},
@@ -221,8 +221,8 @@
   <update id="updateByExampleSelective" parameterType="map" >
     update t_user
     <set >
-      <if test="record.useid != null" >
-        useid = #{record.useid,jdbcType=INTEGER},
+      <if test="record.userid != null" >
+        userid = #{record.userid,jdbcType=INTEGER},
       </if>
       <if test="record.type != null" >
         type = #{record.type,jdbcType=INTEGER},
@@ -270,7 +270,7 @@
   </update>
   <update id="updateByExample" parameterType="map" >
     update t_user
-    set useid = #{record.useid,jdbcType=INTEGER},
+    set userid = #{record.userid,jdbcType=INTEGER},
       type = #{record.type,jdbcType=INTEGER},
       name = #{record.name,jdbcType=VARCHAR},
       password = #{record.password,jdbcType=VARCHAR},
@@ -331,7 +331,7 @@
         picture = #{picture,jdbcType=VARCHAR},
       </if>
     </set>
-    where useid = #{useid,jdbcType=INTEGER}
+    where userid = #{userid,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.dxsfw.pub.model.User" >
     update t_user
@@ -348,6 +348,6 @@
       weixin = #{weixin,jdbcType=VARCHAR},
       zhifubao = #{zhifubao,jdbcType=VARCHAR},
       picture = #{picture,jdbcType=VARCHAR}
-    where useid = #{useid,jdbcType=INTEGER}
+    where userid = #{userid,jdbcType=INTEGER}
   </update>
 </mapper>

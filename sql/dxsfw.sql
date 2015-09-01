@@ -49,7 +49,7 @@ INSERT INTO `t_jianli` VALUES ('2', '1', '简历标题', 'name', null, '2015-08-
 -- ----------------------------
 DROP TABLE IF EXISTS `t_user`;
 CREATE TABLE `t_user` (
-  `useid` int(11) NOT NULL AUTO_INCREMENT,
+  `userid` int(11) NOT NULL AUTO_INCREMENT,
   `type` int(11) DEFAULT NULL COMMENT '1-学生，2-商家，3-管理员',
   `name` varchar(100) DEFAULT NULL COMMENT '用户名',
   `password` varchar(300) DEFAULT NULL COMMENT '密码',

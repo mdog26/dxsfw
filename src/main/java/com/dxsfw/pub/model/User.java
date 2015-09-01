@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 public class User extends AbstractVo {
-    private Integer useid;
+    private Integer userid;
 
     @JsonInclude(Include.NON_NULL)
     private Integer type;
@@ -46,12 +46,12 @@ public class User extends AbstractVo {
     @JsonInclude(Include.NON_NULL)
     private String picture;
 
-    public Integer getUseid() {
-        return useid;
+    public Integer getUserid() {
+        return userid;
     }
 
-    public void setUseid(Integer useid) {
-        this.useid = useid;
+    public void setUserid(Integer userid) {
+        this.userid = userid;
     }
 
     public Integer getType() {
