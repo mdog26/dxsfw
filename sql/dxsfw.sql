@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : 127.0.0.1
-Source Server Version : 50515
-Source Host           : localhost:3306
+Source Server         : 金点子生产环境
+Source Server Version : 50616
+Source Host           : 10.0.0.184:3306
 Source Database       : dxsfw
 
 Target Server Type    : MYSQL
-Target Server Version : 50515
+Target Server Version : 50616
 File Encoding         : 65001
 
-Date: 2015-08-30 22:31:04
+Date: 2015-09-02 16:03:37
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -45,6 +45,34 @@ INSERT INTO `t_jianli` VALUES ('1', '1', 'title', 'name', null, '2015-08-04', nu
 INSERT INTO `t_jianli` VALUES ('2', '1', '简历标题', 'name', null, '2015-08-04', null, null, null, null, null, null, null, null, null);
 
 -- ----------------------------
+-- Table structure for `t_jianzhi`
+-- ----------------------------
+DROP TABLE IF EXISTS `t_jianzhi`;
+CREATE TABLE `t_jianzhi` (
+  `jianzhiid` int(11) NOT NULL AUTO_INCREMENT,
+  `userid` int(11) DEFAULT NULL COMMENT '发布人id（外键）',
+  `createtime` time DEFAULT NULL COMMENT '发布时间,创建时间',
+  `expiretime` time DEFAULT NULL COMMENT '过期时间/失效时间,如果当前系统时间超过失效时间,兼职信息失效',
+  `updatetime` time DEFAULT NULL COMMENT '更新时间(发布着可以更新、申请人申请动作可以更新、排序用)',
+  `expire` varchar(2) DEFAULT NULL COMMENT '是否过期，或者被锁定',
+  `title` varchar(200) DEFAULT NULL COMMENT '职位标题、职位名称',
+  `tag` varchar(100) DEFAULT NULL COMMENT '标签(可用于检索)eg:java 工程师 j2ee(中间用空格隔开)',
+  `company` varchar(400) DEFAULT NULL COMMENT '公司名称',
+  `companyintroduction` varchar(8000) DEFAULT NULL COMMENT '公司介绍(简介)',
+  `workplace` varchar(500) DEFAULT NULL COMMENT '工作地点',
+  `pay` varchar(50) DEFAULT NULL COMMENT '[枚举类型]薪资(20-100/小时 100/天 1000/月 面谈)',
+  `worktime` varchar(50) DEFAULT NULL COMMENT '[枚举类型]工作时间(工作日 周末 其他)',
+  `people` varchar(50) DEFAULT NULL COMMENT '[枚举类型]招聘人数',
+  `description` varchar(8000) DEFAULT NULL COMMENT '职位描述、介绍',
+  `status` varchar(2) DEFAULT NULL,
+  PRIMARY KEY (`jianzhiid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of t_jianzhi
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for `t_user`
 -- ----------------------------
 DROP TABLE IF EXISTS `t_user`;
@@ -63,7 +91,7 @@ CREATE TABLE `t_user` (
   `weixin` varchar(200) DEFAULT NULL COMMENT '微信号',
   `zhifubao` varchar(200) DEFAULT NULL COMMENT '支付宝账号',
   `picture` varchar(300) DEFAULT NULL COMMENT '头像',
-  PRIMARY KEY (`useid`)
+  PRIMARY KEY (`userid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
