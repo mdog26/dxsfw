@@ -162,14 +162,14 @@ public class PubControllerTest {
     
     @Test
     public void downloadJianLiPicture() throws Exception {
-    	mockMvc.perform(MockMvcRequestBuilders.get("/pub/downloadJianLiPicture?userid=1").contentType(MediaType.MULTIPART_FORM_DATA))
+    	mockMvc.perform(MockMvcRequestBuilders.get("/pub/downloadJianLiPicture?jianliid=1").contentType(MediaType.MULTIPART_FORM_DATA))
 		.andDo(MockMvcResultHandlers.print())
     	.andReturn();
     }
     
     @Test
     public void downloadJianLiFujian() throws Exception {
-    	mockMvc.perform(MockMvcRequestBuilders.get("/pub/downloadJianLiFujian?userid=1").contentType(MediaType.MULTIPART_FORM_DATA))
+    	mockMvc.perform(MockMvcRequestBuilders.get("/pub/downloadJianLiFujian?jianliid=2").contentType(MediaType.MULTIPART_FORM_DATA))
     	.andDo(MockMvcResultHandlers.print())
     	.andReturn();
     }

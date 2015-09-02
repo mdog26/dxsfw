@@ -475,7 +475,7 @@ public class PubController {
 				jianli.getPicture().indexOf(jianli.getJianliid() + File.separator)
 						+ (jianli.getJianliid() + File.separator).length());
 		// 文件夹绝对路径
-		String downLoadPath = GlobalValue.PATH_USER_PICTURE + jianli.getPicture();
+		String downLoadPath = GlobalValue.PATH_JIANLI_PICTURE + jianli.getPicture();
 
 		this.downloadFile(response, fileName, downLoadPath);
 		return null;
@@ -496,7 +496,7 @@ public class PubController {
 				jianli.getFujian().indexOf(jianli.getJianliid() + File.separator)
 				+ (jianli.getJianliid() + File.separator).length());
 		// 文件夹绝对路径
-		String downLoadPath = GlobalValue.PATH_USER_PICTURE + jianli.getFujian();
+		String downLoadPath = GlobalValue.PATH_JIANLI_FUJIAN + jianli.getFujian();
 		
 		this.downloadFile(response, fileName, downLoadPath);
 		return null;
