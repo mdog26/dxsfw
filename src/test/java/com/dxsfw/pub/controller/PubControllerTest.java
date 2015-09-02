@@ -159,6 +159,20 @@ public class PubControllerTest {
     	.andDo(MockMvcResultHandlers.print())
     	.andReturn();
     }
+    
+    @Test
+    public void downloadJianLiPicture() throws Exception {
+    	mockMvc.perform(MockMvcRequestBuilders.get("/pub/downloadJianLiPicture?userid=1").contentType(MediaType.MULTIPART_FORM_DATA))
+		.andDo(MockMvcResultHandlers.print())
+    	.andReturn();
+    }
+    
+    @Test
+    public void downloadJianLiFujian() throws Exception {
+    	mockMvc.perform(MockMvcRequestBuilders.get("/pub/downloadJianLiFujian?userid=1").contentType(MediaType.MULTIPART_FORM_DATA))
+    	.andDo(MockMvcResultHandlers.print())
+    	.andReturn();
+    }
 	// ---------------------------简历---------------------------end
     
 	// ---------------------------个人---------------------------start

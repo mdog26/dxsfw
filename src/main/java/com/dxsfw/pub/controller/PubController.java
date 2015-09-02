@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -251,38 +252,18 @@ public class PubController {
 	@RequestMapping(value = "downloadUserPicture")
 	public ModelAndView downloadUserPicture(@RequestParam(value = "userid") int userid, HttpServletResponse response) throws Exception{
 
-		response.setContentType("multipart/form-data");
-		java.io.BufferedInputStream bis = null;
-		java.io.BufferedOutputStream bos = null;
+		User user = userService.getUser(userid);
+		// 解析出文件名 
+		// {userid}\{userid}.type  
+		// eg： 1\1.ico
+		// 1\1.ico -> 1.ico
+		String fileName = user.getPicture().substring(
+				user.getPicture().indexOf(user.getUserid() + File.separator)
+						+ (user.getUserid() + File.separator).length());
+		// 文件夹绝对路径
+		String downLoadPath = GlobalValue.PATH_USER_PICTURE + user.getPicture();
 
-		try {
-			User user = userService.getUser(userid);
-			// 文件名
-			String fileName = user.getPicture().substring(
-					user.getPicture().indexOf(user.getUserid() + File.separator)
-							+ (user.getUserid() + File.separator).length());
-			// 文件夹绝对路径
-			String downLoadPath = GlobalValue.PATH_USER_PICTURE + user.getPicture();
-
-			long fileLength = new File(downLoadPath).length();
-			response.setContentType("multipart/form-data");
-			response.setHeader("Content-disposition", "attachment; filename=" + fileName);
-			response.setHeader("Content-Length", String.valueOf(fileLength));
-			bis = new BufferedInputStream(new FileInputStream(downLoadPath));
-			bos = new BufferedOutputStream(response.getOutputStream());
-			byte[] buff = new byte[1024];
-			int bytesRead;
-			while (-1 != (bytesRead = bis.read(buff, 0, buff.length))) {
-				bos.write(buff, 0, bytesRead);
-			}
-		} catch (Exception e) {
-			log.error("/downloadUserPicture", e);
-		} finally {
-			if (bis != null)
-				bis.close();
-			if (bos != null)
-				bos.close();
-		}
+		this.downloadFile(response, fileName, downLoadPath);
 		return null;
 	}
 
@@ -478,6 +459,84 @@ public class PubController {
 		}
 		return responseJson;
 	}
+	
+	/**
+	 * 下载简历个人头像
+	 * @param jianliid
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "downloadJianLiPicture")
+	public ModelAndView downloadJianLiPicture(@RequestParam(value = "jianliid") int jianliid, HttpServletResponse response) throws Exception{
+		JianLi jianli = jianLiService.getJianLi(jianliid);
+		// 文件名
+		String fileName = jianli.getPicture().substring(
+				jianli.getPicture().indexOf(jianli.getJianliid() + File.separator)
+						+ (jianli.getJianliid() + File.separator).length());
+		// 文件夹绝对路径
+		String downLoadPath = GlobalValue.PATH_USER_PICTURE + jianli.getPicture();
+
+		this.downloadFile(response, fileName, downLoadPath);
+		return null;
+	}
+	
+	/**
+	 * 下载简历附件
+	 * @param jianliid
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "downloadJianLiFujian")
+	public ModelAndView downloadJianLiFujian(@RequestParam(value = "jianliid") int jianliid, HttpServletResponse response) throws Exception{
+		JianLi jianli = jianLiService.getJianLi(jianliid);
+		// 文件名
+		String fileName = jianli.getFujian().substring(
+				jianli.getFujian().indexOf(jianli.getJianliid() + File.separator)
+				+ (jianli.getJianliid() + File.separator).length());
+		// 文件夹绝对路径
+		String downLoadPath = GlobalValue.PATH_USER_PICTURE + jianli.getFujian();
+		
+		this.downloadFile(response, fileName, downLoadPath);
+		return null;
+	}
 	// ---------------------------简历---------------------------end
 	
+	
+	// ---------------------------辅助方法---------------------------end
+	/**
+	 * 下载文件
+	 * @param response
+	 * @param fileName
+	 * @param downLoadPath
+	 * @throws IOException
+	 */
+	private void downloadFile(HttpServletResponse response, String fileName,
+			String downLoadPath) throws IOException {
+		response.setContentType("multipart/form-data");
+		java.io.BufferedInputStream bis = null;
+		java.io.BufferedOutputStream bos = null;
+		try {
+			
+			long fileLength = new File(downLoadPath).length();
+			response.setContentType("multipart/form-data");
+			response.setHeader("Content-disposition", "attachment; filename=" + fileName);
+			response.setHeader("Content-Length", String.valueOf(fileLength));
+			bis = new BufferedInputStream(new FileInputStream(downLoadPath));
+			bos = new BufferedOutputStream(response.getOutputStream());
+			byte[] buff = new byte[1024];
+			int bytesRead;
+			while (-1 != (bytesRead = bis.read(buff, 0, buff.length))) {
+				bos.write(buff, 0, bytesRead);
+			}
+		} catch (Exception e) {
+			log.error("downloadFile", e);
+		} finally {
+			if (bis != null)
+				bis.close();
+			if (bos != null)
+				bos.close();
+		}
+	}
 }

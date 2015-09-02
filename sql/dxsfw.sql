@@ -63,7 +63,7 @@ CREATE TABLE `t_user` (
   `weixin` varchar(200) DEFAULT NULL COMMENT '微信号',
   `zhifubao` varchar(200) DEFAULT NULL COMMENT '支付宝账号',
   `picture` varchar(300) DEFAULT NULL COMMENT '头像',
-  PRIMARY KEY (`useid`)
+  PRIMARY KEY (`userid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
