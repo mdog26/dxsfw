@@ -41,6 +41,7 @@ public class ServerContextListener implements ServletContextListener {
 		//#加载共用路径信息
 		String siteRoot = this.getSiteRoot(contextEvent);
 		String fileServer = PropertiesReader.readByKey("file.server.path");
+		GlobalValue.PATH_PICTURE = fileServer  + "picture" + File.separator;
 		GlobalValue.PATH_USER_PICTURE = fileServer  + "user" + File.separator + "picture" + File.separator;
 		GlobalValue.PATH_JIANLI_PICTURE = fileServer + "jianli" + File.separator + "picture" + File.separator;
 		GlobalValue.PATH_JIANLI_FUJIAN = fileServer + "jianli" + File.separator + "fujian" + File.separator;

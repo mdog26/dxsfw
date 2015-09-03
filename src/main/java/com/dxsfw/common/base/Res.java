@@ -19,6 +19,9 @@ public class Res implements Serializable {
 	
 	@JsonInclude(Include.NON_NULL)
 	private String token;
+	
+	@JsonInclude(Include.NON_NULL)
+	private List<?> list;
 
 	@JsonInclude(Include.NON_NULL)
 	private User user;
@@ -104,5 +107,13 @@ public class Res implements Serializable {
 
 	public void setJianzhiList(List<Jianzhi> jianzhiList) {
 		this.jianzhiList = jianzhiList;
+	}
+
+	public List<?> getList() {
+		return list;
+	}
+
+	public void setList(List<?> list) {
+		this.list = list;
 	}
 }

@@ -43,6 +43,6 @@ CreateDate: 2013-7-10
             <property name="enableSubPackages" value="true" />
         </javaClientGenerator>
         
-        <table schema="" tableName="t_jianzhi"  domainObjectName="Jianzhi"/>
+        <table schema="" tableName="t_jianzhishengqing"  domainObjectName="JianzhiShengqing"/>
 	</context>
 </generatorConfiguration>

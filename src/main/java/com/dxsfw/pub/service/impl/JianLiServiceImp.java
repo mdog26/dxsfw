@@ -10,6 +10,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.dxsfw.common.base.BaseDao;
+import com.dxsfw.common.base.BaseServiceImpl;
+import com.dxsfw.common.page.Pagination;
 import com.dxsfw.pub.dao.JianLiDao;
 import com.dxsfw.pub.model.JianLi;
 import com.dxsfw.pub.model.JianLiExample;
@@ -20,11 +23,16 @@ import com.dxsfw.pub.service.JianLiService;
  *
  */
 @Repository("jianLiService")
-public class JianLiServiceImp implements JianLiService {
+public class JianLiServiceImp extends BaseServiceImpl<JianLi, Integer> implements JianLiService {
 	private static Logger log = LoggerFactory.getLogger(JianLiServiceImp.class);
 	
 	@Autowired
     private JianLiDao jianLiDao;
+	
+	@Override
+	public JianLiDao getDao() {
+		return jianLiDao;
+	}
 	
 	/* 添加简历基本信息(不包括图片和附件)
 	 */
@@ -75,6 +83,11 @@ public class JianLiServiceImp implements JianLiService {
 	@Override
 	public JianLi getJianLi(int jianliid) {
 		return jianLiDao.selectByPrimaryKey(jianliid);
+	}
+
+	@Override
+	public Pagination searchJianLiList(JianLiExample example, Pagination p) {
+		return this.queryByExample(example, p);
 	}
 
 }

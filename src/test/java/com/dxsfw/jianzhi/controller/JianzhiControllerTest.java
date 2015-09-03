@@ -15,7 +15,7 @@ public class JianzhiControllerTest extends BaseTest {
 	
 	@Test
 	public void add() throws Exception {
-		 String requestBody = "{\"userid\":1,\"title\":\"兼职标题\",\"tag\":\"传单 java 服务员\",\"workplace\":\"武汉\"}"; 
+		 String requestBody = "{\"userid\":5,\"title\":\"兼职标题4\",\"tag\":\"cto ceo\",\"workplace\":\"anywhere\"}"; 
 	        mockMvc.perform(MockMvcRequestBuilders.post("/jianzhi/add")
 	                    .contentType(MediaType.APPLICATION_JSON).content(requestBody)
 	                    .accept(MediaType.APPLICATION_JSON))
@@ -25,7 +25,7 @@ public class JianzhiControllerTest extends BaseTest {
 	
 	@Test
 	public void delete() throws Exception {
-		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(action + "/delete/2"))
+		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(action + "/delete/3"))
     			.andDo(MockMvcResultHandlers.print())
     			.andReturn();
 	}
@@ -45,5 +45,49 @@ public class JianzhiControllerTest extends BaseTest {
 		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(action + "/get/3"))
     			.andDo(MockMvcResultHandlers.print())
     			.andReturn();
+	}
+	
+	@Test
+	public void applyJianzhi() throws Exception {
+		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(action + "/applyJianzhi")
+				.param("jianzhiid", "4").param("publishuserid", "4").param("shengqinguserid", "1").param("jianliid", "5"))
+				.andDo(MockMvcResultHandlers.print())
+				.andReturn();
+	}
+	
+	@Test
+	public void search() throws Exception {
+		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(action + "/search")
+				.param("keyword", "java 武汉").param("pageNo", "3").param("pageSize", "3"))
+//				.param("pageNo", "1"))
+				.andDo(MockMvcResultHandlers.print())
+				.andReturn();
+	}
+	
+	@Test
+	public void myList() throws Exception {
+		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(action + "/myList")
+				.param("userid", "1").param("pageNo", "3").param("pageSize", "3"))
+//				.param("pageNo", "1"))
+				.andDo(MockMvcResultHandlers.print())
+				.andReturn();
+	}
+	
+	@Test
+	public void myApplyList() throws Exception {
+		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(action + "/myApplyList")
+				.param("userid", "2").param("pageNo", "3").param("pageSize", "3"))
+//				.param("pageNo", "1"))
+				.andDo(MockMvcResultHandlers.print())
+				.andReturn();
+	}
+	
+	@Test
+	public void applyJianLiList() throws Exception {
+		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(action + "/applyJianLiList")
+				.param("jianzhiid", "4").param("pageNo", "3").param("pageSize", "3"))
+//				.param("pageNo", "1"))
+				.andDo(MockMvcResultHandlers.print())
+				.andReturn();
 	}
 }
