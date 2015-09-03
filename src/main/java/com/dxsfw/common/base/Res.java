@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.dxsfw.common.constants.Constant;
+import com.dxsfw.jianzhi.model.Jianzhi;
 import com.dxsfw.pub.model.JianLi;
 import com.dxsfw.pub.model.User;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -27,6 +28,12 @@ public class Res implements Serializable {
 	
 	@JsonInclude(Include.NON_NULL)
 	private List<JianLi> jianliList;
+	
+	@JsonInclude(Include.NON_NULL)
+	private Jianzhi jianzhi;
+	
+	@JsonInclude(Include.NON_NULL)
+	private List<Jianzhi> jianzhiList;
 
 	public Res() {}
 	
@@ -81,5 +88,21 @@ public class Res implements Serializable {
 
 	public void setJianliList(List<JianLi> jianliList) {
 		this.jianliList = jianliList;
+	}
+
+	public Jianzhi getJianzhi() {
+		return jianzhi;
+	}
+
+	public void setJianzhi(Jianzhi jianzhi) {
+		this.jianzhi = jianzhi;
+	}
+
+	public List<Jianzhi> getJianzhiList() {
+		return jianzhiList;
+	}
+
+	public void setJianzhiList(List<Jianzhi> jianzhiList) {
+		this.jianzhiList = jianzhiList;
 	}
 }

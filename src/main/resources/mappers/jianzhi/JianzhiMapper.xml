@@ -1,0 +1,400 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dxsfw.jianzhi.dao.JianzhiDao" >
+  <resultMap id="BaseResultMap" type="com.dxsfw.jianzhi.model.Jianzhi" >
+    <id column="jianzhiid" property="jianzhiid" jdbcType="INTEGER" />
+    <result column="userid" property="userid" jdbcType="INTEGER" />
+    <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="expiretime" property="expiretime" jdbcType="TIMESTAMP" />
+    <result column="updatetime" property="updatetime" jdbcType="TIMESTAMP" />
+    <result column="expire" property="expire" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="tag" property="tag" jdbcType="VARCHAR" />
+    <result column="company" property="company" jdbcType="VARCHAR" />
+    <result column="companyintroduction" property="companyintroduction" jdbcType="VARCHAR" />
+    <result column="industry" property="industry" jdbcType="VARCHAR" />
+    <result column="workplace" property="workplace" jdbcType="VARCHAR" />
+    <result column="pay" property="pay" jdbcType="VARCHAR" />
+    <result column="worktime" property="worktime" jdbcType="VARCHAR" />
+    <result column="people" property="people" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    jianzhiid, userid, createtime, expiretime, updatetime, expire, title, tag, company, 
+    companyintroduction, industry, workplace, pay, worktime, people, description, status
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.dxsfw.jianzhi.model.JianzhiExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_jianzhi
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_jianzhi
+    where jianzhiid = #{jianzhiid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_jianzhi
+    where jianzhiid = #{jianzhiid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.dxsfw.jianzhi.model.JianzhiExample" >
+    delete from t_jianzhi
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.dxsfw.jianzhi.model.Jianzhi" >
+    insert into t_jianzhi (jianzhiid, userid, createtime, 
+      expiretime, updatetime, expire, 
+      title, tag, company, 
+      companyintroduction, industry, workplace, 
+      pay, worktime, people, 
+      description, status)
+    values (#{jianzhiid,jdbcType=INTEGER}, #{userid,jdbcType=INTEGER}, #{createtime,jdbcType=TIMESTAMP}, 
+      #{expiretime,jdbcType=TIMESTAMP}, #{updatetime,jdbcType=TIMESTAMP}, #{expire,jdbcType=VARCHAR}, 
+      #{title,jdbcType=VARCHAR}, #{tag,jdbcType=VARCHAR}, #{company,jdbcType=VARCHAR}, 
+      #{companyintroduction,jdbcType=VARCHAR}, #{industry,jdbcType=VARCHAR}, #{workplace,jdbcType=VARCHAR}, 
+      #{pay,jdbcType=VARCHAR}, #{worktime,jdbcType=VARCHAR}, #{people,jdbcType=VARCHAR}, 
+      #{description,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dxsfw.jianzhi.model.Jianzhi" >
+    insert into t_jianzhi
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="jianzhiid != null" >
+        jianzhiid,
+      </if>
+      <if test="userid != null" >
+        userid,
+      </if>
+      <if test="createtime != null" >
+        createtime,
+      </if>
+      <if test="expiretime != null" >
+        expiretime,
+      </if>
+      <if test="updatetime != null" >
+        updatetime,
+      </if>
+      <if test="expire != null" >
+        expire,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="tag != null" >
+        tag,
+      </if>
+      <if test="company != null" >
+        company,
+      </if>
+      <if test="companyintroduction != null" >
+        companyintroduction,
+      </if>
+      <if test="industry != null" >
+        industry,
+      </if>
+      <if test="workplace != null" >
+        workplace,
+      </if>
+      <if test="pay != null" >
+        pay,
+      </if>
+      <if test="worktime != null" >
+        worktime,
+      </if>
+      <if test="people != null" >
+        people,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="jianzhiid != null" >
+        #{jianzhiid,jdbcType=INTEGER},
+      </if>
+      <if test="userid != null" >
+        #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expiretime != null" >
+        #{expiretime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expire != null" >
+        #{expire,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="tag != null" >
+        #{tag,jdbcType=VARCHAR},
+      </if>
+      <if test="company != null" >
+        #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="companyintroduction != null" >
+        #{companyintroduction,jdbcType=VARCHAR},
+      </if>
+      <if test="industry != null" >
+        #{industry,jdbcType=VARCHAR},
+      </if>
+      <if test="workplace != null" >
+        #{workplace,jdbcType=VARCHAR},
+      </if>
+      <if test="pay != null" >
+        #{pay,jdbcType=VARCHAR},
+      </if>
+      <if test="worktime != null" >
+        #{worktime,jdbcType=VARCHAR},
+      </if>
+      <if test="people != null" >
+        #{people,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.dxsfw.jianzhi.model.JianzhiExample" resultType="java.lang.Integer" >
+    select count(*) from t_jianzhi
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update t_jianzhi
+    <set >
+      <if test="record.jianzhiid != null" >
+        jianzhiid = #{record.jianzhiid,jdbcType=INTEGER},
+      </if>
+      <if test="record.userid != null" >
+        userid = #{record.userid,jdbcType=INTEGER},
+      </if>
+      <if test="record.createtime != null" >
+        createtime = #{record.createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.expiretime != null" >
+        expiretime = #{record.expiretime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updatetime != null" >
+        updatetime = #{record.updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.expire != null" >
+        expire = #{record.expire,jdbcType=VARCHAR},
+      </if>
+      <if test="record.title != null" >
+        title = #{record.title,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tag != null" >
+        tag = #{record.tag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.company != null" >
+        company = #{record.company,jdbcType=VARCHAR},
+      </if>
+      <if test="record.companyintroduction != null" >
+        companyintroduction = #{record.companyintroduction,jdbcType=VARCHAR},
+      </if>
+      <if test="record.industry != null" >
+        industry = #{record.industry,jdbcType=VARCHAR},
+      </if>
+      <if test="record.workplace != null" >
+        workplace = #{record.workplace,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pay != null" >
+        pay = #{record.pay,jdbcType=VARCHAR},
+      </if>
+      <if test="record.worktime != null" >
+        worktime = #{record.worktime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.people != null" >
+        people = #{record.people,jdbcType=VARCHAR},
+      </if>
+      <if test="record.description != null" >
+        description = #{record.description,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        status = #{record.status,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update t_jianzhi
+    set jianzhiid = #{record.jianzhiid,jdbcType=INTEGER},
+      userid = #{record.userid,jdbcType=INTEGER},
+      createtime = #{record.createtime,jdbcType=TIMESTAMP},
+      expiretime = #{record.expiretime,jdbcType=TIMESTAMP},
+      updatetime = #{record.updatetime,jdbcType=TIMESTAMP},
+      expire = #{record.expire,jdbcType=VARCHAR},
+      title = #{record.title,jdbcType=VARCHAR},
+      tag = #{record.tag,jdbcType=VARCHAR},
+      company = #{record.company,jdbcType=VARCHAR},
+      companyintroduction = #{record.companyintroduction,jdbcType=VARCHAR},
+      industry = #{record.industry,jdbcType=VARCHAR},
+      workplace = #{record.workplace,jdbcType=VARCHAR},
+      pay = #{record.pay,jdbcType=VARCHAR},
+      worktime = #{record.worktime,jdbcType=VARCHAR},
+      people = #{record.people,jdbcType=VARCHAR},
+      description = #{record.description,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dxsfw.jianzhi.model.Jianzhi" >
+    update t_jianzhi
+    <set >
+      <if test="userid != null" >
+        userid = #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null" >
+        createtime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expiretime != null" >
+        expiretime = #{expiretime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        updatetime = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expire != null" >
+        expire = #{expire,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="tag != null" >
+        tag = #{tag,jdbcType=VARCHAR},
+      </if>
+      <if test="company != null" >
+        company = #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="companyintroduction != null" >
+        companyintroduction = #{companyintroduction,jdbcType=VARCHAR},
+      </if>
+      <if test="industry != null" >
+        industry = #{industry,jdbcType=VARCHAR},
+      </if>
+      <if test="workplace != null" >
+        workplace = #{workplace,jdbcType=VARCHAR},
+      </if>
+      <if test="pay != null" >
+        pay = #{pay,jdbcType=VARCHAR},
+      </if>
+      <if test="worktime != null" >
+        worktime = #{worktime,jdbcType=VARCHAR},
+      </if>
+      <if test="people != null" >
+        people = #{people,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where jianzhiid = #{jianzhiid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dxsfw.jianzhi.model.Jianzhi" >
+    update t_jianzhi
+    set userid = #{userid,jdbcType=INTEGER},
+      createtime = #{createtime,jdbcType=TIMESTAMP},
+      expiretime = #{expiretime,jdbcType=TIMESTAMP},
+      updatetime = #{updatetime,jdbcType=TIMESTAMP},
+      expire = #{expire,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      tag = #{tag,jdbcType=VARCHAR},
+      company = #{company,jdbcType=VARCHAR},
+      companyintroduction = #{companyintroduction,jdbcType=VARCHAR},
+      industry = #{industry,jdbcType=VARCHAR},
+      workplace = #{workplace,jdbcType=VARCHAR},
+      pay = #{pay,jdbcType=VARCHAR},
+      worktime = #{worktime,jdbcType=VARCHAR},
+      people = #{people,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR}
+    where jianzhiid = #{jianzhiid,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -25,24 +25,24 @@ CreateDate: 2013-7-10
 
 
 
-        <javaModelGenerator targetPackage="com.dxsfw.pub.model"
+        <javaModelGenerator targetPackage="com.dxsfw.jianzhi.model"
                             targetProject="../src/main/java">
             <property name="enableSubPackages" value="true" />
             <property name="trimStrings" value="true" />
         </javaModelGenerator>
 
 
-        <sqlMapGenerator targetPackage="mappers.pub"
+        <sqlMapGenerator targetPackage="mappers.jianzhi"
                          targetProject="../src/main/resources">
             <property name="enableSubPackages" value="true" />
         </sqlMapGenerator>
 
         <javaClientGenerator type="XMLMAPPER"
-                             targetPackage="com.dxsfw.pub.dao"
+                             targetPackage="com.dxsfw.jianzhi.dao"
                              targetProject="../src/main/java">
             <property name="enableSubPackages" value="true" />
         </javaClientGenerator>
         
-        <table schema="" tableName="t_user"  domainObjectName="User"/>
+        <table schema="" tableName="t_jianzhi"  domainObjectName="Jianzhi"/>
 	</context>
 </generatorConfiguration>
