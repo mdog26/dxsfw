@@ -47,7 +47,8 @@ public class Constant {
 	public final static String MSG_OK_JIANLI_GET = "获取简历成功";
 	
 	//模块消息
-	public final static String PICTURE = "兼职图片";
+	public final static String SEARCH = "检索";
+	public final static String PICTURE = "图片";
 	public final static String JIANLI = "简历";
 	public final static String USER_PICTURE = "个人头像";
 	public final static String JIANLI_PICTURE = "简历头像";

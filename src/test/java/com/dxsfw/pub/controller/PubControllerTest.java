@@ -210,5 +210,25 @@ public class PubControllerTest {
     
 	// ---------------------------个人---------------------------end
     
+    // ---------------------------公共---------------------------start
+    @Test
+    public void uploadPicture() throws Exception {
+    	//文件上传  
+    	File file = new File("D:/workspace/xzl/picture/1.ico");
+    	byte[] bytes = FileUtil.readAsByteArray(file);
+    	mockMvc.perform(MockMvcRequestBuilders.fileUpload("/pub/upload/jianzhi/5").file("file", bytes).param("type", "png").param("token", "配合jsp页面测试spring")) //执行文件上传  
+//    	mockMvc.perform(MockMvcRequestBuilders.fileUpload("/pub/upload/party/1").file("file", bytes).param("type", "jpg").param("pictureid", "9").param("token", "配合jsp页面测试spring")) //执行文件上传  
+    	.andDo(MockMvcResultHandlers.print())
+    	.andReturn();
+    }
+    
+    @Test
+    public void downloadPicture() throws Exception {
+    	mockMvc.perform(MockMvcRequestBuilders.get("/pub/download/jianzhi/1").contentType(MediaType.MULTIPART_FORM_DATA))
+//    	mockMvc.perform(MockMvcRequestBuilders.get("/pub/download/party/1").param("pictureid", "2").contentType(MediaType.MULTIPART_FORM_DATA))
+		.andDo(MockMvcResultHandlers.print())
+    	.andReturn();
+    }
+    // ---------------------------公共---------------------------end
     
 }
