@@ -19,5 +19,7 @@ public interface PubService {
 	Picture getPicture(Integer pictureid);
 
 	List<Picture> getPicture(Picture p);
+
+	Picture addPicture(Picture p);
 	
 }

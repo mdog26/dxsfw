@@ -57,14 +57,14 @@ public class PubControllerTest {
     
     @Test
     public void testregMobile() throws Exception {
-    	MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/pub/regMobile").param("mobile", "18000000").param("password", "pwd").param("check_msg", "xxxx"))
+    	MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/pub/regMobile").param("mobile", "15010842975").param("password", "pwd").param("check_msg", "xxxx"))
   			.andDo(MockMvcResultHandlers.print())
   			.andReturn();
     }
     
     @Test
     public void testgetMobileCheckMsg() throws Exception {
-    	MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/pub/getMobileCheckMsg?mobile=18000000"))
+    	MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/pub/getMobileCheckMsg?mobile=15010842975"))
     			.andDo(MockMvcResultHandlers.print())
     			.andReturn();
     }
@@ -178,9 +178,9 @@ public class PubControllerTest {
 	// ---------------------------个人---------------------------start
     @Test
     public void tesupdateUser() throws Exception {
-//        String requestBody = "{\"useid\":1,\"type\":3,\"name\":\"开发人员\",\"password\":\"pwd\",\"email\":null,\"mobile\":\"15207109571\",\"nickname\":null,\"organization\":null,\"introduction\":null,\"card\":null,\"sex\":null,\"weixin\":null,\"zhifubao\":null}"; 
+//        String requestBody = "{\"userid\":1,\"type\":3,\"name\":\"开发人员\",\"password\":\"pwd\",\"email\":null,\"mobile\":\"15207109571\",\"nickname\":null,\"organization\":null,\"introduction\":null,\"card\":null,\"sex\":null,\"weixin\":null,\"zhifubao\":null}"; 
     	//没属性和null，将不更新。值""可以更新。
-        String requestBody = "{\"useid\":1,\"type\":null,\"name\":\"开发人员\",\"email\":\"email2\"}";
+        String requestBody = "{\"userid\":1,\"type\":null,\"name\":\"开发人员\",\"email\":\"email2\"}";
         mockMvc.perform(MockMvcRequestBuilders.post("/pub/updateUser")
                     .contentType(MediaType.APPLICATION_JSON).content(requestBody)
                     .accept(MediaType.APPLICATION_JSON)) //执行请求
@@ -211,21 +211,43 @@ public class PubControllerTest {
 	// ---------------------------个人---------------------------end
     
     // ---------------------------公共---------------------------start
+    /**
+     * 业务模块单一图片测试
+     * @throws Exception
+     */
     @Test
     public void uploadPicture() throws Exception {
     	//文件上传  
     	File file = new File("D:/workspace/xzl/picture/1.ico");
     	byte[] bytes = FileUtil.readAsByteArray(file);
-    	mockMvc.perform(MockMvcRequestBuilders.fileUpload("/pub/upload/jianzhi/5").file("file", bytes).param("type", "png").param("token", "配合jsp页面测试spring")) //执行文件上传  
-//    	mockMvc.perform(MockMvcRequestBuilders.fileUpload("/pub/upload/party/1").file("file", bytes).param("type", "jpg").param("pictureid", "9").param("token", "配合jsp页面测试spring")) //执行文件上传  
+    	//单一个图片业务模块新增或更新测试
+//    	mockMvc.perform(MockMvcRequestBuilders.fileUpload("/pub/upload/jianzhi/4").file("file", bytes).param("type", "jpg").param("token", "配合jsp页面测试spring")) //执行文件上传  
+    	//多图片业务模块更新测试
+    	mockMvc.perform(MockMvcRequestBuilders.fileUpload("/pub/upload/party/5").file("file", bytes).param("pictureid", "5").param("type", "bpm").param("token", "配合jsp页面测试spring")) //执行文件上传  
+    	.andDo(MockMvcResultHandlers.print())
+    	.andReturn();
+    }
+    
+    /**
+     * 业务模块多图片测试
+     * @throws Exception
+     */
+    @Test
+    public void uploadMorePicture() throws Exception {
+    	//文件上传  
+    	File file = new File("D:/workspace/xzl/picture/1.ico");
+    	byte[] bytes = FileUtil.readAsByteArray(file);
+    	mockMvc.perform(MockMvcRequestBuilders.fileUpload("/pub/uploadMore/party/5").file("file", bytes).param("type", "jpg").param("token", "配合jsp页面测试spring")) //执行文件上传  
     	.andDo(MockMvcResultHandlers.print())
     	.andReturn();
     }
     
     @Test
     public void downloadPicture() throws Exception {
-    	mockMvc.perform(MockMvcRequestBuilders.get("/pub/download/jianzhi/1").contentType(MediaType.MULTIPART_FORM_DATA))
-//    	mockMvc.perform(MockMvcRequestBuilders.get("/pub/download/party/1").param("pictureid", "2").contentType(MediaType.MULTIPART_FORM_DATA))
+    	//单一个图片业务模块新增或更新测试
+    	mockMvc.perform(MockMvcRequestBuilders.get("/pub/download/jianzhi/5").contentType(MediaType.MULTIPART_FORM_DATA))
+    	//多图片业务模块更新测试
+//    	mockMvc.perform(MockMvcRequestBuilders.get("/pub/download/party/1").param("pictureid", "5").contentType(MediaType.MULTIPART_FORM_DATA))
 		.andDo(MockMvcResultHandlers.print())
     	.andReturn();
     }

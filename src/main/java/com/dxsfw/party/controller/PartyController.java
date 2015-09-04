@@ -1,10 +1,6 @@
-package com.dxsfw.jianzhi.controller;
+package com.dxsfw.party.controller;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,67 +9,55 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.dxsfw.common.base.BaseController;
 import com.dxsfw.common.base.Res;
 import com.dxsfw.common.constants.Constant;
-import com.dxsfw.common.constants.GlobalValue;
 import com.dxsfw.common.page.Pagination;
-import com.dxsfw.jianzhi.model.Jianzhi;
-import com.dxsfw.jianzhi.model.JianzhiShengqing;
-import com.dxsfw.jianzhi.model.JianzhiShengqingExample;
-import com.dxsfw.jianzhi.service.JianzhiService;
-import com.dxsfw.pub.model.JianLiExample;
-import com.dxsfw.pub.model.User;
-import com.dxsfw.pub.service.JianLiService;
-import com.dxsfw.pub.service.UserService;
+import com.dxsfw.party.model.Party;
+import com.dxsfw.party.model.PartyShengqing;
+import com.dxsfw.party.service.PartyService;
 
 @Controller
-@RequestMapping("/jianzhi")
-public class JianzhiController extends BaseController {
-	private static Logger log = LoggerFactory.getLogger(JianzhiController.class);
+@RequestMapping("/party")
+public class PartyController extends BaseController {
+	private static Logger log = LoggerFactory.getLogger(PartyController.class);
 
-//	@Autowired
-//	private UserService userService;
-//	@Autowired
-//	private JianLiService jianLiService;
 	@Autowired
-	private JianzhiService jianzhiService;
+	private PartyService partyService;
 
 	/**
-	 * 新增兼职
+	 * 新增活动
 	 * @return
 	 */
 	@ResponseBody
 	@RequestMapping("add")
-	public Res add(@RequestBody Jianzhi jianzhi) {
+	public Res add(@RequestBody Party party) {
 		Res responseJson = new Res();
 		try {
 			Date now = new Date();
-			jianzhi.setCreatetime(now);
-			jianzhi.setUpdatetime(now);
-			jianzhi = jianzhiService.addJianzhi(jianzhi);
-			if (jianzhi != null) {
-				responseJson.setMsg(Constant.ADD + Constant.JIANZHI + Constant.OK);
+			party.setCreatetime(now);
+			party.setUpdatetime(now);
+			party = partyService.addParty(party);
+			if (party != null) {
+				responseJson.setMsg(Constant.ADD + Constant.PARTY + Constant.OK);
 			}
 		} catch (Exception e) {
 			log.error("/add", e);
-			jianzhi = null;
+			party = null;
 		}
-		if (jianzhi == null) {
-			responseJson.setMsg(Constant.ADD + Constant.JIANZHI + Constant.ERROR);
+		if (party == null) {
+			responseJson.setMsg(Constant.ADD + Constant.PARTY + Constant.ERROR);
 			responseJson.setStatus(Constant.STATUS_ERROR_500);
 		}
-		responseJson.setJianzhi(jianzhi);
+		responseJson.setParty(party);
 		return responseJson;
 	}
 	
 	/**
-	 * 删除兼职
+	 * 删除活动
 	 * @return
 	 */
 	@ResponseBody
@@ -81,74 +65,73 @@ public class JianzhiController extends BaseController {
 	public Res delete(@PathVariable("id") int id) {
 		Res responseJson = new Res();
 		try {
-			jianzhiService.deleteById(id);
-			//删除级联关系
+			partyService.deleteById(id);
+			//数据库自动删除级联关系
 			
-			
-			responseJson.setMsg(Constant.DELETE + Constant.JIANZHI + Constant.OK);
+			responseJson.setMsg(Constant.DELETE + Constant.PARTY + Constant.OK);
 		} catch (Exception e) {
 			log.error("/delete", e);
-			responseJson.setMsg(Constant.DELETE + Constant.JIANZHI + Constant.ERROR);
+			responseJson.setMsg(Constant.DELETE + Constant.PARTY + Constant.ERROR);
 			responseJson.setStatus(Constant.STATUS_ERROR_500);
 		}
 		return responseJson;
 	}
 	
 	/**
-	 * 更新兼职
+	 * 更新活动
 	 * @return
 	 */
 	@ResponseBody
 	@RequestMapping("update")
-	public Res update(@RequestBody Jianzhi jianzhi) {
+	public Res update(@RequestBody Party party) {
 		Res responseJson = new Res();
 		try {
 			Date now = new Date();
-			jianzhi.setUpdatetime(now);
-			int r = jianzhiService.updateByIdSelective(jianzhi);
+			party.setUpdatetime(now);
+			int r = partyService.updateByIdSelective(party);
 			if (r > 0) {
-				jianzhi = jianzhiService.findById(jianzhi.getJianzhiid());
-				responseJson.setMsg(Constant.UPDATE + Constant.JIANZHI + Constant.OK);
+				party = partyService.findById(party.getPartyid());
+				responseJson.setMsg(Constant.UPDATE + Constant.PARTY + Constant.OK);
 			}
 		} catch (Exception e) {
 			log.error("/update", e);
-			jianzhi = null;
+			party = null;
 		}
-		if (jianzhi == null) {
-			responseJson.setMsg(Constant.UPDATE + Constant.JIANZHI + Constant.ERROR);
+		if (party == null) {
+			responseJson.setMsg(Constant.UPDATE + Constant.PARTY + Constant.ERROR);
 			responseJson.setStatus(Constant.STATUS_ERROR_500);
 		}
-		responseJson.setJianzhi(jianzhi);
+		responseJson.setParty(party);
 		return responseJson;
 	}
 	
 	/**
-	 * 获取兼职
+	 * 获取活动
 	 * @return
 	 */
 	@ResponseBody
 	@RequestMapping("get/{id:\\d+}")
 	public Res get(@PathVariable("id") int id) {
 		Res responseJson = new Res();
-		Jianzhi jianzhi = null;
+		Party party = null;
 		try {
-			jianzhi = jianzhiService.findById(id);
-			responseJson.setMsg(Constant.SELECT + Constant.JIANZHI + Constant.OK);
+			party = partyService.findById(id);
+			responseJson.setMsg(Constant.SELECT + Constant.PARTY + Constant.OK);
 		} catch (Exception e) {
 			log.error("/get", e);
-			jianzhi = null;
+			party = null;
 		}
-		if (jianzhi == null) {
-			responseJson.setMsg(Constant.SELECT + Constant.JIANZHI + Constant.ERROR);
+		if (party == null) {
+			responseJson.setMsg(Constant.SELECT + Constant.PARTY + Constant.ERROR);
 			responseJson.setStatus(Constant.STATUS_ERROR_500);
 		}
-		responseJson.setJianzhi(jianzhi);
+		responseJson.setParty(party);
 		return responseJson;
 	}
 	
 	/**
-	 * 报名申请兼职
-	 * @param jianzhiid
+	 * 报名申请活动
+	 * @param partyid
 	 * @param publishuserid
 	 * @param shengqinguserid
 	 * @param jianliid
@@ -156,25 +139,23 @@ public class JianzhiController extends BaseController {
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping("applyJianzhi")
-	public Res applyJianzhi(@RequestParam(value = "jianzhiid") Integer jianzhiid, 
+	@RequestMapping("applyParty")
+	public Res applyParty(@RequestParam(value = "partyid") Integer partyid, 
 			@RequestParam(value = "publishuserid") Integer publishuserid,
-			@RequestParam(value = "shengqinguserid") Integer shengqinguserid,
-			@RequestParam(value = "jianliid") Integer jianliid
+			@RequestParam(value = "shengqinguserid") Integer shengqinguserid
 			) {
 		Res responseJson = new Res();
-		JianzhiShengqing record = new JianzhiShengqing();
-		record.setJianzhiid(jianzhiid);
+		PartyShengqing record = new PartyShengqing();
+		record.setPartyid(partyid);
 		record.setPublishuserid(publishuserid);
 		record.setShengqinguserid(shengqinguserid);
-		record.setJianliid(jianliid);
 		record.setTime(new Date());
-		boolean flag = jianzhiService.applyJianzhi(record);
+		boolean flag = partyService.applyParty(record);
 		if (flag) {
 			// 申请成功
-			responseJson.setMsg(Constant.JIANZHISHENGQING + Constant.OK);
+			responseJson.setMsg(Constant.PARTYSHENGQING + Constant.OK);
 		} else {
-			responseJson.setMsg("您已经报名申请过此兼职");
+			responseJson.setMsg("您已经报名申请过此活动/活动已经报满");
 			responseJson.setStatus(Constant.STATUS_ERROR_500);
 		}
 		return responseJson;
@@ -200,19 +181,19 @@ public class JianzhiController extends BaseController {
 			if (pageSize != null) {
 				p.setPageSize(pageSize);
 			}
-			p = jianzhiService.search(keyword, p);
+			p = partyService.search(keyword, p);
 			responseJson.setList(p.getList());
-			responseJson.setMsg(Constant.SEARCH + Constant.JIANZHI + Constant.OK);
+			responseJson.setMsg(Constant.SEARCH + Constant.PARTY + Constant.OK);
 		} catch (Exception e) {
 			log.error("/search", e);
-			responseJson.setMsg(Constant.SEARCH + Constant.JIANZHI + Constant.ERROR);
+			responseJson.setMsg(Constant.SEARCH + Constant.PARTY + Constant.ERROR);
 			responseJson.setStatus(Constant.STATUS_ERROR_500);
 		}
 		return responseJson;
 	}
 	
 	/**
-	 * 查看我发布的兼职列表List
+	 * 查看我发布的活动列表List
 	 * @param userid
 	 * @param pageNo
 	 * @param pageSize
@@ -231,19 +212,19 @@ public class JianzhiController extends BaseController {
 			if (pageSize != null) {
 				p.setPageSize(pageSize);
 			}
-			p = jianzhiService.myList(userid, p);
+			p = partyService.myList(userid, p);
 			responseJson.setList(p.getList());
-			responseJson.setMsg(Constant.SEARCH + Constant.JIANZHI + Constant.OK);
+			responseJson.setMsg(Constant.SEARCH + Constant.PARTY + Constant.OK);
 		} catch (Exception e) {
 			log.error("/myList", e);
-			responseJson.setMsg(Constant.SEARCH + Constant.JIANZHI + Constant.ERROR);
+			responseJson.setMsg(Constant.SEARCH + Constant.PARTY + Constant.ERROR);
 			responseJson.setStatus(Constant.STATUS_ERROR_500);
 		}
 		return responseJson;
 	}
 	
 	/**
-	 * 查看我申请的兼职列表List
+	 * 查看我申请的活动列表List
 	 * @param userid
 	 * @param pageNo
 	 * @param pageSize
@@ -262,29 +243,30 @@ public class JianzhiController extends BaseController {
 			if (pageSize != null) {
 				p.setPageSize(pageSize);
 			}
-			p = jianzhiService.myApplyList(userid, p);
+			p = partyService.myApplyList(userid, p);
 			responseJson.setList(p.getList());
-			responseJson.setMsg(Constant.SEARCH + Constant.JIANZHI + Constant.OK);
+			responseJson.setMsg(Constant.SEARCH + Constant.PARTY + Constant.OK);
 		} catch (Exception e) {
 			log.error("/myApplyList", e);
-			responseJson.setMsg(Constant.SEARCH + Constant.JIANZHI + Constant.ERROR);
+			responseJson.setMsg(Constant.SEARCH + Constant.PARTY + Constant.ERROR);
 			responseJson.setStatus(Constant.STATUS_ERROR_500);
 		}
 		return responseJson;
 	}
 	
 	/**
-	 * 查看某个兼职的报名简历列表
-	 * @param userid
+	 * 查看某个活动的报名人列表
+	 * @param partyid
 	 * @param pageNo
 	 * @param pageSize
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping("applyJianLiList")
-	public Res applyJianLiList(@RequestParam(value = "jianzhiid") Integer jianzhiid, 
+	@RequestMapping("applyUserList")
+	public Res applyUserList(@RequestParam(value = "partyid") Integer partyid, 
 			@RequestParam(value = "pageNo") Integer pageNo,
-			@RequestParam(value = "pageSize", required = false) Integer pageSize
+			@RequestParam(value = "pageSize", required = false) Integer pageSize,
+			@RequestParam(value = "includePublishUser", required = false) Boolean includePublishUser
 			) {
 		Res responseJson = new Res();
 		try {
@@ -294,28 +276,12 @@ public class JianzhiController extends BaseController {
 				p.setPageSize(pageSize);
 			}
 			//
-//			JianzhiShengqingExample example1 = new JianzhiShengqingExample();
-//			example1.createCriteria().andJianzhiidEqualTo(jianzhiid);
-//			example1.setOrderByClause("time desc");
-//			List<JianzhiShengqing> idList = null;//jianzhiShengqingDao.selectByExample(example1);
-//			if (idList.size() > 0) {
-//				// 子表查询出所有的兼职申请 的 简历ids
-//				List<Integer> ids = new ArrayList<Integer>();
-//				for (JianzhiShengqing jianzhiShengqing : idList) {
-//					ids.add(jianzhiShengqing.getJianliid());
-//				}
-//				// 再查主表 简历表
-//				JianLiExample example = new JianLiExample();
-//				example.createCriteria().andJianliidIn(ids);
-//				p =  jianLiService.queryByExample(example, p);
-//			}
-			//
-			p = jianzhiService.applyJianLiList(jianzhiid, p);
+			p = partyService.applyUserList(partyid, includePublishUser, p);
 			responseJson.setList(p.getList());
-			responseJson.setMsg(Constant.SEARCH + Constant.JIANZHI + Constant.OK);
+			responseJson.setMsg(Constant.SEARCH + Constant.PARTY + Constant.OK);
 		} catch (Exception e) {
-			log.error("/applyJianLiList", e);
-			responseJson.setMsg(Constant.SEARCH + Constant.JIANZHI + Constant.ERROR);
+			log.error("/applyUserList", e);
+			responseJson.setMsg(Constant.SEARCH + Constant.PARTY + Constant.ERROR);
 			responseJson.setStatus(Constant.STATUS_ERROR_500);
 		}
 		return responseJson;

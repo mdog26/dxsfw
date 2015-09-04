@@ -13,6 +13,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,8 @@ import com.dxsfw.common.constants.GlobalValue;
 import com.dxsfw.common.util.RandomUtil;
 import com.dxsfw.jianzhi.model.Jianzhi;
 import com.dxsfw.jianzhi.service.JianzhiService;
+import com.dxsfw.party.model.Party;
+import com.dxsfw.party.service.PartyService;
 import com.dxsfw.pub.model.JianLi;
 import com.dxsfw.pub.model.Picture;
 import com.dxsfw.pub.model.User;
@@ -51,6 +54,8 @@ public class PubController {
 	private JianLiService jianLiService;
 	@Autowired
 	private JianzhiService jianzhiService;
+	@Autowired
+	private PartyService partyService;
 
 	// ---------------------------登录注册---------------------------start
 	/**
@@ -516,9 +521,8 @@ public class PubController {
 	
 	// ---------------------------共用接口---------------------------start
 	/**
-	 * 上传或更新图片
-	 * 如果说需要1对多的图片接口，可添加返回该1对多pictureid list,然后一个一个下载
-	 * 增加添加图片接口
+	 * 上传业务模块单一图片
+	 * 更新图片指定图片
 	 * @return
 	 */
 	@ResponseBody
@@ -574,6 +578,81 @@ public class PubController {
 				responseJson.setStatus(Constant.STATUS_ERROR_500);
 			}
 		} else {
+			responseJson.setMsg(modlename + "模块不支持单图片上传,请用uploadMore方式" );
+			responseJson.setStatus(Constant.STATUS_ERROR_500);
+		}
+		return responseJson;
+	}
+	
+	/**
+	 * 上传1对多的图片接口，可添加返回该1对多pictureid list,然后一个一个下载
+	 * 增加添加图片接口
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("uploadMore/{modlename}/{pk:\\d+}")
+	public Res uploadMorePubPicture(@RequestParam(value = "file") MultipartFile file,
+			@PathVariable("modlename") String modlename, 
+			@PathVariable("pk") int pk,
+			@RequestParam(value = "type") String type,
+			@RequestParam(value = "token") String token) {
+		Res responseJson = new Res();
+		// 验证模块是否支持
+		if (GlobalValue.MODLE_PARTY.equals(modlename)) {
+			Integer pictureid = null;
+			try {
+				//属于其他业务连带动作
+				Party party = new Party();
+				party.setPartyid(pk);
+				party = partyService.findById(pk);
+				if (party != null) {
+					// #先保存表数据获取picture id
+					Picture p = new Picture();
+					p.setTablename("t_" + modlename);
+					p.setPk(pk);
+					p = pubService.addPicture(p);
+					pictureid = p.getPictureid();
+							
+					//设置 path
+					String fileName =  pk + "_" + pictureid + "." + type;;
+					//#更新picture表
+					p.setPath(fileName);
+					pubService.addorUpdatePicture(p);
+					//#保存图片到硬盘
+					// 文件夹绝对路径
+					String picturePath = GlobalValue.PATH_PICTURE + modlename + File.separator;
+					File targetFile = new File(picturePath);
+					if (!targetFile.exists()) {
+						targetFile.mkdirs();
+					}
+					// 保存
+					targetFile = new File(picturePath + fileName);
+					file.transferTo(targetFile);
+					
+					//#更新相应业务
+					String pcitures = party.getPictures();
+					if (StringUtils.isEmpty(pcitures)) {
+						pcitures = String.valueOf(pictureid);
+					} else {
+						pcitures += "," + pictureid;
+					}
+					party.setUpdatetime(new Date());
+					party.setPictures(pcitures);
+					partyService.updateByIdSelective(party);
+				}
+				
+				responseJson.setMsg(Constant.ADD + Constant.PICTURE + Constant.OK);
+			} catch (Exception e) {
+				log.error("/uploadMore", e);
+				if (pictureid != null) {
+					Picture p = new Picture();
+					p.setPictureid(pictureid);
+					pubService.deletePicture(p);
+				}
+				responseJson.setMsg(Constant.ADD + Constant.PICTURE + Constant.ERROR);
+				responseJson.setStatus(Constant.STATUS_ERROR_500);
+			}
+		} else {
 			responseJson.setMsg(modlename + "模块不支持图片上传" );
 			responseJson.setStatus(Constant.STATUS_ERROR_500);
 		}
@@ -592,26 +671,31 @@ public class PubController {
 			HttpServletResponse response)
 			throws Exception {
 		// 验证模块是否支持
-		if (GlobalValue.TABLE_SET.contains(modlename)) {
-			Picture p = null;
-			if(pictureid == null){
+		Picture p = null;
+		if (pictureid == null) {
+			// 单一模块图片逻辑
+			if (GlobalValue.TABLE_SET.contains(modlename)) {
 				String tablename = "t_" + modlename;
 				p = new Picture();
 				p.setTablename(tablename);
 				p.setPk(pk);
-				List<Picture>list = pubService.getPicture(p);
-				if(list.size() > 0){
+				List<Picture> list = pubService.getPicture(p);
+				if (list.size() > 0) {
 					p = list.get(0);
 				}
 			} else {
-				p = pubService.getPicture(pictureid);
+				log.error(modlename + "模块不支持单图片下载");
+				throw new Exception(modlename + "模块不支持单图片下载");
 			}
-			// 文件名
-			String fileName = p.getPath();
-			// 文件夹绝对路径
-			String downLoadPath = GlobalValue.PATH_PICTURE + modlename + File.separator + fileName;
-			this.downloadFile(response, fileName, downLoadPath);
+		} else {
+			p = pubService.getPicture(pictureid);
 		}
+		// 文件名
+		String fileName = p.getPath();
+		// 文件夹绝对路径
+		String downLoadPath = GlobalValue.PATH_PICTURE + modlename + File.separator + fileName;
+		//System.out.println(downLoadPath);
+		this.downloadFile(response, fileName, downLoadPath);
 		return null;
 	}
 	// ---------------------------共用接口---------------------------end

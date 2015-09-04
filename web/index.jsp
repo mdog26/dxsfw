@@ -49,7 +49,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 //请求数据,登录账号 +密码  
 var data = {  
      email: 'anme',  
-     useid: 1
+     userid: 1
 }  
   
 $.ajax({  

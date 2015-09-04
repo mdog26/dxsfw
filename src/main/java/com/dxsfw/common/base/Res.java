@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.dxsfw.common.constants.Constant;
 import com.dxsfw.jianzhi.model.Jianzhi;
+import com.dxsfw.party.model.Party;
 import com.dxsfw.pub.model.JianLi;
 import com.dxsfw.pub.model.User;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -37,6 +38,12 @@ public class Res implements Serializable {
 	
 	@JsonInclude(Include.NON_NULL)
 	private List<Jianzhi> jianzhiList;
+	
+	@JsonInclude(Include.NON_NULL)
+	private Party party;
+	
+	@JsonInclude(Include.NON_NULL)
+	private List<Party> partyList;
 
 	public Res() {}
 	
@@ -115,5 +122,21 @@ public class Res implements Serializable {
 
 	public void setList(List<?> list) {
 		this.list = list;
+	}
+
+	public Party getParty() {
+		return party;
+	}
+
+	public void setParty(Party party) {
+		this.party = party;
+	}
+
+	public List<Party> getPartyList() {
+		return partyList;
+	}
+
+	public void setPartyList(List<Party> partyList) {
+		this.partyList = partyList;
 	}
 }

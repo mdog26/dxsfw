@@ -24,6 +24,7 @@ public class GlobalValue {
 	public static LinkedHashMap<String, Long> MOBILE_CHECK_MAP = new LinkedHashMap<String, Long>();
 	
 	/**
+	 * 单图片业务模块
 	 * 模块和表映射
 	 */
 	public static Set<String> TABLE_SET = new HashSet<String>();
@@ -48,6 +49,5 @@ public class GlobalValue {
 
 	static {
 		TABLE_SET.add(MODLE_JIANZHI);
-		TABLE_SET.add(MODLE_PARTY);
 	}
 }

@@ -26,14 +26,14 @@ public class PubServiceImp implements PubService {
 	@Autowired
     private PictureDao pictureDao;
 	
-	/* 添加或更新图片
+	/* 添加或更新图片(业务唯一图片)
 	 */
 	@Override
 	public void addorUpdatePicture(Picture p) {
 		if (p.getPictureid() == null) {
-			// 如果没有唯一id
+			// 如果没有id, 表明单一业务的图片关系
 			PictureExample example = new PictureExample();
-			example.createCriteria().andTablenameEqualTo(p.getTablename()).andPathEqualTo(p.getPath());
+			example.createCriteria().andTablenameEqualTo(p.getTablename()).andPkEqualTo(p.getPk());
 			List<Picture> list = pictureDao.selectByExample(example);
 			if (list.size() > 0) {
 				p.setPictureid(list.get(0).getPictureid());
@@ -45,6 +45,23 @@ public class PubServiceImp implements PubService {
 			// 如果有唯一id, 证明肯定有数据
 			pictureDao.updateByPrimaryKeySelective(p);
 		}
+	}
+	
+	/* 添加新图片
+	 */
+	@Override
+	public Picture addPicture(Picture p) {
+		int r = pictureDao.insertSelective(p);
+		if (r > 0) {
+			PictureExample example = new PictureExample();
+			example.createCriteria().andTablenameEqualTo(p.getTablename()).andPkEqualTo(p.getPk());
+			example.setOrderByClause("pictureid desc");
+			List<Picture> list = pictureDao.selectByExample(example);
+			if (list.size() > 0) {
+				return list.get(0);
+			}
+		}
+		return null;
 	}
 
 	/* 删除图片

@@ -7,17 +7,24 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.dxsfw.common.base.BaseServiceImpl;
+import com.dxsfw.common.page.Pagination;
 import com.dxsfw.pub.dao.UserDao;
 import com.dxsfw.pub.model.User;
 import com.dxsfw.pub.model.UserExample;
 import com.dxsfw.pub.service.UserService;
 
 @Repository("userService")
-public class UserServiceImp implements UserService {
+public class UserServiceImp extends BaseServiceImpl<User, Integer> implements UserService {
 	private static Logger log = LoggerFactory.getLogger(UserServiceImp.class);
 	
 	@Autowired
     private UserDao userDao;
+	
+	@Override
+	public UserDao getDao() {
+		return userDao;
+	}
 	
 	@Override
 	public User reg(String mobile, String password) {
@@ -64,4 +71,8 @@ public class UserServiceImp implements UserService {
 		return this.getUser(userid);
 	}
 
+	@Override
+	public Pagination searchUserList(UserExample example, Pagination p) {
+		return this.queryByExample(example, p);
+	}
 }

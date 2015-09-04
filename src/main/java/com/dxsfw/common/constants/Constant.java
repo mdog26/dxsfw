@@ -55,4 +55,6 @@ public class Constant {
 	public final static String JIANLI_FUJIAN = "简历附件";
 	public final static String JIANZHI = "兼职";
 	public final static String JIANZHISHENGQING = "兼职申请";
+	public final static String PARTY = "活动";
+	public final static String PARTYSHENGQING = "活动申请";
 }
