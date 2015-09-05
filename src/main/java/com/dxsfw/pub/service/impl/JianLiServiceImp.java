@@ -3,6 +3,7 @@
  */
 package com.dxsfw.pub.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -38,6 +39,8 @@ public class JianLiServiceImp extends BaseServiceImpl<JianLi, Integer> implement
 	 */
 	@Override
 	public JianLi addJianLi(JianLi record) {
+		record.setCreatetime(new Date());
+		record.setUpdatetime(new Date());
 		int r = jianLiDao.insertSelective(record);
 		if (r > 0) {
 			JianLiExample example = new JianLiExample();
@@ -66,6 +69,7 @@ public class JianLiServiceImp extends BaseServiceImpl<JianLi, Integer> implement
 	 */
 	@Override
 	public JianLi updateJianLi(JianLi jl) {
+		jl.setUpdatetime(new Date());
 		jianLiDao.updateByPrimaryKeySelective(jl);
 		return this.getJianLi(jl.getJianliid());
 	}

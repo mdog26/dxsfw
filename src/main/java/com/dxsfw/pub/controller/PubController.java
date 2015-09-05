@@ -27,8 +27,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.dxsfw.common.base.Res;
+import com.dxsfw.common.base.jianli.ResJianLi;
 import com.dxsfw.common.constants.Constant;
 import com.dxsfw.common.constants.GlobalValue;
+import com.dxsfw.common.util.JsonUtil;
 import com.dxsfw.common.util.RandomUtil;
 import com.dxsfw.jianzhi.model.Jianzhi;
 import com.dxsfw.jianzhi.service.JianzhiService;
@@ -288,12 +290,15 @@ public class PubController {
 	/**
 	 * 新增简历
 	 * @return
+	 * @throws Exception 
 	 */
 	@ResponseBody
 	@RequestMapping("addJianLi")
-	public Res addJianLi(@RequestBody JianLi jianli) {
+	public Res addJianLi(@RequestBody ResJianLi res) throws Exception {
 		Res responseJson = new Res();
+		JianLi jianli = null;
 		try {
+			jianli = JsonUtil.res2Jianli(res);
 			jianli = jianLiService.addJianLi(jianli);
 			if (jianli != null) {
 				responseJson.setMsg(Constant.MSG_OK_JIANLI_ADD);
@@ -306,7 +311,7 @@ public class PubController {
 			responseJson.setMsg(Constant.MSG_ERROR_JIANLI_ADD);
 			responseJson.setStatus(Constant.STATUS_ERROR_500);
 		}
-		responseJson.setJianli(jianli);
+		responseJson.setJianli(JsonUtil.jianli2Res(jianli));
 		return responseJson;
 	}
 	
@@ -321,7 +326,7 @@ public class PubController {
 		Res responseJson = new Res();
 		try {
 			List<JianLi> jianliList = jianLiService.getJianLiByUser(userid);
-			responseJson.setJianliList(jianliList);
+			responseJson.setJianliList(JsonUtil.jianli2Res(jianliList));
 			responseJson.setMsg(Constant.MSG_OK_JIANLI_LIST);
 		} catch (Exception e) {
 			log.error("/getJianLiByUser", e);
@@ -342,7 +347,7 @@ public class PubController {
 		Res responseJson = new Res();
 		try {
 			JianLi jianli = jianLiService.getJianLi(jianliid);
-			responseJson.setJianli(jianli);
+			responseJson.setJianli(JsonUtil.jianli2Res(jianli));
 			responseJson.setMsg(Constant.MSG_OK_JIANLI_GET);
 		} catch (Exception e) {
 			log.error("/getJianLiByUser", e);
@@ -377,9 +382,11 @@ public class PubController {
 	 */
 	@ResponseBody
 	@RequestMapping("updateJianLi")
-	public Res updateJianLi(@RequestBody JianLi jianli) {
+	public Res updateJianLi(@RequestBody ResJianLi res) throws Exception {
 		Res responseJson = new Res();
+		JianLi jianli = null;
 		try {
+			jianli = JsonUtil.res2Jianli(res);
 			jianli = jianLiService.updateJianLi(jianli);
 			if (jianli != null) {
 				responseJson.setMsg(Constant.UPDATE + Constant.JIANLI + Constant.OK);
@@ -392,7 +399,7 @@ public class PubController {
 			responseJson.setMsg(Constant.UPDATE + Constant.JIANLI + Constant.ERROR);
 			responseJson.setStatus(Constant.STATUS_ERROR_500);
 		}
-		responseJson.setJianli(jianli);
+		responseJson.setJianli(JsonUtil.jianli2Res(jianli));
 		return responseJson;
 	}
 	
@@ -515,6 +522,43 @@ public class PubController {
 		
 		this.downloadFile(response, fileName, downLoadPath);
 		return null;
+	}
+	
+	/**
+	 * 获取用户之前简历的基本信息
+	 * @param userid
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("getJianLiPublicInfo")
+	public Res getJianLiPublicInfo(@RequestParam(value = "userid") int userid) {
+		Res responseJson = new Res();
+		try {
+			List<JianLi> list = jianLiService.getJianLiByUser(userid);
+			if (list.size() > 0) {
+				JianLi jianli = list.get(0);
+				ResJianLi res = new ResJianLi();
+				//公共信息
+				res.setName(jianli.getName());
+				res.setSex(jianli.getSex());
+				res.setBirthdate(jianli.getBirthdate());
+				res.setMobile(jianli.getMobile());
+				res.setEmail(jianli.getEmail());
+				res.setCard(jianli.getCard());
+				res.setAddress(jianli.getAddress());
+				res.setHeight(jianli.getHeight());
+				
+				responseJson.setJianli(res);
+				responseJson.setMsg(Constant.MSG_OK_JIANLI_GET);
+			} else {
+				responseJson.setMsg(Constant.MSG_ERROR_JIANLI_LIST);
+			}
+		} catch (Exception e) {
+			log.error("/getJianLiByUser", e);
+			responseJson.setMsg(Constant.MSG_ERROR_JIANLI_GET);
+			responseJson.setStatus(Constant.STATUS_ERROR_500);
+		}
+		return responseJson;
 	}
 	// ---------------------------简历---------------------------end
 	

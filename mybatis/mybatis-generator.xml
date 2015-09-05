@@ -25,24 +25,24 @@ CreateDate: 2013-7-10
 
 
 
-        <javaModelGenerator targetPackage="com.dxsfw.party.model"
+        <javaModelGenerator targetPackage="com.dxsfw.pub.model"
                             targetProject="../src/main/java">
             <property name="enableSubPackages" value="true" />
             <property name="trimStrings" value="true" />
         </javaModelGenerator>
 
 
-        <sqlMapGenerator targetPackage="mappers.party"
+        <sqlMapGenerator targetPackage="mappers.pub"
                          targetProject="../src/main/resources">
             <property name="enableSubPackages" value="true" />
         </sqlMapGenerator>
 
         <javaClientGenerator type="XMLMAPPER"
-                             targetPackage="com.dxsfw.party.dao"
+                             targetPackage="com.dxsfw.pub.dao"
                              targetProject="../src/main/java">
             <property name="enableSubPackages" value="true" />
         </javaClientGenerator>
         
-        <table schema="" tableName="t_party"  domainObjectName="Party"/>
+        <table schema="" tableName="t_jianli"  domainObjectName="JianLi"/>
 	</context>
 </generatorConfiguration>

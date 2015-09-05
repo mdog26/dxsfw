@@ -11,12 +11,19 @@
     <result column="mobile" property="mobile" jdbcType="VARCHAR" />
     <result column="email" property="email" jdbcType="VARCHAR" />
     <result column="card" property="card" jdbcType="VARCHAR" />
-    <result column="school" property="school" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="height" property="height" jdbcType="VARCHAR" />
     <result column="education" property="education" jdbcType="VARCHAR" />
+    <result column="train" property="train" jdbcType="VARCHAR" />
+    <result column="language" property="language" jdbcType="VARCHAR" />
+    <result column="zhengshu" property="zhengshu" jdbcType="VARCHAR" />
     <result column="experience" property="experience" jdbcType="VARCHAR" />
     <result column="evaluation" property="evaluation" jdbcType="VARCHAR" />
     <result column="picture" property="picture" jdbcType="VARCHAR" />
     <result column="fujian" property="fujian" jdbcType="VARCHAR" />
+    <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="updatetime" property="updatetime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -77,8 +84,9 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    jianliid, userid, title, name, sex, birthdate, mobile, email, card, school, education, 
-    experience, evaluation, picture, fujian
+    jianliid, userid, title, name, sex, birthdate, mobile, email, card, address, height, 
+    education, train, language, zhengshu, experience, evaluation, picture, fujian, createtime, 
+    updatetime, status
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.dxsfw.pub.model.JianLiExample" >
     select
@@ -114,15 +122,19 @@
     insert into t_jianli (jianliid, userid, title, 
       name, sex, birthdate, 
       mobile, email, card, 
-      school, education, experience, 
-      evaluation, picture, fujian
-      )
+      address, height, education, 
+      train, language, zhengshu, 
+      experience, evaluation, picture, 
+      fujian, createtime, updatetime, 
+      status)
     values (#{jianliid,jdbcType=INTEGER}, #{userid,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, 
       #{name,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR}, #{birthdate,jdbcType=DATE}, 
       #{mobile,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{card,jdbcType=VARCHAR}, 
-      #{school,jdbcType=VARCHAR}, #{education,jdbcType=VARCHAR}, #{experience,jdbcType=VARCHAR}, 
-      #{evaluation,jdbcType=VARCHAR}, #{picture,jdbcType=VARCHAR}, #{fujian,jdbcType=VARCHAR}
-      )
+      #{address,jdbcType=VARCHAR}, #{height,jdbcType=VARCHAR}, #{education,jdbcType=VARCHAR}, 
+      #{train,jdbcType=VARCHAR}, #{language,jdbcType=VARCHAR}, #{zhengshu,jdbcType=VARCHAR}, 
+      #{experience,jdbcType=VARCHAR}, #{evaluation,jdbcType=VARCHAR}, #{picture,jdbcType=VARCHAR}, 
+      #{fujian,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, #{updatetime,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.dxsfw.pub.model.JianLi" >
     insert into t_jianli
@@ -154,11 +166,23 @@
       <if test="card != null" >
         card,
       </if>
-      <if test="school != null" >
-        school,
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="height != null" >
+        height,
       </if>
       <if test="education != null" >
         education,
+      </if>
+      <if test="train != null" >
+        train,
+      </if>
+      <if test="language != null" >
+        language,
+      </if>
+      <if test="zhengshu != null" >
+        zhengshu,
       </if>
       <if test="experience != null" >
         experience,
@@ -171,6 +195,15 @@
       </if>
       <if test="fujian != null" >
         fujian,
+      </if>
+      <if test="createtime != null" >
+        createtime,
+      </if>
+      <if test="updatetime != null" >
+        updatetime,
+      </if>
+      <if test="status != null" >
+        status,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -201,11 +234,23 @@
       <if test="card != null" >
         #{card,jdbcType=VARCHAR},
       </if>
-      <if test="school != null" >
-        #{school,jdbcType=VARCHAR},
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="height != null" >
+        #{height,jdbcType=VARCHAR},
       </if>
       <if test="education != null" >
         #{education,jdbcType=VARCHAR},
+      </if>
+      <if test="train != null" >
+        #{train,jdbcType=VARCHAR},
+      </if>
+      <if test="language != null" >
+        #{language,jdbcType=VARCHAR},
+      </if>
+      <if test="zhengshu != null" >
+        #{zhengshu,jdbcType=VARCHAR},
       </if>
       <if test="experience != null" >
         #{experience,jdbcType=VARCHAR},
@@ -218,6 +263,15 @@
       </if>
       <if test="fujian != null" >
         #{fujian,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -257,11 +311,23 @@
       <if test="record.card != null" >
         card = #{record.card,jdbcType=VARCHAR},
       </if>
-      <if test="record.school != null" >
-        school = #{record.school,jdbcType=VARCHAR},
+      <if test="record.address != null" >
+        address = #{record.address,jdbcType=VARCHAR},
+      </if>
+      <if test="record.height != null" >
+        height = #{record.height,jdbcType=VARCHAR},
       </if>
       <if test="record.education != null" >
         education = #{record.education,jdbcType=VARCHAR},
+      </if>
+      <if test="record.train != null" >
+        train = #{record.train,jdbcType=VARCHAR},
+      </if>
+      <if test="record.language != null" >
+        language = #{record.language,jdbcType=VARCHAR},
+      </if>
+      <if test="record.zhengshu != null" >
+        zhengshu = #{record.zhengshu,jdbcType=VARCHAR},
       </if>
       <if test="record.experience != null" >
         experience = #{record.experience,jdbcType=VARCHAR},
@@ -274,6 +340,15 @@
       </if>
       <if test="record.fujian != null" >
         fujian = #{record.fujian,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createtime != null" >
+        createtime = #{record.createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updatetime != null" >
+        updatetime = #{record.updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.status != null" >
+        status = #{record.status,jdbcType=VARCHAR},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -291,12 +366,19 @@
       mobile = #{record.mobile,jdbcType=VARCHAR},
       email = #{record.email,jdbcType=VARCHAR},
       card = #{record.card,jdbcType=VARCHAR},
-      school = #{record.school,jdbcType=VARCHAR},
+      address = #{record.address,jdbcType=VARCHAR},
+      height = #{record.height,jdbcType=VARCHAR},
       education = #{record.education,jdbcType=VARCHAR},
+      train = #{record.train,jdbcType=VARCHAR},
+      language = #{record.language,jdbcType=VARCHAR},
+      zhengshu = #{record.zhengshu,jdbcType=VARCHAR},
       experience = #{record.experience,jdbcType=VARCHAR},
       evaluation = #{record.evaluation,jdbcType=VARCHAR},
       picture = #{record.picture,jdbcType=VARCHAR},
-      fujian = #{record.fujian,jdbcType=VARCHAR}
+      fujian = #{record.fujian,jdbcType=VARCHAR},
+      createtime = #{record.createtime,jdbcType=TIMESTAMP},
+      updatetime = #{record.updatetime,jdbcType=TIMESTAMP},
+      status = #{record.status,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -328,11 +410,23 @@
       <if test="card != null" >
         card = #{card,jdbcType=VARCHAR},
       </if>
-      <if test="school != null" >
-        school = #{school,jdbcType=VARCHAR},
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="height != null" >
+        height = #{height,jdbcType=VARCHAR},
       </if>
       <if test="education != null" >
         education = #{education,jdbcType=VARCHAR},
+      </if>
+      <if test="train != null" >
+        train = #{train,jdbcType=VARCHAR},
+      </if>
+      <if test="language != null" >
+        language = #{language,jdbcType=VARCHAR},
+      </if>
+      <if test="zhengshu != null" >
+        zhengshu = #{zhengshu,jdbcType=VARCHAR},
       </if>
       <if test="experience != null" >
         experience = #{experience,jdbcType=VARCHAR},
@@ -345,6 +439,15 @@
       </if>
       <if test="fujian != null" >
         fujian = #{fujian,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        createtime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        updatetime = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
       </if>
     </set>
     where jianliid = #{jianliid,jdbcType=INTEGER}
@@ -359,12 +462,19 @@
       mobile = #{mobile,jdbcType=VARCHAR},
       email = #{email,jdbcType=VARCHAR},
       card = #{card,jdbcType=VARCHAR},
-      school = #{school,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      height = #{height,jdbcType=VARCHAR},
       education = #{education,jdbcType=VARCHAR},
+      train = #{train,jdbcType=VARCHAR},
+      language = #{language,jdbcType=VARCHAR},
+      zhengshu = #{zhengshu,jdbcType=VARCHAR},
       experience = #{experience,jdbcType=VARCHAR},
       evaluation = #{evaluation,jdbcType=VARCHAR},
       picture = #{picture,jdbcType=VARCHAR},
-      fujian = #{fujian,jdbcType=VARCHAR}
+      fujian = #{fujian,jdbcType=VARCHAR},
+      createtime = #{createtime,jdbcType=TIMESTAMP},
+      updatetime = #{updatetime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=VARCHAR}
     where jianliid = #{jianliid,jdbcType=INTEGER}
   </update>
 </mapper>

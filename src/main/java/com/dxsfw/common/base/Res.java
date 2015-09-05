@@ -3,6 +3,7 @@ package com.dxsfw.common.base;
 import java.io.Serializable;
 import java.util.List;
 
+import com.dxsfw.common.base.jianli.ResJianLi;
 import com.dxsfw.common.constants.Constant;
 import com.dxsfw.jianzhi.model.Jianzhi;
 import com.dxsfw.party.model.Party;
@@ -28,10 +29,10 @@ public class Res implements Serializable {
 	private User user;
 
 	@JsonInclude(Include.NON_NULL)
-	private JianLi jianli;
+	private ResJianLi jianli;
 	
 	@JsonInclude(Include.NON_NULL)
-	private List<JianLi> jianliList;
+	private List<ResJianLi> jianliList;
 	
 	@JsonInclude(Include.NON_NULL)
 	private Jianzhi jianzhi;
@@ -84,19 +85,19 @@ public class Res implements Serializable {
 		this.user = user;
 	}
 
-	public JianLi getJianli() {
+	public ResJianLi getJianli() {
 		return jianli;
 	}
 
-	public void setJianli(JianLi jianli) {
+	public void setJianli(ResJianLi jianli) {
 		this.jianli = jianli;
 	}
 
-	public List<JianLi> getJianliList() {
+	public List<ResJianLi> getJianliList() {
 		return jianliList;
 	}
 
-	public void setJianliList(List<JianLi> jianliList) {
+	public void setJianliList(List<ResJianLi> jianliList) {
 		this.jianliList = jianliList;
 	}
 
