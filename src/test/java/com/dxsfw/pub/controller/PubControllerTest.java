@@ -91,7 +91,7 @@ public class PubControllerTest {
     
     @Test
     public void testgetJianLiByJianliid() throws Exception {
-    	MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/pub/getJianLiByJianliid?jianliid=8"))
+    	MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/pub/getJianLiByJianliid?jianliid=2"))
     			.andDo(MockMvcResultHandlers.print())
     			.andReturn();
     }

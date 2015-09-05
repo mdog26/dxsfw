@@ -1,7 +1,7 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : 127.0.0.1
+Source Server         : localhost
 Source Server Version : 50515
 Source Host           : localhost:3306
 Source Database       : dxsfw
@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50515
 File Encoding         : 65001
 
-Date: 2015-09-04 20:53:35
+Date: 2015-09-05 20:41:58
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -29,23 +29,31 @@ CREATE TABLE `t_jianli` (
   `mobile` varchar(50) DEFAULT NULL COMMENT '手机号',
   `email` varchar(200) DEFAULT NULL COMMENT '邮箱',
   `card` varchar(50) DEFAULT NULL COMMENT '身份证',
-  `school` varchar(200) DEFAULT NULL COMMENT '学校',
-  `education` varchar(4000) DEFAULT NULL COMMENT '教育经历',
-  `experience` varchar(8000) DEFAULT NULL COMMENT '个人优势、经历',
-  `evaluation` varchar(2000) DEFAULT NULL COMMENT '自我评价',
+  `address` varchar(200) DEFAULT NULL COMMENT '住址',
+  `height` varchar(100) DEFAULT NULL COMMENT '身高',
+  `education` varchar(2000) DEFAULT NULL COMMENT '教育经历',
+  `train` varchar(4000) DEFAULT NULL COMMENT '培训经历',
+  `language` varchar(1000) DEFAULT NULL COMMENT '语言能力',
+  `zhengshu` varchar(2000) DEFAULT NULL COMMENT '证书/奖励',
+  `experience` varchar(4000) DEFAULT NULL COMMENT '工作经验',
+  `evaluation` varchar(1000) DEFAULT NULL COMMENT '自我评价',
   `picture` varchar(300) DEFAULT NULL COMMENT '简历头像',
   `fujian` varchar(300) DEFAULT NULL COMMENT '简历附件',
+  `createtime` timestamp NULL DEFAULT NULL,
+  `updatetime` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `status` varchar(2) DEFAULT NULL,
   PRIMARY KEY (`jianliid`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of t_jianli
 -- ----------------------------
-INSERT INTO `t_jianli` VALUES ('1', '1', 'title', 'name', null, '2015-08-04', null, null, null, null, null, null, null, '1\\1.ico', null);
-INSERT INTO `t_jianli` VALUES ('2', '1', '简历标题1', 'name', null, '2015-09-01', 'name', null, null, 'xx大学', null, null, null, null, '2\\2.xls');
-INSERT INTO `t_jianli` VALUES ('4', '1', '简历标题', 'name', null, '2015-08-04', null, null, null, null, null, null, null, null, null);
-INSERT INTO `t_jianli` VALUES ('5', '1', '简历标题', '测试中文', null, '2015-08-04', null, null, null, null, null, null, null, null, null);
-INSERT INTO `t_jianli` VALUES ('6', '1', '简历标题', '测试中文', null, '2015-08-04', null, null, null, null, null, null, null, null, null);
+INSERT INTO `t_jianli` VALUES ('1', '1', 'title', 'name', null, '2015-08-04', null, null, null, null, null, null, null, null, null, null, null, '1\\1.ico', null, null, null, null);
+INSERT INTO `t_jianli` VALUES ('4', '1', '简历标题', 'name', null, '2015-08-04', null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+INSERT INTO `t_jianli` VALUES ('5', '4', '1我的简历标题2', '姓名', '女', '2015-09-01', '13607447461', 'sfa@163.com', '420202199012120000', '长沙市望城坡1-1301', '身高', '[{\"time\":\"2003/9-2006/6\",\"school\":\"湖南大学\",\"zhuanye\":\"会计学\",\"xueli\":\"本科\",\"miaoshu\":\"预留字段\"},{\"time\":\"2007/9-2010/6\",\"school\":\"北京大学\",\"zhuanye\":\"会计学\",\"xueli\":\"研究生\"},{\"time\":\"2010/9-2013/6\",\"school\":\"哈弗大学\",\"zhuanye\":\"财经管理\",\"xueli\":\"博士生\"}]', '[{\"time\":\"2013/9-2013/12\",\"company\":\"新东方厨师学院\",\"kecheng\":\"厨师高级班\",\"address\":\"长沙\",\"zhengshu\":\"国家级厨师专业三级\",\"miaoshu\":\"预留字段\"},{\"time\":\"2013/9-2013/12\",\"company\":\"某某飞行学校\",\"kecheng\":\"飞行驾驶员课程\",\"address\":\"上海\",\"zhengshu\":\"飞行员资格证书\"}]', '[{\"zhonglei\":\"英语\",\"dengji\":\"专业八级\",\"chengdu\":\"精通\",\"duxie\":\"一般\",\"tingshuo\":\"良好\"},{\"zhonglei\":\"日语\",\"dengji\":\"国家一级\",\"chengdu\":\"熟练\",\"duxie\":\"一般\",\"tingshuo\":\"良好\"},{\"zhonglei\":\"法语\",\"dengji\":\"一级\",\"chengdu\":\"熟练\",\"duxie\":\"一般\",\"tingshuo\":\"良好\"}]', '[{\"time\":\"2013/9\",\"name\":\"校级辩论赛一等奖\",\"dengji\":\"高级0\"},{\"time\":\"2003/9\",\"name\":\"1一等奖\",\"dengji\":\"高级1\"},{\"time\":\"2004/9\",\"name\":\"2一等奖\",\"dengji\":\"高级2\"},{\"time\":\"2014/9\",\"name\":\"3一等奖\",\"dengji\":\"高级3\"},{\"time\":\"2015/9\",\"name\":\"4一等奖\",\"dengji\":\"高级4\"},{\"time\":\"2013/10\",\"name\":\"5一等奖\",\"dengji\":\"高级5\"}]', '[{\"time\":\"2013/9-2015/12\",\"company\":\"新东方英语学校\",\"zhiwei\":\"英语口语高级讲师\",\"address\":\"北京\",\"zhengshu\":\"预留字段\",\"miaoshu\":\"预留字段1\"}]', '自我评价啊,随便填', '5/1.ico', '2/2.xls', '2015-09-05 18:18:47', '2015-09-05 20:10:06', 'N');
+INSERT INTO `t_jianli` VALUES ('6', '1', '简历标题', '测试中文', null, '2015-08-04', null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+INSERT INTO `t_jianli` VALUES ('7', '4', '我的简历标题2', '姓名', '女', '2015-09-01', '13607447461', 'sfa@163.com', '420202199012120000', '长沙市望城坡1-1301', '身高', '[{\"time\":\"2003/9-2006/6\",\"school\":\"湖南大学\",\"zhuanye\":\"会计学\",\"xueli\":\"本科\",\"miaoshu\":\"预留字段\"},{\"time\":\"2007/9-2010/6\",\"school\":\"北京大学\",\"zhuanye\":\"会计学\",\"xueli\":\"研究生\"},{\"time\":\"2010/9-2013/6\",\"school\":\"哈弗大学\",\"zhuanye\":\"财经管理\",\"xueli\":\"博士生\"}]', '[{\"time\":\"2013/9-2013/12\",\"company\":\"新东方厨师学院\",\"kecheng\":\"厨师高级班\",\"address\":\"长沙\",\"zhengshu\":\"国家级厨师专业三级\",\"miaoshu\":\"预留字段\"},{\"time\":\"2013/9-2013/12\",\"company\":\"某某飞行学校\",\"kecheng\":\"飞行驾驶员课程\",\"address\":\"上海\",\"zhengshu\":\"飞行员资格证书\"}]', '[{\"zhonglei\":\"英语\",\"dengji\":\"专业八级\",\"chengdu\":\"精通\",\"duxie\":\"一般\",\"tingshuo\":\"良好\"},{\"zhonglei\":\"日语\",\"dengji\":\"国家一级\",\"chengdu\":\"熟练\",\"duxie\":\"一般\",\"tingshuo\":\"良好\"},{\"zhonglei\":\"法语\",\"dengji\":\"一级\",\"chengdu\":\"熟练\",\"duxie\":\"一般\",\"tingshuo\":\"良好\"}]', '[{\"time\":\"2013/9\",\"name\":\"校级辩论赛一等奖\",\"dengji\":\"高级0\"},{\"time\":\"2003/9\",\"name\":\"1一等奖\",\"dengji\":\"高级1\"},{\"time\":\"2004/9\",\"name\":\"2一等奖\",\"dengji\":\"高级2\"},{\"time\":\"2014/9\",\"name\":\"3一等奖\",\"dengji\":\"高级3\"},{\"time\":\"2015/9\",\"name\":\"4一等奖\",\"dengji\":\"高级4\"},{\"time\":\"2013/10\",\"name\":\"5一等奖\",\"dengji\":\"高级5\"}]', '[{\"time\":\"2013/9-2015/12\",\"company\":\"新东方英语学校\",\"zhiwei\":\"英语口语高级讲师\",\"address\":\"北京\",\"zhengshu\":\"预留字段\",\"miaoshu\":\"预留字段\"}]', '自我评价啊,随便填', '5/1.ico', '2/2.xls', '2015-09-05 18:18:47', '2015-09-05 18:23:15', 'N');
+INSERT INTO `t_jianli` VALUES ('8', '4', '1我的简历标题2', '姓名', '女', '2015-09-05', '13607447461', 'sfa@163.com', '420202199012120000', '长沙市望城坡1-1301', '身高', '[{\"time\":\"2003/9-2006/6\",\"school\":\"湖南大学\",\"zhuanye\":\"会计学\",\"xueli\":\"本科\",\"miaoshu\":\"预留字段\"},{\"time\":\"2007/9-2010/6\",\"school\":\"北京大学\",\"zhuanye\":\"会计学\",\"xueli\":\"研究生\"},{\"time\":\"2010/9-2013/6\",\"school\":\"哈弗大学\",\"zhuanye\":\"财经管理\",\"xueli\":\"博士生\"}]', '[{\"time\":\"2013/9-2013/12\",\"company\":\"新东方厨师学院\",\"kecheng\":\"厨师高级班\",\"address\":\"长沙\",\"zhengshu\":\"国家级厨师专业三级\",\"miaoshu\":\"预留字段\"},{\"time\":\"2013/9-2013/12\",\"company\":\"某某飞行学校\",\"kecheng\":\"飞行驾驶员课程\",\"address\":\"上海\",\"zhengshu\":\"飞行员资格证书\"}]', '[{\"zhonglei\":\"英语\",\"dengji\":\"专业八级\",\"chengdu\":\"精通\",\"duxie\":\"一般\",\"tingshuo\":\"良好\"},{\"zhonglei\":\"日语\",\"dengji\":\"国家一级\",\"chengdu\":\"熟练\",\"duxie\":\"一般\",\"tingshuo\":\"良好\"},{\"zhonglei\":\"法语\",\"dengji\":\"一级\",\"chengdu\":\"熟练\",\"duxie\":\"一般\",\"tingshuo\":\"良好\"}]', '[{\"time\":\"2013/9\",\"name\":\"校级辩论赛一等奖\",\"dengji\":\"高级0\"},{\"time\":\"2003/9\",\"name\":\"1一等奖\",\"dengji\":\"高级1\"},{\"time\":\"2004/9\",\"name\":\"2一等奖\",\"dengji\":\"高级2\"},{\"time\":\"2014/9\",\"name\":\"3一等奖\",\"dengji\":\"高级3\"},{\"time\":\"2015/9\",\"name\":\"4一等奖\",\"dengji\":\"高级4\"},{\"time\":\"2013/10\",\"name\":\"5一等奖\",\"dengji\":\"高级5\"}]', '[{\"time\":\"2013/9-2015/12\",\"company\":\"新东方英语学校\",\"zhiwei\":\"英语口语高级讲师\",\"address\":\"北京\",\"zhengshu\":\"预留字段\",\"miaoshu\":\"预留字段1\"}]', '自我评价啊,随便填', '5/1.ico', '2/2.xls', '2015-09-05 18:18:47', '2015-09-05 18:23:15', 'N');
 
 -- ----------------------------
 -- Table structure for `t_jianzhi`
@@ -68,7 +76,7 @@ CREATE TABLE `t_jianzhi` (
   `worktime` varchar(50) DEFAULT NULL COMMENT '工作时间(工作日 周末 其他)',
   `people` varchar(50) DEFAULT NULL COMMENT '招聘人数',
   `description` varchar(8000) DEFAULT NULL COMMENT '职位描述、介绍',
-  `status` varchar(2) DEFAULT NULL,
+  `status` varchar(4000) DEFAULT NULL COMMENT '任职要求',
   PRIMARY KEY (`jianzhiid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
