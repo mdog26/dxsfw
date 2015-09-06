@@ -15,6 +15,14 @@ public class AllInterceptor extends HandlerInterceptorAdapter {
 	
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+		//方便调试，输出请求json
+		if ("application/json".equalsIgnoreCase(request.getContentType())) {
+			byte[] b = new byte[request.getContentLength()];
+			request.getInputStream().read(b);
+			String requestJson = new String(b, "utf-8");
+			log.debug("URL : " + request.getPathInfo());
+			log.debug("Request Json : " + requestJson);
+		}
 		String action = request.getServletPath();
 		if ("/pub/login".equals(action) || "/pub/openApp".equals(action) || "/pub/regMobile".equals(action)
 				|| "/pub/getMobileCheckMsg".equals(action)) {

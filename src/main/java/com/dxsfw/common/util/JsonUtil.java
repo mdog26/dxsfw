@@ -1,6 +1,7 @@
 package com.dxsfw.common.util;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -12,11 +13,27 @@ import com.dxsfw.common.base.jianli.pro.JianLiLanguage;
 import com.dxsfw.common.base.jianli.pro.JianLiTrain;
 import com.dxsfw.common.base.jianli.pro.JianLiZhengshu;
 import com.dxsfw.pub.model.JianLi;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonRootName;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.core.JsonParser.Feature;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 public class JsonUtil {
 	private static ObjectMapper mapper = new ObjectMapper();
+	
+	static {
+		// 支持数组中只有单个对象[{aaaa:aaaa}]
+		mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
+		mapper.configure(Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
+	}
 	
 	/**
 	 * 数据库JianLi类转接口Jianli类
@@ -112,16 +129,41 @@ public class JsonUtil {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		String s = "{\"jianlidi\":5,\"userid\":4,\"title\":\"1我的简历标题2\",\"name\":\"姓名\",\"sex\":\"女\",\"birthdate\":1441036800000,\"mobile\":\"13607447461\",\"email\":\"sfa@163.com\",\"card\":\"420202199012120000\",\"address\":\"长沙市望城坡1-1301\",\"height\":\"身高\",\"evaluation\":\"自我评价啊,随便填\",\"picture\":\"5/1.ico\",\"fujian\":\"2/2.xls\",\"createtime\":1441448327000,\"updatetime\":1441448595000,\"status\":\"N\",\"_education\":[{\"time\":\"2003/9-2006/6\",\"school\":\"湖南大学\",\"zhuanye\":\"会计学\",\"xueli\":\"本科\",\"miaoshu\":\"预留字段\"},{\"time\":\"2007/9-2010/6\",\"school\":\"北京大学\",\"zhuanye\":\"会计学\",\"xueli\":\"研究生\"},{\"time\":\"2010/9-2013/6\",\"school\":\"哈弗大学\",\"zhuanye\":\"财经管理\",\"xueli\":\"博士生\"}],\"_train\":[{\"time\":\"2013/9-2013/12\",\"company\":\"新东方厨师学院\",\"kecheng\":\"厨师高级班\",\"address\":\"长沙\",\"zhengshu\":\"国家级厨师专业三级\",\"miaoshu\":\"预留字段\"},{\"time\":\"2013/9-2013/12\",\"company\":\"某某飞行学校\",\"kecheng\":\"飞行驾驶员课程\",\"address\":\"上海\",\"zhengshu\":\"飞行员资格证书\"}],\"_language\":[{\"zhonglei\":\"英语\",\"dengji\":\"专业八级\",\"chengdu\":\"精通\",\"duxie\":\"一般\",\"tingshuo\":\"良好\"},{\"zhonglei\":\"日语\",\"dengji\":\"国家一级\",\"chengdu\":\"熟练\",\"duxie\":\"一般\",\"tingshuo\":\"良好\"},{\"zhonglei\":\"法语\",\"dengji\":\"一级\",\"chengdu\":\"熟练\",\"duxie\":\"一般\",\"tingshuo\":\"良好\"}],\"_zhengshu\":[{\"time\":\"2013/9\",\"name\":\"校级辩论赛一等奖\",\"dengji\":\"高级0\"},{\"time\":\"2003/9\",\"name\":\"1一等奖\",\"dengji\":\"高级1\"},{\"time\":\"2004/9\",\"name\":\"2一等奖\",\"dengji\":\"高级2\"},{\"time\":\"2014/9\",\"name\":\"3一等奖\",\"dengji\":\"高级3\"},{\"time\":\"2015/9\",\"name\":\"4一等奖\",\"dengji\":\"高级4\"},{\"time\":\"2013/10\",\"name\":\"5一等奖\",\"dengji\":\"高级5\"}],\"_experience\":[{\"time\":\"2013/9-2015/12\",\"company\":\"新东方英语学校\",\"zhiwei\":\"英语口语高级讲师\",\"address\":\"北京\",\"zhengshu\":\"预留字段\",\"miaoshu\":\"预留字段1\"}]}";
+//		String s = "{\"jianlidi\":5,\"userid\":4,\"title\":\"1我的简历标题2\",\"name\":\"姓名\",\"sex\":\"女\",\"birthdate\":1441036800000,\"mobile\":\"13607447461\",\"email\":\"sfa@163.com\",\"card\":\"420202199012120000\",\"address\":\"长沙市望城坡1-1301\",\"height\":\"身高\",\"evaluation\":\"自我评价啊,随便填\",\"picture\":\"5/1.ico\",\"fujian\":\"2/2.xls\",\"createtime\":1441448327000,\"updatetime\":1441448595000,\"status\":\"N\",\"_education\":[{\"time\":\"2003/9-2006/6\",\"school\":\"湖南大学\",\"zhuanye\":\"会计学\",\"xueli\":\"本科\",\"miaoshu\":\"预留字段\"},{\"time\":\"2007/9-2010/6\",\"school\":\"北京大学\",\"zhuanye\":\"会计学\",\"xueli\":\"研究生\"},{\"time\":\"2010/9-2013/6\",\"school\":\"哈弗大学\",\"zhuanye\":\"财经管理\",\"xueli\":\"博士生\"}],\"_train\":[{\"time\":\"2013/9-2013/12\",\"company\":\"新东方厨师学院\",\"kecheng\":\"厨师高级班\",\"address\":\"长沙\",\"zhengshu\":\"国家级厨师专业三级\",\"miaoshu\":\"预留字段\"},{\"time\":\"2013/9-2013/12\",\"company\":\"某某飞行学校\",\"kecheng\":\"飞行驾驶员课程\",\"address\":\"上海\",\"zhengshu\":\"飞行员资格证书\"}],\"_language\":[{\"zhonglei\":\"英语\",\"dengji\":\"专业八级\",\"chengdu\":\"精通\",\"duxie\":\"一般\",\"tingshuo\":\"良好\"},{\"zhonglei\":\"日语\",\"dengji\":\"国家一级\",\"chengdu\":\"熟练\",\"duxie\":\"一般\",\"tingshuo\":\"良好\"},{\"zhonglei\":\"法语\",\"dengji\":\"一级\",\"chengdu\":\"熟练\",\"duxie\":\"一般\",\"tingshuo\":\"良好\"}],\"_zhengshu\":[{\"time\":\"2013/9\",\"name\":\"校级辩论赛一等奖\",\"dengji\":\"高级0\"},{\"time\":\"2003/9\",\"name\":\"1一等奖\",\"dengji\":\"高级1\"},{\"time\":\"2004/9\",\"name\":\"2一等奖\",\"dengji\":\"高级2\"},{\"time\":\"2014/9\",\"name\":\"3一等奖\",\"dengji\":\"高级3\"},{\"time\":\"2015/9\",\"name\":\"4一等奖\",\"dengji\":\"高级4\"},{\"time\":\"2013/10\",\"name\":\"5一等奖\",\"dengji\":\"高级5\"}],\"_experience\":[{\"time\":\"2013/9-2015/12\",\"company\":\"新东方英语学校\",\"zhiwei\":\"英语口语高级讲师\",\"address\":\"北京\",\"zhengshu\":\"预留字段\",\"miaoshu\":\"预留字段1\"}]}";
+//		
+//		mapper.readValue(s, ResJianLi.class);
+//		JianLi jianli = new JianLi();
+//		jianli.setLanguage("[{\"id\":1,\"zhonglei\":\"英语\",\"dengji\":\"专业八级\",\"chengdu\":\"精通\",\"duxie\":\"一般\",\"tingshuo\":\"良好\"},{\"id\":1,\"zhonglei\":\"日语\",\"dengji\":\"国家一级\",\"chengdu\":\"熟练\",\"duxie\":\"一般\",\"tingshuo\":\"良好\"}]");
+//		
+//		ResJianLi res = jianli2Res(jianli);
+//		System.out.println(res.get_language().size());
+//		
+//		jianli = res2Jianli(res);
+//		System.out.println(jianli);
 		
-		mapper.readValue(s, ResJianLi.class);
-		JianLi jianli = new JianLi();
-		jianli.setLanguage("[{\"id\":1,\"zhonglei\":\"英语\",\"dengji\":\"专业八级\",\"chengdu\":\"精通\",\"duxie\":\"一般\",\"tingshuo\":\"良好\"},{\"id\":1,\"zhonglei\":\"日语\",\"dengji\":\"国家一级\",\"chengdu\":\"熟练\",\"duxie\":\"一般\",\"tingshuo\":\"良好\"}]");
-		
-		ResJianLi res = jianli2Res(jianli);
-		System.out.println(res.get_language().size());
-		
-		jianli = res2Jianli(res);
-		System.out.println(jianli);
+		A a = new A(new Date());
+		A c = new A(new Date());
+		c.b = a;
+		mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS,false);
+//		mapper.configure(SerializationFeature.WRITE_CHAR_ARRAYS_AS_JSON_ARRAYS,true);  
+		String s = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(c);
+		System.out.println(s);
 	}
+	
+}
+
+@JsonRootName("root")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = "id")  
+@JsonAutoDetect(fieldVisibility=JsonAutoDetect.Visibility.ANY)
+class A{
+	String id;
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+	Date[] d = new Date[1];
+	
+	public A(Date d){
+		this.d[0] = d;
+	}
+	
+	@JsonUnwrapped
+	public A b;
 }
