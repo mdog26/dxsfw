@@ -21,6 +21,8 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.RequestEntity;
+import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.http.HttpStatus;
 import org.apache.http.params.CoreConnectionPNames;
@@ -97,7 +99,16 @@ public class IOLHttpClient {
 			}
 			NameValuePair[] data = nvps.toArray(new NameValuePair[] {});
 			//设置参数
-			httpost.setRequestBody(data);
+			String requestBody = "{\"email\":\"xiazl1987@163.com\"}";
+			httpost.setRequestHeader("Content-Type", "application/json");
+			
+//			File f = new File("D:/a.json");
+//			FileInputStream in = new FileInputStream(f);
+//			httpost.setRequestBody(new java.io.ByteArrayInputStream(requestBody.getBytes("utf-8")));
+//			httpost.setRequestBody(in);
+//			StringEntity entity = new StringEntity(requestBody);
+			StringRequestEntity entity = new StringRequestEntity(requestBody, "application/json", "utf-8");
+			httpost.setRequestEntity(entity);
 			//设置编码格式统一为UTF_8
 			httpost.getParams().setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET, "UTF-8");		
 			//设置超时
@@ -112,6 +123,8 @@ public class IOLHttpClient {
 				} else {
 					result = getStringFromStream(httpost);
 				}
+			} else {
+				System.out.println(httpost.getStatusCode());
 			}
 			return result;
 		} catch (Exception e) {
@@ -140,10 +153,28 @@ public class IOLHttpClient {
 	}
 	
 	public static void main(String[] args) {
-		Map map=new HashMap();
-		map.put("agentIolId ", "AA1000000046");
-		String s=IOLHttpClient.sendPostRequest("http://10.0.111.184:8088/IOL_CC/getAgentInfo.do",map);
-		System.out.println("www--- " + s);
+//		Map map=new HashMap();
+//		map.put("userid ", "1");
+		String url = "http://120.25.58.3:8080/dxsfw/pub/updateUser?token=0113F592410463C2DA4BA8AABB09FD4A";
+//		String url = "http://127.0.0.1:8080/dxsfw/pub/updateUser?token=B3526D29E30E433D537596A20C2DC8D7";
+//		String s=IOLHttpClient.sendPostRequest(url,map);
+//		System.out.println("www--- " + s);
+		String params = "{\"userid\": 1, \"name\":\"中午\"}";
+		
+		HttpClient httpClient = new HttpClient();
+	    PostMethod method = new PostMethod(url);
+	    try {
+	      if(params != null && !params.trim().equals("")) {
+	        RequestEntity requestEntity = new StringRequestEntity(params,"application/json","UTF-8");
+	        method.setRequestEntity(requestEntity);
+	      }
+	      method.releaseConnection();
+	      httpClient.executeMethod(method);
+	      String responses= method.getResponseBodyAsString();
+	      System.out.println(responses);
+	    } catch (Exception e) {
+	      e.printStackTrace();
+	    }
 	}	
 	
 }
