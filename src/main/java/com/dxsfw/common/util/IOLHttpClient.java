@@ -21,6 +21,8 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.methods.RequestEntity;
+import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.http.HttpStatus;
 import org.apache.http.params.CoreConnectionPNames;
@@ -98,6 +100,12 @@ public class IOLHttpClient {
 			NameValuePair[] data = nvps.toArray(new NameValuePair[] {});
 			//设置参数
 			httpost.setRequestBody(data);
+			// -------另一种json 格式交互接口 -----start
+//			String requestBody = "{\"email\":\"xiazl1987@163.com\"}";
+//			httpost.setRequestHeader("Content-Type", "application/json");
+//			StringRequestEntity entity = new StringRequestEntity(requestBody, "application/json", "utf-8");
+//			httpost.setRequestEntity(entity);
+			// -------另一种json 格式交互接口 -----end
 			//设置编码格式统一为UTF_8
 			httpost.getParams().setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET, "UTF-8");		
 			//设置超时
@@ -112,6 +120,8 @@ public class IOLHttpClient {
 				} else {
 					result = getStringFromStream(httpost);
 				}
+			} else {
+				System.out.println(httpost.getStatusCode());
 			}
 			return result;
 		} catch (Exception e) {
@@ -139,11 +149,51 @@ public class IOLHttpClient {
 		return sendPostRequest(url, requestParam, true);
 	}
 	
+	/**
+	 * Josn 接口交互
+	 */
+	public static String postJsonRequest(String url, String requestJsonBody) {
+		HttpClient httpClient = new HttpClient();
+		PostMethod method = new PostMethod(url);
+		try {
+			if (requestJsonBody != null && !requestJsonBody.trim().equals("")) {
+				RequestEntity requestEntity = new StringRequestEntity(
+						requestJsonBody, "application/json", "UTF-8");
+				method.setRequestEntity(requestEntity);
+			}
+			method.releaseConnection();
+			httpClient.executeMethod(method);
+			String responses = method.getResponseBodyAsString();
+			return responses;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "";
+	}
+	
 	public static void main(String[] args) {
-		Map map=new HashMap();
-		map.put("agentIolId ", "AA1000000046");
-		String s=IOLHttpClient.sendPostRequest("http://10.0.111.184:8088/IOL_CC/getAgentInfo.do",map);
-		System.out.println("www--- " + s);
+//		Map map=new HashMap();
+//		map.put("userid ", "1");
+//		String url = "http://120.25.58.3:8080/dxsfw/pub/updateUser?token=0113F592410463C2DA4BA8AABB09FD4A";
+		String url = "http://127.0.0.1:8080/dxsfw/pub/updateUser?token=6BEFB92F1EBD55723EBA8565B17D2580";
+//		String s=IOLHttpClient.sendPostRequest(url,map);
+//		System.out.println("www--- " + s);
+		String params = "{\"userid\": 1, \"name\":\"中午\"}";
+		
+		HttpClient httpClient = new HttpClient();
+	    PostMethod method = new PostMethod(url);
+	    try {
+	      if(params != null && !params.trim().equals("")) {
+	        RequestEntity requestEntity = new StringRequestEntity(params,"application/json","UTF-8");
+	        method.setRequestEntity(requestEntity);
+	      }
+	      method.releaseConnection();
+	      httpClient.executeMethod(method);
+	      String responses= method.getResponseBodyAsString();
+	      System.out.println(responses);
+	    } catch (Exception e) {
+	      e.printStackTrace();
+	    }
 	}	
 	
 }
