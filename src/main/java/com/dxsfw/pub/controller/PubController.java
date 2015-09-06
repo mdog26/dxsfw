@@ -5,6 +5,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,10 +13,12 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,12 +27,20 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.dxsfw.common.base.Res;
+import com.dxsfw.common.base.jianli.ResJianLi;
 import com.dxsfw.common.constants.Constant;
 import com.dxsfw.common.constants.GlobalValue;
+import com.dxsfw.common.util.JsonUtil;
 import com.dxsfw.common.util.RandomUtil;
+import com.dxsfw.jianzhi.model.Jianzhi;
+import com.dxsfw.jianzhi.service.JianzhiService;
+import com.dxsfw.party.model.Party;
+import com.dxsfw.party.service.PartyService;
 import com.dxsfw.pub.model.JianLi;
+import com.dxsfw.pub.model.Picture;
 import com.dxsfw.pub.model.User;
 import com.dxsfw.pub.service.JianLiService;
+import com.dxsfw.pub.service.PubService;
 import com.dxsfw.pub.service.UserService;
 
 @Controller
@@ -38,9 +49,15 @@ public class PubController {
 	private static Logger log = LoggerFactory.getLogger(PubController.class);
 
 	@Autowired
+	private PubService pubService;
+	@Autowired
 	private UserService userService;
 	@Autowired
 	private JianLiService jianLiService;
+	@Autowired
+	private JianzhiService jianzhiService;
+	@Autowired
+	private PartyService partyService;
 
 	// ---------------------------登录注册---------------------------start
 	/**
@@ -273,12 +290,15 @@ public class PubController {
 	/**
 	 * 新增简历
 	 * @return
+	 * @throws Exception 
 	 */
 	@ResponseBody
 	@RequestMapping("addJianLi")
-	public Res addJianLi(@RequestBody JianLi jianli) {
+	public Res addJianLi(@RequestBody ResJianLi res) throws Exception {
 		Res responseJson = new Res();
+		JianLi jianli = null;
 		try {
+			jianli = JsonUtil.res2Jianli(res);
 			jianli = jianLiService.addJianLi(jianli);
 			if (jianli != null) {
 				responseJson.setMsg(Constant.MSG_OK_JIANLI_ADD);
@@ -291,7 +311,7 @@ public class PubController {
 			responseJson.setMsg(Constant.MSG_ERROR_JIANLI_ADD);
 			responseJson.setStatus(Constant.STATUS_ERROR_500);
 		}
-		responseJson.setJianli(jianli);
+		responseJson.setJianli(JsonUtil.jianli2Res(jianli));
 		return responseJson;
 	}
 	
@@ -306,7 +326,7 @@ public class PubController {
 		Res responseJson = new Res();
 		try {
 			List<JianLi> jianliList = jianLiService.getJianLiByUser(userid);
-			responseJson.setJianliList(jianliList);
+			responseJson.setJianliList(JsonUtil.jianli2Res(jianliList));
 			responseJson.setMsg(Constant.MSG_OK_JIANLI_LIST);
 		} catch (Exception e) {
 			log.error("/getJianLiByUser", e);
@@ -327,7 +347,7 @@ public class PubController {
 		Res responseJson = new Res();
 		try {
 			JianLi jianli = jianLiService.getJianLi(jianliid);
-			responseJson.setJianli(jianli);
+			responseJson.setJianli(JsonUtil.jianli2Res(jianli));
 			responseJson.setMsg(Constant.MSG_OK_JIANLI_GET);
 		} catch (Exception e) {
 			log.error("/getJianLiByUser", e);
@@ -362,9 +382,11 @@ public class PubController {
 	 */
 	@ResponseBody
 	@RequestMapping("updateJianLi")
-	public Res updateJianLi(@RequestBody JianLi jianli) {
+	public Res updateJianLi(@RequestBody ResJianLi res) throws Exception {
 		Res responseJson = new Res();
+		JianLi jianli = null;
 		try {
+			jianli = JsonUtil.res2Jianli(res);
 			jianli = jianLiService.updateJianLi(jianli);
 			if (jianli != null) {
 				responseJson.setMsg(Constant.UPDATE + Constant.JIANLI + Constant.OK);
@@ -377,7 +399,7 @@ public class PubController {
 			responseJson.setMsg(Constant.UPDATE + Constant.JIANLI + Constant.ERROR);
 			responseJson.setStatus(Constant.STATUS_ERROR_500);
 		}
-		responseJson.setJianli(jianli);
+		responseJson.setJianli(JsonUtil.jianli2Res(jianli));
 		return responseJson;
 	}
 	
@@ -475,7 +497,7 @@ public class PubController {
 				jianli.getPicture().indexOf(jianli.getJianliid() + File.separator)
 						+ (jianli.getJianliid() + File.separator).length());
 		// 文件夹绝对路径
-		String downLoadPath = GlobalValue.PATH_USER_PICTURE + jianli.getPicture();
+		String downLoadPath = GlobalValue.PATH_JIANLI_PICTURE + jianli.getPicture();
 
 		this.downloadFile(response, fileName, downLoadPath);
 		return null;
@@ -496,13 +518,231 @@ public class PubController {
 				jianli.getFujian().indexOf(jianli.getJianliid() + File.separator)
 				+ (jianli.getJianliid() + File.separator).length());
 		// 文件夹绝对路径
-		String downLoadPath = GlobalValue.PATH_USER_PICTURE + jianli.getFujian();
+		String downLoadPath = GlobalValue.PATH_JIANLI_FUJIAN + jianli.getFujian();
 		
 		this.downloadFile(response, fileName, downLoadPath);
 		return null;
 	}
+	
+	/**
+	 * 获取用户之前简历的基本信息
+	 * @param userid
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("getJianLiPublicInfo")
+	public Res getJianLiPublicInfo(@RequestParam(value = "userid") int userid) {
+		Res responseJson = new Res();
+		try {
+			List<JianLi> list = jianLiService.getJianLiByUser(userid);
+			if (list.size() > 0) {
+				JianLi jianli = list.get(0);
+				ResJianLi res = new ResJianLi();
+				//公共信息
+				res.setName(jianli.getName());
+				res.setSex(jianli.getSex());
+				res.setBirthdate(jianli.getBirthdate());
+				res.setMobile(jianli.getMobile());
+				res.setEmail(jianli.getEmail());
+				res.setCard(jianli.getCard());
+				res.setAddress(jianli.getAddress());
+				res.setHeight(jianli.getHeight());
+				
+				responseJson.setJianli(res);
+				responseJson.setMsg(Constant.MSG_OK_JIANLI_GET);
+			} else {
+				responseJson.setMsg(Constant.MSG_ERROR_JIANLI_LIST);
+			}
+		} catch (Exception e) {
+			log.error("/getJianLiByUser", e);
+			responseJson.setMsg(Constant.MSG_ERROR_JIANLI_GET);
+			responseJson.setStatus(Constant.STATUS_ERROR_500);
+		}
+		return responseJson;
+	}
 	// ---------------------------简历---------------------------end
 	
+	
+	// ---------------------------共用接口---------------------------start
+	/**
+	 * 上传业务模块单一图片
+	 * 更新图片指定图片
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("upload/{modlename}/{pk:\\d+}")
+	public Res uploadPubPicture(@RequestParam(value = "file") MultipartFile file,
+			@PathVariable("modlename") String modlename, 
+			@PathVariable("pk") int pk,
+			@RequestParam(value = "type") String type,
+			@RequestParam(value = "pictureid", required = false) Integer pictureid,
+			@RequestParam(value = "token") String token) {
+		Res responseJson = new Res();
+		// 验证模块是否支持
+		if (GlobalValue.TABLE_SET.contains(modlename)) {
+			try {
+				String tablename = "t_" + modlename;
+				// 文件名
+				String fileName = null;
+				if (pictureid == null) {
+					// 业务条目唯一图片
+					fileName = pk + "." + type;
+				} else {
+					// 业务条目多图片
+					fileName = pk + "_" + pictureid + "." + type;
+				}
+				// 文件夹绝对路径
+				String picturePath = GlobalValue.PATH_PICTURE + modlename + File.separator;
+				File targetFile = new File(picturePath);
+				if (!targetFile.exists()) {
+					targetFile.mkdirs();
+				}
+				// 保存
+				targetFile = new File(picturePath + fileName);
+				file.transferTo(targetFile);
+				
+				Picture p = new Picture();
+				p.setPictureid(pictureid);
+				p.setTablename(tablename);
+				p.setPk(pk);
+				p.setPath(fileName);
+				pubService.addorUpdatePicture(p);
+				responseJson.setMsg(Constant.ADD + "/" + Constant.UPDATE + Constant.PICTURE + Constant.OK);
+				
+				//属于其他业务连带动作
+				if (GlobalValue.MODLE_JIANZHI.equals(modlename)) {
+					Jianzhi jianzhi = new Jianzhi();
+					jianzhi.setJianzhiid(pk);
+					jianzhi.setUpdatetime(new Date());
+					jianzhiService.updateByIdSelective(jianzhi);
+				}
+			} catch (Exception e) {
+				log.error("/picture", e);
+				responseJson.setMsg(Constant.ADD + "/" + Constant.UPDATE + Constant.PICTURE + Constant.ERROR);
+				responseJson.setStatus(Constant.STATUS_ERROR_500);
+			}
+		} else {
+			responseJson.setMsg(modlename + "模块不支持单图片上传,请用uploadMore方式" );
+			responseJson.setStatus(Constant.STATUS_ERROR_500);
+		}
+		return responseJson;
+	}
+	
+	/**
+	 * 上传1对多的图片接口，可添加返回该1对多pictureid list,然后一个一个下载
+	 * 增加添加图片接口
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("uploadMore/{modlename}/{pk:\\d+}")
+	public Res uploadMorePubPicture(@RequestParam(value = "file") MultipartFile file,
+			@PathVariable("modlename") String modlename, 
+			@PathVariable("pk") int pk,
+			@RequestParam(value = "type") String type,
+			@RequestParam(value = "token") String token) {
+		Res responseJson = new Res();
+		// 验证模块是否支持
+		if (GlobalValue.MODLE_PARTY.equals(modlename)) {
+			Integer pictureid = null;
+			try {
+				//属于其他业务连带动作
+				Party party = new Party();
+				party.setPartyid(pk);
+				party = partyService.findById(pk);
+				if (party != null) {
+					// #先保存表数据获取picture id
+					Picture p = new Picture();
+					p.setTablename("t_" + modlename);
+					p.setPk(pk);
+					p = pubService.addPicture(p);
+					pictureid = p.getPictureid();
+							
+					//设置 path
+					String fileName =  pk + "_" + pictureid + "." + type;;
+					//#更新picture表
+					p.setPath(fileName);
+					pubService.addorUpdatePicture(p);
+					//#保存图片到硬盘
+					// 文件夹绝对路径
+					String picturePath = GlobalValue.PATH_PICTURE + modlename + File.separator;
+					File targetFile = new File(picturePath);
+					if (!targetFile.exists()) {
+						targetFile.mkdirs();
+					}
+					// 保存
+					targetFile = new File(picturePath + fileName);
+					file.transferTo(targetFile);
+					
+					//#更新相应业务
+					String pcitures = party.getPictures();
+					if (StringUtils.isEmpty(pcitures)) {
+						pcitures = String.valueOf(pictureid);
+					} else {
+						pcitures += "," + pictureid;
+					}
+					party.setUpdatetime(new Date());
+					party.setPictures(pcitures);
+					partyService.updateByIdSelective(party);
+				}
+				
+				responseJson.setMsg(Constant.ADD + Constant.PICTURE + Constant.OK);
+			} catch (Exception e) {
+				log.error("/uploadMore", e);
+				if (pictureid != null) {
+					Picture p = new Picture();
+					p.setPictureid(pictureid);
+					pubService.deletePicture(p);
+				}
+				responseJson.setMsg(Constant.ADD + Constant.PICTURE + Constant.ERROR);
+				responseJson.setStatus(Constant.STATUS_ERROR_500);
+			}
+		} else {
+			responseJson.setMsg(modlename + "模块不支持图片上传" );
+			responseJson.setStatus(Constant.STATUS_ERROR_500);
+		}
+		return responseJson;
+	}
+	
+	/**
+	 * 下载公共图片
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "download/{modlename}/{pk:\\d+}")
+	public ModelAndView downloadPubPicture(@PathVariable("modlename") String modlename, 
+			@PathVariable("pk") int pk,
+			@RequestParam(value = "pictureid", required = false) Integer pictureid, 
+			HttpServletResponse response)
+			throws Exception {
+		// 验证模块是否支持
+		Picture p = null;
+		if (pictureid == null) {
+			// 单一模块图片逻辑
+			if (GlobalValue.TABLE_SET.contains(modlename)) {
+				String tablename = "t_" + modlename;
+				p = new Picture();
+				p.setTablename(tablename);
+				p.setPk(pk);
+				List<Picture> list = pubService.getPicture(p);
+				if (list.size() > 0) {
+					p = list.get(0);
+				}
+			} else {
+				log.error(modlename + "模块不支持单图片下载");
+				throw new Exception(modlename + "模块不支持单图片下载");
+			}
+		} else {
+			p = pubService.getPicture(pictureid);
+		}
+		// 文件名
+		String fileName = p.getPath();
+		// 文件夹绝对路径
+		String downLoadPath = GlobalValue.PATH_PICTURE + modlename + File.separator + fileName;
+		//System.out.println(downLoadPath);
+		this.downloadFile(response, fileName, downLoadPath);
+		return null;
+	}
+	// ---------------------------共用接口---------------------------end
 	
 	// ---------------------------辅助方法---------------------------end
 	/**

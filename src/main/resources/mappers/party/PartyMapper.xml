@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dxsfw.party.dao.PartyDao" >
+  <resultMap id="BaseResultMap" type="com.dxsfw.party.model.Party" >
+    <id column="partyid" property="partyid" jdbcType="INTEGER" />
+    <result column="userid" property="userid" jdbcType="INTEGER" />
+    <result column="feeid" property="feeid" jdbcType="INTEGER" />
+    <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="expiretime" property="expiretime" jdbcType="TIMESTAMP" />
+    <result column="updatetime" property="updatetime" jdbcType="TIMESTAMP" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="cost" property="cost" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="partytime" property="partytime" jdbcType="VARCHAR" />
+    <result column="people" property="people" jdbcType="INTEGER" />
+    <result column="tag" property="tag" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="pictures" property="pictures" jdbcType="VARCHAR" />
+    <result column="info" property="info" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    partyid, userid, feeid, createtime, expiretime, updatetime, title, address, cost, 
+    content, partytime, people, tag, status, pictures, info
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.dxsfw.party.model.PartyExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_party
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_party
+    where partyid = #{partyid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_party
+    where partyid = #{partyid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.dxsfw.party.model.PartyExample" >
+    delete from t_party
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.dxsfw.party.model.Party" >
+    insert into t_party (partyid, userid, feeid, 
+      createtime, expiretime, updatetime, 
+      title, address, cost, 
+      content, partytime, people, 
+      tag, status, pictures, 
+      info)
+    values (#{partyid,jdbcType=INTEGER}, #{userid,jdbcType=INTEGER}, #{feeid,jdbcType=INTEGER}, 
+      #{createtime,jdbcType=TIMESTAMP}, #{expiretime,jdbcType=TIMESTAMP}, #{updatetime,jdbcType=TIMESTAMP}, 
+      #{title,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{cost,jdbcType=VARCHAR}, 
+      #{content,jdbcType=VARCHAR}, #{partytime,jdbcType=VARCHAR}, #{people,jdbcType=INTEGER}, 
+      #{tag,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{pictures,jdbcType=VARCHAR}, 
+      #{info,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dxsfw.party.model.Party" >
+    insert into t_party
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="partyid != null" >
+        partyid,
+      </if>
+      <if test="userid != null" >
+        userid,
+      </if>
+      <if test="feeid != null" >
+        feeid,
+      </if>
+      <if test="createtime != null" >
+        createtime,
+      </if>
+      <if test="expiretime != null" >
+        expiretime,
+      </if>
+      <if test="updatetime != null" >
+        updatetime,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="cost != null" >
+        cost,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="partytime != null" >
+        partytime,
+      </if>
+      <if test="people != null" >
+        people,
+      </if>
+      <if test="tag != null" >
+        tag,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="pictures != null" >
+        pictures,
+      </if>
+      <if test="info != null" >
+        info,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="partyid != null" >
+        #{partyid,jdbcType=INTEGER},
+      </if>
+      <if test="userid != null" >
+        #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="feeid != null" >
+        #{feeid,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expiretime != null" >
+        #{expiretime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="cost != null" >
+        #{cost,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="partytime != null" >
+        #{partytime,jdbcType=VARCHAR},
+      </if>
+      <if test="people != null" >
+        #{people,jdbcType=INTEGER},
+      </if>
+      <if test="tag != null" >
+        #{tag,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="pictures != null" >
+        #{pictures,jdbcType=VARCHAR},
+      </if>
+      <if test="info != null" >
+        #{info,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.dxsfw.party.model.PartyExample" resultType="java.lang.Integer" >
+    select count(*) from t_party
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update t_party
+    <set >
+      <if test="record.partyid != null" >
+        partyid = #{record.partyid,jdbcType=INTEGER},
+      </if>
+      <if test="record.userid != null" >
+        userid = #{record.userid,jdbcType=INTEGER},
+      </if>
+      <if test="record.feeid != null" >
+        feeid = #{record.feeid,jdbcType=INTEGER},
+      </if>
+      <if test="record.createtime != null" >
+        createtime = #{record.createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.expiretime != null" >
+        expiretime = #{record.expiretime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updatetime != null" >
+        updatetime = #{record.updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.title != null" >
+        title = #{record.title,jdbcType=VARCHAR},
+      </if>
+      <if test="record.address != null" >
+        address = #{record.address,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cost != null" >
+        cost = #{record.cost,jdbcType=VARCHAR},
+      </if>
+      <if test="record.content != null" >
+        content = #{record.content,jdbcType=VARCHAR},
+      </if>
+      <if test="record.partytime != null" >
+        partytime = #{record.partytime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.people != null" >
+        people = #{record.people,jdbcType=INTEGER},
+      </if>
+      <if test="record.tag != null" >
+        tag = #{record.tag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        status = #{record.status,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pictures != null" >
+        pictures = #{record.pictures,jdbcType=VARCHAR},
+      </if>
+      <if test="record.info != null" >
+        info = #{record.info,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update t_party
+    set partyid = #{record.partyid,jdbcType=INTEGER},
+      userid = #{record.userid,jdbcType=INTEGER},
+      feeid = #{record.feeid,jdbcType=INTEGER},
+      createtime = #{record.createtime,jdbcType=TIMESTAMP},
+      expiretime = #{record.expiretime,jdbcType=TIMESTAMP},
+      updatetime = #{record.updatetime,jdbcType=TIMESTAMP},
+      title = #{record.title,jdbcType=VARCHAR},
+      address = #{record.address,jdbcType=VARCHAR},
+      cost = #{record.cost,jdbcType=VARCHAR},
+      content = #{record.content,jdbcType=VARCHAR},
+      partytime = #{record.partytime,jdbcType=VARCHAR},
+      people = #{record.people,jdbcType=INTEGER},
+      tag = #{record.tag,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=VARCHAR},
+      pictures = #{record.pictures,jdbcType=VARCHAR},
+      info = #{record.info,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dxsfw.party.model.Party" >
+    update t_party
+    <set >
+      <if test="userid != null" >
+        userid = #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="feeid != null" >
+        feeid = #{feeid,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null" >
+        createtime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expiretime != null" >
+        expiretime = #{expiretime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        updatetime = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="cost != null" >
+        cost = #{cost,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="partytime != null" >
+        partytime = #{partytime,jdbcType=VARCHAR},
+      </if>
+      <if test="people != null" >
+        people = #{people,jdbcType=INTEGER},
+      </if>
+      <if test="tag != null" >
+        tag = #{tag,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="pictures != null" >
+        pictures = #{pictures,jdbcType=VARCHAR},
+      </if>
+      <if test="info != null" >
+        info = #{info,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where partyid = #{partyid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dxsfw.party.model.Party" >
+    update t_party
+    set userid = #{userid,jdbcType=INTEGER},
+      feeid = #{feeid,jdbcType=INTEGER},
+      createtime = #{createtime,jdbcType=TIMESTAMP},
+      expiretime = #{expiretime,jdbcType=TIMESTAMP},
+      updatetime = #{updatetime,jdbcType=TIMESTAMP},
+      title = #{title,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      cost = #{cost,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      partytime = #{partytime,jdbcType=VARCHAR},
+      people = #{people,jdbcType=INTEGER},
+      tag = #{tag,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      pictures = #{pictures,jdbcType=VARCHAR},
+      info = #{info,jdbcType=VARCHAR}
+    where partyid = #{partyid,jdbcType=INTEGER}
+  </update>
+</mapper>

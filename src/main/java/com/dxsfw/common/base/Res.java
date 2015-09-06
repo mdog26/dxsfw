@@ -3,7 +3,10 @@ package com.dxsfw.common.base;
 import java.io.Serializable;
 import java.util.List;
 
+import com.dxsfw.common.base.jianli.ResJianLi;
 import com.dxsfw.common.constants.Constant;
+import com.dxsfw.jianzhi.model.Jianzhi;
+import com.dxsfw.party.model.Party;
 import com.dxsfw.pub.model.JianLi;
 import com.dxsfw.pub.model.User;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -18,15 +21,30 @@ public class Res implements Serializable {
 	
 	@JsonInclude(Include.NON_NULL)
 	private String token;
+	
+	@JsonInclude(Include.NON_NULL)
+	private List<?> list;
 
 	@JsonInclude(Include.NON_NULL)
 	private User user;
 
 	@JsonInclude(Include.NON_NULL)
-	private JianLi jianli;
+	private ResJianLi jianli;
 	
 	@JsonInclude(Include.NON_NULL)
-	private List<JianLi> jianliList;
+	private List<ResJianLi> jianliList;
+	
+	@JsonInclude(Include.NON_NULL)
+	private Jianzhi jianzhi;
+	
+	@JsonInclude(Include.NON_NULL)
+	private List<Jianzhi> jianzhiList;
+	
+	@JsonInclude(Include.NON_NULL)
+	private Party party;
+	
+	@JsonInclude(Include.NON_NULL)
+	private List<Party> partyList;
 
 	public Res() {}
 	
@@ -67,19 +85,59 @@ public class Res implements Serializable {
 		this.user = user;
 	}
 
-	public JianLi getJianli() {
+	public ResJianLi getJianli() {
 		return jianli;
 	}
 
-	public void setJianli(JianLi jianli) {
+	public void setJianli(ResJianLi jianli) {
 		this.jianli = jianli;
 	}
 
-	public List<JianLi> getJianliList() {
+	public List<ResJianLi> getJianliList() {
 		return jianliList;
 	}
 
-	public void setJianliList(List<JianLi> jianliList) {
+	public void setJianliList(List<ResJianLi> jianliList) {
 		this.jianliList = jianliList;
+	}
+
+	public Jianzhi getJianzhi() {
+		return jianzhi;
+	}
+
+	public void setJianzhi(Jianzhi jianzhi) {
+		this.jianzhi = jianzhi;
+	}
+
+	public List<Jianzhi> getJianzhiList() {
+		return jianzhiList;
+	}
+
+	public void setJianzhiList(List<Jianzhi> jianzhiList) {
+		this.jianzhiList = jianzhiList;
+	}
+
+	public List<?> getList() {
+		return list;
+	}
+
+	public void setList(List<?> list) {
+		this.list = list;
+	}
+
+	public Party getParty() {
+		return party;
+	}
+
+	public void setParty(Party party) {
+		this.party = party;
+	}
+
+	public List<Party> getPartyList() {
+		return partyList;
+	}
+
+	public void setPartyList(List<Party> partyList) {
+		this.partyList = partyList;
 	}
 }

@@ -43,6 +43,6 @@ CreateDate: 2013-7-10
             <property name="enableSubPackages" value="true" />
         </javaClientGenerator>
         
-        <table schema="" tableName="t_user"  domainObjectName="User"/>
+        <table schema="" tableName="t_jianli"  domainObjectName="JianLi"/>
 	</context>
 </generatorConfiguration>
