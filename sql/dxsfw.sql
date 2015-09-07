@@ -10,10 +10,69 @@ Target Server Type    : MYSQL
 Target Server Version : 50515
 File Encoding         : 65001
 
-Date: 2015-09-05 20:41:58
+Date: 2015-09-08 00:04:14
 */
 
 SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for `t_bbs`
+-- ----------------------------
+DROP TABLE IF EXISTS `t_bbs`;
+CREATE TABLE `t_bbs` (
+  `bbsid` int(11) NOT NULL AUTO_INCREMENT,
+  `userid` int(11) DEFAULT NULL COMMENT '发布人id(外键)',
+  `feeid` int(11) DEFAULT NULL COMMENT '收费id(外键)',
+  `createtime` timestamp NULL DEFAULT NULL COMMENT '发布时间',
+  `expiretime` timestamp NULL DEFAULT NULL COMMENT '过期时间',
+  `updatetime` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `type` varchar(200) DEFAULT NULL COMMENT '发布类型{交流、讲师授课}',
+  `title` varchar(200) DEFAULT NULL COMMENT '标题',
+  `address` varchar(500) DEFAULT NULL COMMENT '授课地址',
+  `bankuai` varchar(300) DEFAULT NULL,
+  `zhuanye` varchar(300) DEFAULT NULL COMMENT '专业分类/板块｛用于论坛交流的专业分类｝',
+  `teachtype` varchar(500) DEFAULT NULL COMMENT '授课种类｛1对1，1对多当面授课等｝',
+  `content` varchar(8000) DEFAULT NULL COMMENT '交流/授课内容介绍',
+  `teachtime` varchar(500) DEFAULT NULL COMMENT '授课开始时间',
+  `people` int(11) DEFAULT NULL COMMENT '授课可参与人数',
+  `replynumber` int(11) DEFAULT NULL COMMENT '报名人数/回贴数量',
+  `clicknumber` int(11) DEFAULT NULL COMMENT '点击量',
+  `tag` varchar(200) DEFAULT NULL COMMENT '标签(可用于检索)',
+  `status` varchar(2) DEFAULT NULL COMMENT '状态(预留字段)',
+  `pictures` varchar(1000) DEFAULT NULL COMMENT '图片集{1,23,50 "公共图片表id组合"}',
+  `info` varchar(1000) DEFAULT NULL COMMENT '预留字段',
+  PRIMARY KEY (`bbsid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of t_bbs
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `t_bbsshengqing`
+-- ----------------------------
+DROP TABLE IF EXISTS `t_bbsshengqing`;
+CREATE TABLE `t_bbsshengqing` (
+  `shenqingid` int(11) NOT NULL AUTO_INCREMENT,
+  `bbsid` int(11) DEFAULT NULL COMMENT '学术论坛表id（外键）',
+  `publishUserid` int(11) DEFAULT NULL COMMENT '发布人id（外键）',
+  `shengqingUserid` int(11) DEFAULT NULL COMMENT '报名人id（外键）',
+  `payid` int(11) DEFAULT NULL COMMENT '支付明细表id（外键）',
+  `time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '报名时间',
+  `message` varchar(2000) DEFAULT NULL COMMENT '留言',
+  `status` varchar(2) DEFAULT NULL COMMENT '状态',
+  PRIMARY KEY (`shenqingid`),
+  KEY `FK_bbsid` (`bbsid`),
+  KEY `FK_userid_5` (`publishUserid`),
+  KEY `FK_userid_6` (`shengqingUserid`),
+  CONSTRAINT `FK_bbsid` FOREIGN KEY (`bbsid`) REFERENCES `t_bbs` (`bbsid`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `FK_userid_5` FOREIGN KEY (`publishUserid`) REFERENCES `t_user` (`userid`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `FK_userid_6` FOREIGN KEY (`shengqingUserid`) REFERENCES `t_user` (`userid`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of t_bbsshengqing
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for `t_jianli`
@@ -49,7 +108,7 @@ CREATE TABLE `t_jianli` (
 -- Records of t_jianli
 -- ----------------------------
 INSERT INTO `t_jianli` VALUES ('1', '1', 'title', 'name', null, '2015-08-04', null, null, null, null, null, null, null, null, null, null, null, '1\\1.ico', null, null, null, null);
-INSERT INTO `t_jianli` VALUES ('4', '1', '简历标题', 'name', null, '2015-08-04', null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
+INSERT INTO `t_jianli` VALUES ('4', '5', 'uuijbbn', '%E9%B1%BC', '0', '1993-09-06', '17727610912', null, null, '%E9%B1%BC', null, null, null, null, null, null, null, null, null, '2015-09-06 00:00:00', '2015-09-06 21:57:29', null);
 INSERT INTO `t_jianli` VALUES ('5', '4', '1我的简历标题2', '姓名', '女', '2015-09-01', '13607447461', 'sfa@163.com', '420202199012120000', '长沙市望城坡1-1301', '身高', '[{\"time\":\"2003/9-2006/6\",\"school\":\"湖南大学\",\"zhuanye\":\"会计学\",\"xueli\":\"本科\",\"miaoshu\":\"预留字段\"},{\"time\":\"2007/9-2010/6\",\"school\":\"北京大学\",\"zhuanye\":\"会计学\",\"xueli\":\"研究生\"},{\"time\":\"2010/9-2013/6\",\"school\":\"哈弗大学\",\"zhuanye\":\"财经管理\",\"xueli\":\"博士生\"}]', '[{\"time\":\"2013/9-2013/12\",\"company\":\"新东方厨师学院\",\"kecheng\":\"厨师高级班\",\"address\":\"长沙\",\"zhengshu\":\"国家级厨师专业三级\",\"miaoshu\":\"预留字段\"},{\"time\":\"2013/9-2013/12\",\"company\":\"某某飞行学校\",\"kecheng\":\"飞行驾驶员课程\",\"address\":\"上海\",\"zhengshu\":\"飞行员资格证书\"}]', '[{\"zhonglei\":\"英语\",\"dengji\":\"专业八级\",\"chengdu\":\"精通\",\"duxie\":\"一般\",\"tingshuo\":\"良好\"},{\"zhonglei\":\"日语\",\"dengji\":\"国家一级\",\"chengdu\":\"熟练\",\"duxie\":\"一般\",\"tingshuo\":\"良好\"},{\"zhonglei\":\"法语\",\"dengji\":\"一级\",\"chengdu\":\"熟练\",\"duxie\":\"一般\",\"tingshuo\":\"良好\"}]', '[{\"time\":\"2013/9\",\"name\":\"校级辩论赛一等奖\",\"dengji\":\"高级0\"},{\"time\":\"2003/9\",\"name\":\"1一等奖\",\"dengji\":\"高级1\"},{\"time\":\"2004/9\",\"name\":\"2一等奖\",\"dengji\":\"高级2\"},{\"time\":\"2014/9\",\"name\":\"3一等奖\",\"dengji\":\"高级3\"},{\"time\":\"2015/9\",\"name\":\"4一等奖\",\"dengji\":\"高级4\"},{\"time\":\"2013/10\",\"name\":\"5一等奖\",\"dengji\":\"高级5\"}]', '[{\"time\":\"2013/9-2015/12\",\"company\":\"新东方英语学校\",\"zhiwei\":\"英语口语高级讲师\",\"address\":\"北京\",\"zhengshu\":\"预留字段\",\"miaoshu\":\"预留字段1\"}]', '自我评价啊,随便填', '5/1.ico', '2/2.xls', '2015-09-05 18:18:47', '2015-09-05 20:10:06', 'N');
 INSERT INTO `t_jianli` VALUES ('6', '1', '简历标题', '测试中文', null, '2015-08-04', null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
 INSERT INTO `t_jianli` VALUES ('7', '4', '我的简历标题2', '姓名', '女', '2015-09-01', '13607447461', 'sfa@163.com', '420202199012120000', '长沙市望城坡1-1301', '身高', '[{\"time\":\"2003/9-2006/6\",\"school\":\"湖南大学\",\"zhuanye\":\"会计学\",\"xueli\":\"本科\",\"miaoshu\":\"预留字段\"},{\"time\":\"2007/9-2010/6\",\"school\":\"北京大学\",\"zhuanye\":\"会计学\",\"xueli\":\"研究生\"},{\"time\":\"2010/9-2013/6\",\"school\":\"哈弗大学\",\"zhuanye\":\"财经管理\",\"xueli\":\"博士生\"}]', '[{\"time\":\"2013/9-2013/12\",\"company\":\"新东方厨师学院\",\"kecheng\":\"厨师高级班\",\"address\":\"长沙\",\"zhengshu\":\"国家级厨师专业三级\",\"miaoshu\":\"预留字段\"},{\"time\":\"2013/9-2013/12\",\"company\":\"某某飞行学校\",\"kecheng\":\"飞行驾驶员课程\",\"address\":\"上海\",\"zhengshu\":\"飞行员资格证书\"}]', '[{\"zhonglei\":\"英语\",\"dengji\":\"专业八级\",\"chengdu\":\"精通\",\"duxie\":\"一般\",\"tingshuo\":\"良好\"},{\"zhonglei\":\"日语\",\"dengji\":\"国家一级\",\"chengdu\":\"熟练\",\"duxie\":\"一般\",\"tingshuo\":\"良好\"},{\"zhonglei\":\"法语\",\"dengji\":\"一级\",\"chengdu\":\"熟练\",\"duxie\":\"一般\",\"tingshuo\":\"良好\"}]', '[{\"time\":\"2013/9\",\"name\":\"校级辩论赛一等奖\",\"dengji\":\"高级0\"},{\"time\":\"2003/9\",\"name\":\"1一等奖\",\"dengji\":\"高级1\"},{\"time\":\"2004/9\",\"name\":\"2一等奖\",\"dengji\":\"高级2\"},{\"time\":\"2014/9\",\"name\":\"3一等奖\",\"dengji\":\"高级3\"},{\"time\":\"2015/9\",\"name\":\"4一等奖\",\"dengji\":\"高级4\"},{\"time\":\"2013/10\",\"name\":\"5一等奖\",\"dengji\":\"高级5\"}]', '[{\"time\":\"2013/9-2015/12\",\"company\":\"新东方英语学校\",\"zhiwei\":\"英语口语高级讲师\",\"address\":\"北京\",\"zhengshu\":\"预留字段\",\"miaoshu\":\"预留字段\"}]', '自我评价啊,随便填', '5/1.ico', '2/2.xls', '2015-09-05 18:18:47', '2015-09-05 18:23:15', 'N');
@@ -116,7 +175,6 @@ CREATE TABLE `t_jianzhishengqing` (
 -- ----------------------------
 -- Records of t_jianzhishengqing
 -- ----------------------------
-INSERT INTO `t_jianzhishengqing` VALUES ('4', '1', '5', '1', '2', '2015-09-03 20:27:16', null);
 INSERT INTO `t_jianzhishengqing` VALUES ('5', '4', '4', '1', '6', '2015-09-03 21:44:44', null);
 INSERT INTO `t_jianzhishengqing` VALUES ('6', '1', '1', '1', '5', '2015-09-03 22:46:37', null);
 
@@ -235,7 +293,7 @@ CREATE TABLE `t_user` (
 -- ----------------------------
 -- Records of t_user
 -- ----------------------------
-INSERT INTO `t_user` VALUES ('1', '3', '开发人员', 'pwd', 'email2', '15207109571', 'riven', null, null, null, null, null, null, '1\\1.ico');
+INSERT INTO `t_user` VALUES ('1', '3', 'test1', 'pwd', 'xiazl1987@163.com', '15207109571', 'riven', null, null, null, null, null, null, '1\\1.ico');
 INSERT INTO `t_user` VALUES ('4', null, '中午', '2', null, '1', null, null, null, null, null, null, null, null);
 INSERT INTO `t_user` VALUES ('5', null, '', 'pwd', '', '18000000', '', '', '', '', '', '', '', '');
 INSERT INTO `t_user` VALUES ('6', '1', null, 'pwd', null, '13607447461', null, null, null, null, null, null, null, null);
