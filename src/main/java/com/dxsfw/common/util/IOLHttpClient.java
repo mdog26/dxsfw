@@ -99,16 +99,13 @@ public class IOLHttpClient {
 			}
 			NameValuePair[] data = nvps.toArray(new NameValuePair[] {});
 			//设置参数
-			String requestBody = "{\"email\":\"xiazl1987@163.com\"}";
-			httpost.setRequestHeader("Content-Type", "application/json");
-			
-//			File f = new File("D:/a.json");
-//			FileInputStream in = new FileInputStream(f);
-//			httpost.setRequestBody(new java.io.ByteArrayInputStream(requestBody.getBytes("utf-8")));
-//			httpost.setRequestBody(in);
-//			StringEntity entity = new StringEntity(requestBody);
-			StringRequestEntity entity = new StringRequestEntity(requestBody, "application/json", "utf-8");
-			httpost.setRequestEntity(entity);
+			httpost.setRequestBody(data);
+			// -------另一种json 格式交互接口 -----start
+//			String requestBody = "{\"email\":\"xiazl1987@163.com\"}";
+//			httpost.setRequestHeader("Content-Type", "application/json");
+//			StringRequestEntity entity = new StringRequestEntity(requestBody, "application/json", "utf-8");
+//			httpost.setRequestEntity(entity);
+			// -------另一种json 格式交互接口 -----end
 			//设置编码格式统一为UTF_8
 			httpost.getParams().setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET, "UTF-8");		
 			//设置超时
@@ -152,11 +149,33 @@ public class IOLHttpClient {
 		return sendPostRequest(url, requestParam, true);
 	}
 	
+	/**
+	 * Josn 接口交互
+	 */
+	public static String postJsonRequest(String url, String requestJsonBody) {
+		HttpClient httpClient = new HttpClient();
+		PostMethod method = new PostMethod(url);
+		try {
+			if (requestJsonBody != null && !requestJsonBody.trim().equals("")) {
+				RequestEntity requestEntity = new StringRequestEntity(
+						requestJsonBody, "application/json", "UTF-8");
+				method.setRequestEntity(requestEntity);
+			}
+			method.releaseConnection();
+			httpClient.executeMethod(method);
+			String responses = method.getResponseBodyAsString();
+			return responses;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "";
+	}
+	
 	public static void main(String[] args) {
 //		Map map=new HashMap();
 //		map.put("userid ", "1");
-		String url = "http://120.25.58.3:8080/dxsfw/pub/updateUser?token=0113F592410463C2DA4BA8AABB09FD4A";
-//		String url = "http://127.0.0.1:8080/dxsfw/pub/updateUser?token=B3526D29E30E433D537596A20C2DC8D7";
+//		String url = "http://120.25.58.3:8080/dxsfw/pub/updateUser?token=0113F592410463C2DA4BA8AABB09FD4A";
+		String url = "http://127.0.0.1:8080/dxsfw/pub/updateUser?token=6BEFB92F1EBD55723EBA8565B17D2580";
 //		String s=IOLHttpClient.sendPostRequest(url,map);
 //		System.out.println("www--- " + s);
 		String params = "{\"userid\": 1, \"name\":\"中午\"}";
