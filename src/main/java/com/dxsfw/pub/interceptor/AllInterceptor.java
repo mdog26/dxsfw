@@ -15,14 +15,6 @@ public class AllInterceptor extends HandlerInterceptorAdapter {
 	
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-		//方便调试，输出请求json
-//		if ("application/json".equalsIgnoreCase(request.getContentType()) || "application/json; charset=UTF-8".equalsIgnoreCase(request.getContentType())) {
-//			byte[] b = new byte[request.getContentLength()];
-//			request.getInputStream().read(b);
-//			String requestJson = new String(b, "utf-8");
-//			log.debug("URL : " + request.getServletPath());
-//			log.debug("Request Json : " + requestJson); request.getCharacterEncoding();  request.getContextPath(); request.getMethod();
-//		}
 		String action = request.getServletPath();
 		if ("/pub/login".equals(action) || "/pub/openApp".equals(action) || "/pub/regMobile".equals(action)
 				|| "/pub/getMobileCheckMsg".equals(action)) {
@@ -48,5 +40,18 @@ public class AllInterceptor extends HandlerInterceptorAdapter {
 		response.getWriter().write("{\"status\": "+Constant.STATUS_ERROR_500+", \"msg\":\""+Constant.MSG_ERROR_TOKEN+"\",\"token\":\"\"}");
 		log.debug("拦截请求 token失效 token : " + token);
 		return false;
+	}
+
+	public boolean beforePreHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+		//方便调试，输出请求json
+		if ("application/json".equalsIgnoreCase(request.getContentType()) || "application/json; charset=UTF-8".equalsIgnoreCase(request.getContentType())) {
+			BodyReaderHttpServletRequestWrapper requestWrapper = new BodyReaderHttpServletRequestWrapper(request);
+			String requestJson = requestWrapper.getRequestBodyAsString();
+			log.debug("URL : " + request.getServletPath());
+			log.debug("Request Json : " + requestJson);
+			return super.preHandle(requestWrapper, response, handler);
+		} else {
+			return super.preHandle(request, response, handler);
+		}
 	}
 }

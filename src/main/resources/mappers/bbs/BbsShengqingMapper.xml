@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dxsfw.bbs.dao.BbsShengqingDao" >
+  <resultMap id="BaseResultMap" type="com.dxsfw.bbs.model.BbsShengqing" >
+    <id column="shenqingid" property="shenqingid" jdbcType="INTEGER" />
+    <result column="bbsid" property="bbsid" jdbcType="INTEGER" />
+    <result column="publishUserid" property="publishuserid" jdbcType="INTEGER" />
+    <result column="shengqingUserid" property="shengqinguserid" jdbcType="INTEGER" />
+    <result column="payid" property="payid" jdbcType="INTEGER" />
+    <result column="time" property="time" jdbcType="TIMESTAMP" />
+    <result column="message" property="message" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    shenqingid, bbsid, publishUserid, shengqingUserid, payid, time, message, status
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.dxsfw.bbs.model.BbsShengqingExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_bbsshengqing
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_bbsshengqing
+    where shenqingid = #{shenqingid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_bbsshengqing
+    where shenqingid = #{shenqingid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.dxsfw.bbs.model.BbsShengqingExample" >
+    delete from t_bbsshengqing
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.dxsfw.bbs.model.BbsShengqing" >
+    insert into t_bbsshengqing (shenqingid, bbsid, publishUserid, 
+      shengqingUserid, payid, time, 
+      message, status)
+    values (#{shenqingid,jdbcType=INTEGER}, #{bbsid,jdbcType=INTEGER}, #{publishuserid,jdbcType=INTEGER}, 
+      #{shengqinguserid,jdbcType=INTEGER}, #{payid,jdbcType=INTEGER}, #{time,jdbcType=TIMESTAMP}, 
+      #{message,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dxsfw.bbs.model.BbsShengqing" >
+    insert into t_bbsshengqing
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="shenqingid != null" >
+        shenqingid,
+      </if>
+      <if test="bbsid != null" >
+        bbsid,
+      </if>
+      <if test="publishuserid != null" >
+        publishUserid,
+      </if>
+      <if test="shengqinguserid != null" >
+        shengqingUserid,
+      </if>
+      <if test="payid != null" >
+        payid,
+      </if>
+      <if test="time != null" >
+        time,
+      </if>
+      <if test="message != null" >
+        message,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="shenqingid != null" >
+        #{shenqingid,jdbcType=INTEGER},
+      </if>
+      <if test="bbsid != null" >
+        #{bbsid,jdbcType=INTEGER},
+      </if>
+      <if test="publishuserid != null" >
+        #{publishuserid,jdbcType=INTEGER},
+      </if>
+      <if test="shengqinguserid != null" >
+        #{shengqinguserid,jdbcType=INTEGER},
+      </if>
+      <if test="payid != null" >
+        #{payid,jdbcType=INTEGER},
+      </if>
+      <if test="time != null" >
+        #{time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="message != null" >
+        #{message,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.dxsfw.bbs.model.BbsShengqingExample" resultType="java.lang.Integer" >
+    select count(*) from t_bbsshengqing
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update t_bbsshengqing
+    <set >
+      <if test="record.shenqingid != null" >
+        shenqingid = #{record.shenqingid,jdbcType=INTEGER},
+      </if>
+      <if test="record.bbsid != null" >
+        bbsid = #{record.bbsid,jdbcType=INTEGER},
+      </if>
+      <if test="record.publishuserid != null" >
+        publishUserid = #{record.publishuserid,jdbcType=INTEGER},
+      </if>
+      <if test="record.shengqinguserid != null" >
+        shengqingUserid = #{record.shengqinguserid,jdbcType=INTEGER},
+      </if>
+      <if test="record.payid != null" >
+        payid = #{record.payid,jdbcType=INTEGER},
+      </if>
+      <if test="record.time != null" >
+        time = #{record.time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.message != null" >
+        message = #{record.message,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        status = #{record.status,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update t_bbsshengqing
+    set shenqingid = #{record.shenqingid,jdbcType=INTEGER},
+      bbsid = #{record.bbsid,jdbcType=INTEGER},
+      publishUserid = #{record.publishuserid,jdbcType=INTEGER},
+      shengqingUserid = #{record.shengqinguserid,jdbcType=INTEGER},
+      payid = #{record.payid,jdbcType=INTEGER},
+      time = #{record.time,jdbcType=TIMESTAMP},
+      message = #{record.message,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dxsfw.bbs.model.BbsShengqing" >
+    update t_bbsshengqing
+    <set >
+      <if test="bbsid != null" >
+        bbsid = #{bbsid,jdbcType=INTEGER},
+      </if>
+      <if test="publishuserid != null" >
+        publishUserid = #{publishuserid,jdbcType=INTEGER},
+      </if>
+      <if test="shengqinguserid != null" >
+        shengqingUserid = #{shengqinguserid,jdbcType=INTEGER},
+      </if>
+      <if test="payid != null" >
+        payid = #{payid,jdbcType=INTEGER},
+      </if>
+      <if test="time != null" >
+        time = #{time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="message != null" >
+        message = #{message,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where shenqingid = #{shenqingid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dxsfw.bbs.model.BbsShengqing" >
+    update t_bbsshengqing
+    set bbsid = #{bbsid,jdbcType=INTEGER},
+      publishUserid = #{publishuserid,jdbcType=INTEGER},
+      shengqingUserid = #{shengqinguserid,jdbcType=INTEGER},
+      payid = #{payid,jdbcType=INTEGER},
+      time = #{time,jdbcType=TIMESTAMP},
+      message = #{message,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR}
+    where shenqingid = #{shenqingid,jdbcType=INTEGER}
+  </update>
+</mapper>
