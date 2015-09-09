@@ -12,6 +12,20 @@
     <result column="picture" property="picture" jdbcType="VARCHAR" />
     <result column="status" property="status" jdbcType="VARCHAR" />
   </resultMap>
+  <resultMap id="ResResultMap" type="com.dxsfw.common.base.reply.ResReply" >
+    <id column="replyid" property="replyid" jdbcType="INTEGER" />
+    <result column="tablename" property="tablename" jdbcType="VARCHAR" />
+    <result column="pk" property="pk" jdbcType="INTEGER" />
+    <result column="publishUserid" property="publishuserid" jdbcType="INTEGER" />
+    <result column="replyUserid" property="replyuserid" jdbcType="INTEGER" />
+    <result column="message" property="message" jdbcType="VARCHAR" />
+    <result column="time" property="time" jdbcType="TIMESTAMP" />
+    <result column="picture" property="picture" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    
+<!--     用户表信息 -->
+    <result column="name" property="name" jdbcType="VARCHAR" />
+  </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
       <foreach collection="oredCriteria" item="criteria" separator="or" >
@@ -73,13 +87,19 @@
   <sql id="Base_Column_List" >
     replyid, tablename, pk, publishUserid, replyUserid, message, time, picture, status
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.dxsfw.pub.model.ReplyExample" >
+  <select id="selectByExample" resultMap="ResResultMap" parameterType="com.dxsfw.pub.model.ReplyExample" >
     select
     <if test="distinct" >
       distinct
     </if>
-    <include refid="Base_Column_List" />
-    from t_reply
+      replyid, tablename, pk, publishUserid, replyUserid, message, time, r.picture, status
+    <if test="leftJoinUser" >
+      , name
+    </if>
+    from t_reply r
+    <if test="leftJoinUser" >
+       left join t_user u on r.replyUserid = u.userid
+    </if>
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>

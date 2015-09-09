@@ -17,12 +17,16 @@ import com.dxsfw.bbs.dao.BbsDao;
 import com.dxsfw.bbs.dao.BbsShengqingDao;
 import com.dxsfw.bbs.model.Bbs;
 import com.dxsfw.bbs.model.BbsExample;
+import com.dxsfw.bbs.model.BbsExample.Criteria;
 import com.dxsfw.bbs.model.BbsShengqing;
 import com.dxsfw.bbs.model.BbsShengqingExample;
 import com.dxsfw.bbs.service.BbsService;
 import com.dxsfw.common.base.BaseServiceImpl;
 import com.dxsfw.common.page.Pagination;
+import com.dxsfw.pub.dao.ReplyDao;
 import com.dxsfw.pub.dao.UserDao;
+import com.dxsfw.pub.model.Reply;
+import com.dxsfw.pub.model.ReplyExample;
 import com.dxsfw.pub.model.UserExample;
 import com.dxsfw.pub.service.UserService;
 
@@ -42,6 +46,9 @@ public class BbsServiceImp extends BaseServiceImpl<Bbs, Integer> implements BbsS
 	
 	@Autowired
 	private UserDao userDao;
+	
+	@Autowired
+	private ReplyDao replyDao;
 	
 	@Autowired
 	private UserService userService;
@@ -121,21 +128,32 @@ public class BbsServiceImp extends BaseServiceImpl<Bbs, Integer> implements BbsS
 	/* 获取交流/授课List或者search交流/授课List
 	 */
 	@Override
-	public Pagination search(String keyword, Pagination p) {
+	public Pagination search(String keyword, String type, Pagination p) {
 		BbsExample example = new BbsExample();
 		if (keyword != null && !StringUtils.isEmpty(keyword)) {
 			String[] keys = keyword.split(" ");
 			for (int i = 0; i < keys.length; i++) {
 				String key = keys[i];
 				if (i == 0) {
-					example.createCriteria().andTagLike("%" + key + "%");
-					example.or(example.createCriteria().andTitleLike("%" + key + "%"));
+					if (!StringUtils.isEmpty(type)) {
+						example.createCriteria().andTagLike("%" + key + "%").andTypeEqualTo(type);
+						example.or(example.createCriteria().andTitleLike("%" + key + "%").andTypeEqualTo(type));
+					} else {
+						example.createCriteria().andTagLike("%" + key + "%");
+						example.or(example.createCriteria().andTitleLike("%" + key + "%"));
+					}
 				} else {
-					example.or(example.createCriteria().andTagLike("%" + key + "%"));
-					example.or(example.createCriteria().andTitleLike("%" + key + "%"));
+					if (!StringUtils.isEmpty(type)) {
+						example.or(example.createCriteria().andTagLike("%" + key + "%").andTypeEqualTo(type));
+						example.or(example.createCriteria().andTitleLike("%" + key + "%").andTypeEqualTo(type));
+					} else {
+						example.or(example.createCriteria().andTagLike("%" + key + "%"));
+						example.or(example.createCriteria().andTitleLike("%" + key + "%"));
+					}
 				}
 			}
 		}
+		
 		example.setOrderByClause("updatetime desc");
 		return this.queryByExample(example, p);
 	}
@@ -146,7 +164,10 @@ public class BbsServiceImp extends BaseServiceImpl<Bbs, Integer> implements BbsS
 	@Override
 	public Pagination myList(Integer userid, String type, Pagination p) {
 		BbsExample example = new BbsExample();
-		example.createCriteria().andUseridEqualTo(userid).andTypeEqualTo(type);
+		Criteria c = example.createCriteria().andUseridEqualTo(userid);
+		if (!StringUtils.isEmpty(type)) {
+			c.andTypeEqualTo(type);
+		}
 		example.setOrderByClause("updatetime desc");
 		return this.queryByExample(example, p);
 	}
@@ -155,19 +176,22 @@ public class BbsServiceImp extends BaseServiceImpl<Bbs, Integer> implements BbsS
 	 * 我申请的交流/授课列表
 	 */
 	@Override
-	public Pagination myApplyList(Integer userid, Pagination p) {
+	public Pagination myApplyList(Integer userid, String type, Pagination p) {
 		BbsShengqingExample example1 = new BbsShengqingExample();
 		example1.createCriteria().andShengqinguseridEqualTo(userid);
 		List<BbsShengqing> idList = bbsShengqingDao.selectByExample(example1);
 		if (idList.size() > 0) {
-			// 子表查询出所有的交流/授课id
+			// 子表查询出所有的授课id
 			List<Integer> ids = new ArrayList<Integer>();
 			for (BbsShengqing bbsShengqing : idList) {
 				ids.add(bbsShengqing.getBbsid());
 			}
 			// 再查主表
 			BbsExample example = new BbsExample();
-			example.createCriteria().andBbsidIn(ids);
+			Criteria c = example.createCriteria().andBbsidIn(ids);
+			if (!StringUtils.isEmpty(type)) {
+				c.andTypeEqualTo(type);
+			}
 			example.setOrderByClause("updatetime desc");
 			return this.queryByExample(example, p);
 		} else {
@@ -199,6 +223,33 @@ public class BbsServiceImp extends BaseServiceImpl<Bbs, Integer> implements BbsS
 			example.createCriteria().andUseridIn(ids);
 			example.setOrderByClause("userid asc");
 			return userService.searchUserList(example, p);
+		} else {
+			return p;
+		}
+	}
+	
+	/**
+	 * 我回复的交流帖子
+	 */
+	@Override
+	public Pagination myReplyList(Integer userid, String type, Pagination p) {
+		ReplyExample example1 = new ReplyExample();
+		example1.createCriteria().andReplyuseridEqualTo(userid);
+		List<Reply> idList = replyDao.selectByExample(example1);
+		if (idList.size() > 0) {
+			// 子表查询出所有的授课id
+			List<Integer> ids = new ArrayList<Integer>();
+			for (Reply reply : idList) {
+				ids.add(reply.getPk());
+			}
+			// 再查主表
+			BbsExample example = new BbsExample();
+			Criteria c = example.createCriteria().andBbsidIn(ids);
+			if (!StringUtils.isEmpty(type)) {
+				c.andTypeEqualTo(type);
+			}
+			example.setOrderByClause("updatetime desc");
+			return this.queryByExample(example, p);
 		} else {
 			return p;
 		}

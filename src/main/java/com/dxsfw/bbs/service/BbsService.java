@@ -12,12 +12,14 @@ public interface BbsService extends BaseService<Bbs, Integer> {
 
 	boolean applyClass(BbsShengqing record);
 
-	Pagination search(String keyword, Pagination p);
+	Pagination search(String keyword, String type, Pagination p);
 
 	Pagination myList(Integer userid, String type, Pagination p);
 
-	Pagination myApplyList(Integer userid, Pagination p);
+	Pagination myApplyList(Integer userid, String type, Pagination p);
 
 	Pagination applyUserList(Integer bbsid, Boolean includePublishUser, Pagination p);
+	
+	Pagination myReplyList(Integer userid, String type, Pagination p);
 	
 }

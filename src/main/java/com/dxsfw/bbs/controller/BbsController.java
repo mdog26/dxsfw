@@ -154,7 +154,7 @@ public class BbsController extends BaseController {
 	 */
 	@ResponseBody
 	@RequestMapping("applyClass")
-	public Res applyBbs(@RequestParam(value = "bbsid") Integer bbsid, 
+	public Res applyClass(@RequestParam(value = "bbsid") Integer bbsid, 
 			@RequestParam(value = "publishuserid") Integer publishuserid,
 			@RequestParam(value = "shengqinguserid") Integer shengqinguserid,
 			@RequestParam(value = "message", required = false) String message
@@ -171,7 +171,7 @@ public class BbsController extends BaseController {
 			// 申请成功
 			responseJson.setMsg(Constant.BBSSHENGQING + Constant.OK);
 		} else {
-			responseJson.setMsg("您已经报名申请过此授课/授课已经报满");
+			responseJson.setMsg("您已经报名申请过此授课或授课名额已经报满");
 			responseJson.setStatus(Constant.STATUS_ERROR_500);
 		}
 		return responseJson;
@@ -187,6 +187,7 @@ public class BbsController extends BaseController {
 	@ResponseBody
 	@RequestMapping("search")
 	public Res search(@RequestParam(value = "keyword", required = false) String keyword, 
+			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "pageNo") Integer pageNo,
 			@RequestParam(value = "pageSize", required = false) Integer pageSize
 			) {
@@ -197,7 +198,7 @@ public class BbsController extends BaseController {
 			if (pageSize != null) {
 				p.setPageSize(pageSize);
 			}
-			p = bbsService.search(keyword, p);
+			p = bbsService.search(keyword, type, p);
 			responseJson.setList(p.getList());
 			responseJson.setMsg(Constant.SEARCH + Constant.BBS + Constant.OK);
 		} catch (Exception e) {
@@ -218,7 +219,7 @@ public class BbsController extends BaseController {
 	@ResponseBody
 	@RequestMapping("myList")
 	public Res myList(@RequestParam(value = "userid") Integer userid, 
-			@RequestParam(value = "type") String type, 
+			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "pageNo") Integer pageNo,
 			@RequestParam(value = "pageSize", required = false) Integer pageSize
 			) {
@@ -250,6 +251,7 @@ public class BbsController extends BaseController {
 	@ResponseBody
 	@RequestMapping("myApplyList")
 	public Res myApplyList(@RequestParam(value = "userid") Integer userid, 
+			@RequestParam(value = "type", required = false) String type,
 			@RequestParam(value = "pageNo") Integer pageNo,
 			@RequestParam(value = "pageSize", required = false) Integer pageSize
 			) {
@@ -260,7 +262,7 @@ public class BbsController extends BaseController {
 			if (pageSize != null) {
 				p.setPageSize(pageSize);
 			}
-			p = bbsService.myApplyList(userid, p);
+			p = bbsService.myApplyList(userid, type, p);
 			responseJson.setList(p.getList());
 			responseJson.setMsg(Constant.SEARCH + Constant.BBS + Constant.OK);
 		} catch (Exception e) {
@@ -298,6 +300,38 @@ public class BbsController extends BaseController {
 			responseJson.setMsg(Constant.SEARCH + Constant.BBS + Constant.OK);
 		} catch (Exception e) {
 			log.error("/applyUserList", e);
+			responseJson.setMsg(Constant.SEARCH + Constant.BBS + Constant.ERROR);
+			responseJson.setStatus(Constant.STATUS_ERROR_500);
+		}
+		return responseJson;
+	}
+	
+	/**
+	 * 查看我回复的交流List
+	 * @param userid
+	 * @param pageNo
+	 * @param pageSize
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("myReplyList")
+	public Res myReplyList(@RequestParam(value = "userid") Integer userid, 
+			@RequestParam(value = "type", required = false) String type,
+			@RequestParam(value = "pageNo") Integer pageNo,
+			@RequestParam(value = "pageSize", required = false) Integer pageSize
+			) {
+		Res responseJson = new Res();
+		try {
+			Pagination p = new Pagination();
+			p.setPageNo(pageNo);
+			if (pageSize != null) {
+				p.setPageSize(pageSize);
+			}
+			p = bbsService.myReplyList(userid, type, p);
+			responseJson.setList(p.getList());
+			responseJson.setMsg(Constant.SEARCH + Constant.BBS + Constant.OK);
+		} catch (Exception e) {
+			log.error("/myApplyList", e);
 			responseJson.setMsg(Constant.SEARCH + Constant.BBS + Constant.ERROR);
 			responseJson.setStatus(Constant.STATUS_ERROR_500);
 		}
