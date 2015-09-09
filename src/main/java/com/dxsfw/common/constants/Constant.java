@@ -24,6 +24,8 @@ public class Constant {
 	
 	public final static String MSG_ERROR_USER_UPDATE = "个人信息更新失败";
 	
+	public final static String MSG_ERROR_USER_GET = "获取个人信息失败";
+	
 	public final static String MSG_ERROR_JIANLI_ADD = "添加简历失败";
 	
 	public final static String MSG_ERROR_JIANLI_LIST = "获取所有简历失败";
@@ -39,6 +41,8 @@ public class Constant {
 	public final static String MSG_OK_CHECK_MSG = "注册码发送成功";
 	
 	public final static String MSG_OK_USER_UPDATE = "个人信息更新成功";
+	
+	public final static String MSG_OK_USER_GET = "获取个人信息成功";
 	
 	public final static String MSG_OK_JIANLI_ADD = "添加简历成功";
 	
@@ -59,5 +63,5 @@ public class Constant {
 	public final static String PARTY = "活动";
 	public final static String PARTYSHENGQING = "活动申请";
 	public final static String BBS = "交流/授课";
-	public final static String BBSSHENGQING = "交流/授课申请";
+	public final static String BBSSHENGQING = "授课申请";
 }

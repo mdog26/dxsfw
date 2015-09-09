@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : 10.0.0.146
-Source Server Version : 50539
-Source Host           : 10.0.0.146:3306
+Source Server         : localhost
+Source Server Version : 50515
+Source Host           : localhost:3306
 Source Database       : dxsfw
 
 Target Server Type    : MYSQL
-Target Server Version : 50539
+Target Server Version : 50515
 File Encoding         : 65001
 
-Date: 2015-09-09 18:40:21
+Date: 2015-09-10 00:23:41
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -26,10 +26,10 @@ CREATE TABLE `t_bbs` (
   `createtime` timestamp NULL DEFAULT NULL COMMENT '发布时间',
   `expiretime` timestamp NULL DEFAULT NULL COMMENT '过期时间',
   `updatetime` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `type` varchar(200) DEFAULT NULL COMMENT '发布类型{交流、讲师授课}',
+  `type` varchar(200) DEFAULT NULL COMMENT '发布类型{1-交流、2-讲师授课}',
   `title` varchar(200) DEFAULT NULL COMMENT '标题',
   `address` varchar(500) DEFAULT NULL COMMENT '授课地址',
-  `bankuai` varchar(300) DEFAULT NULL,
+  `bankuai` varchar(300) DEFAULT NULL COMMENT '板块',
   `zhuanye` varchar(300) DEFAULT NULL COMMENT '专业分类/板块｛用于论坛交流的专业分类｝',
   `teachtype` varchar(500) DEFAULT NULL COMMENT '授课种类｛1对1，1对多当面授课等｝',
   `content` varchar(8000) DEFAULT NULL COMMENT '交流/授课内容介绍',
@@ -42,11 +42,15 @@ CREATE TABLE `t_bbs` (
   `pictures` varchar(1000) DEFAULT NULL COMMENT '图片集{1,23,50 "公共图片表id组合"}',
   `info` varchar(1000) DEFAULT NULL COMMENT '预留字段',
   PRIMARY KEY (`bbsid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of t_bbs
 -- ----------------------------
+INSERT INTO `t_bbs` VALUES ('2', '5', null, '2015-09-09 20:30:10', null, '2015-09-09 22:36:24', '1', '标题1', null, null, null, null, '内容', null, null, null, '2', '?', null, null, null);
+INSERT INTO `t_bbs` VALUES ('3', '5', null, '2015-09-09 20:31:08', null, '2015-09-09 22:36:27', '1', '标题1', null, null, null, null, '内容', null, null, null, null, '?', null, null, null);
+INSERT INTO `t_bbs` VALUES ('4', '5', null, '2015-09-09 20:37:43', null, '2015-09-09 22:50:53', '1', '交流1update', null, null, null, null, '交流内容，学生学术交流', null, null, null, null, '学术 交流', null, '7,8', null);
+INSERT INTO `t_bbs` VALUES ('5', '4', null, '2015-09-09 20:44:04', null, '2015-09-09 21:31:37', '2', '授课1', null, null, null, '1对1面授', '高数补课', '周六下午4点-6点', '1', null, null, '数学', null, null, null);
 
 -- ----------------------------
 -- Table structure for `t_bbsshengqing`
@@ -68,11 +72,12 @@ CREATE TABLE `t_bbsshengqing` (
   CONSTRAINT `FK_bbsid` FOREIGN KEY (`bbsid`) REFERENCES `t_bbs` (`bbsid`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `FK_userid_5` FOREIGN KEY (`publishUserid`) REFERENCES `t_user` (`userid`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `FK_userid_6` FOREIGN KEY (`shengqingUserid`) REFERENCES `t_user` (`userid`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of t_bbsshengqing
 -- ----------------------------
+INSERT INTO `t_bbsshengqing` VALUES ('1', '5', '1', '7', null, '2015-09-09 21:31:36', null, null);
 
 -- ----------------------------
 -- Table structure for `t_jianli`
@@ -102,17 +107,20 @@ CREATE TABLE `t_jianli` (
   `updatetime` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `status` varchar(2) DEFAULT NULL,
   PRIMARY KEY (`jianliid`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of t_jianli
 -- ----------------------------
-INSERT INTO `t_jianli` VALUES ('1', '1', 'title', 'name', null, '2015-08-04', null, null, null, null, null, null, null, null, null, null, null, '1\\1.ico', null, null, null, null);
-INSERT INTO `t_jianli` VALUES ('4', '5', 'uuijbbn', '%E9%B1%BC', '0', '1993-09-06', '17727610912', null, null, '%E9%B1%BC', null, null, null, null, null, null, null, null, null, '2015-09-06 00:00:00', '2015-09-06 21:57:29', null);
+INSERT INTO `t_jianli` VALUES ('1', '1', 'title', 'name', null, '2015-08-04', null, null, null, null, null, null, null, null, null, null, null, '1\\1.ico', null, null, '2015-09-09 22:50:54', null);
+INSERT INTO `t_jianli` VALUES ('4', '5', 'uuijbbn', '%E9%B1%BC', '0', '1993-09-06', '17727610912', null, null, '%E9%B1%BC', null, null, null, null, null, null, null, null, null, '2015-09-06 00:00:00', '2015-09-09 22:50:53', null);
 INSERT INTO `t_jianli` VALUES ('5', '4', '1我的简历标题2', '姓名', '女', '2015-09-01', '13607447461', 'sfa@163.com', '420202199012120000', '长沙市望城坡1-1301', '身高', '[{\"time\":\"2003/9-2006/6\",\"school\":\"湖南大学\",\"zhuanye\":\"会计学\",\"xueli\":\"本科\",\"miaoshu\":\"预留字段\"},{\"time\":\"2007/9-2010/6\",\"school\":\"北京大学\",\"zhuanye\":\"会计学\",\"xueli\":\"研究生\"},{\"time\":\"2010/9-2013/6\",\"school\":\"哈弗大学\",\"zhuanye\":\"财经管理\",\"xueli\":\"博士生\"}]', '[{\"time\":\"2013/9-2013/12\",\"company\":\"新东方厨师学院\",\"kecheng\":\"厨师高级班\",\"address\":\"长沙\",\"zhengshu\":\"国家级厨师专业三级\",\"miaoshu\":\"预留字段\"},{\"time\":\"2013/9-2013/12\",\"company\":\"某某飞行学校\",\"kecheng\":\"飞行驾驶员课程\",\"address\":\"上海\",\"zhengshu\":\"飞行员资格证书\"}]', '[{\"zhonglei\":\"英语\",\"dengji\":\"专业八级\",\"chengdu\":\"精通\",\"duxie\":\"一般\",\"tingshuo\":\"良好\"},{\"zhonglei\":\"日语\",\"dengji\":\"国家一级\",\"chengdu\":\"熟练\",\"duxie\":\"一般\",\"tingshuo\":\"良好\"},{\"zhonglei\":\"法语\",\"dengji\":\"一级\",\"chengdu\":\"熟练\",\"duxie\":\"一般\",\"tingshuo\":\"良好\"}]', '[{\"time\":\"2013/9\",\"name\":\"校级辩论赛一等奖\",\"dengji\":\"高级0\"},{\"time\":\"2003/9\",\"name\":\"1一等奖\",\"dengji\":\"高级1\"},{\"time\":\"2004/9\",\"name\":\"2一等奖\",\"dengji\":\"高级2\"},{\"time\":\"2014/9\",\"name\":\"3一等奖\",\"dengji\":\"高级3\"},{\"time\":\"2015/9\",\"name\":\"4一等奖\",\"dengji\":\"高级4\"},{\"time\":\"2013/10\",\"name\":\"5一等奖\",\"dengji\":\"高级5\"}]', '[{\"time\":\"2013/9-2015/12\",\"company\":\"新东方英语学校\",\"zhiwei\":\"英语口语高级讲师\",\"address\":\"北京\",\"zhengshu\":\"预留字段\",\"miaoshu\":\"预留字段1\"}]', '自我评价啊,随便填', '5/1.ico', '2/2.xls', '2015-09-05 18:18:47', '2015-09-05 20:10:06', 'N');
 INSERT INTO `t_jianli` VALUES ('6', '1', '简历标题', '测试中文', null, '2015-08-04', null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
 INSERT INTO `t_jianli` VALUES ('7', '4', '我的简历标题2', '姓名', '女', '2015-09-01', '13607447461', 'sfa@163.com', '420202199012120000', '长沙市望城坡1-1301', '身高', '[{\"time\":\"2003/9-2006/6\",\"school\":\"湖南大学\",\"zhuanye\":\"会计学\",\"xueli\":\"本科\",\"miaoshu\":\"预留字段\"},{\"time\":\"2007/9-2010/6\",\"school\":\"北京大学\",\"zhuanye\":\"会计学\",\"xueli\":\"研究生\"},{\"time\":\"2010/9-2013/6\",\"school\":\"哈弗大学\",\"zhuanye\":\"财经管理\",\"xueli\":\"博士生\"}]', '[{\"time\":\"2013/9-2013/12\",\"company\":\"新东方厨师学院\",\"kecheng\":\"厨师高级班\",\"address\":\"长沙\",\"zhengshu\":\"国家级厨师专业三级\",\"miaoshu\":\"预留字段\"},{\"time\":\"2013/9-2013/12\",\"company\":\"某某飞行学校\",\"kecheng\":\"飞行驾驶员课程\",\"address\":\"上海\",\"zhengshu\":\"飞行员资格证书\"}]', '[{\"zhonglei\":\"英语\",\"dengji\":\"专业八级\",\"chengdu\":\"精通\",\"duxie\":\"一般\",\"tingshuo\":\"良好\"},{\"zhonglei\":\"日语\",\"dengji\":\"国家一级\",\"chengdu\":\"熟练\",\"duxie\":\"一般\",\"tingshuo\":\"良好\"},{\"zhonglei\":\"法语\",\"dengji\":\"一级\",\"chengdu\":\"熟练\",\"duxie\":\"一般\",\"tingshuo\":\"良好\"}]', '[{\"time\":\"2013/9\",\"name\":\"校级辩论赛一等奖\",\"dengji\":\"高级0\"},{\"time\":\"2003/9\",\"name\":\"1一等奖\",\"dengji\":\"高级1\"},{\"time\":\"2004/9\",\"name\":\"2一等奖\",\"dengji\":\"高级2\"},{\"time\":\"2014/9\",\"name\":\"3一等奖\",\"dengji\":\"高级3\"},{\"time\":\"2015/9\",\"name\":\"4一等奖\",\"dengji\":\"高级4\"},{\"time\":\"2013/10\",\"name\":\"5一等奖\",\"dengji\":\"高级5\"}]', '[{\"time\":\"2013/9-2015/12\",\"company\":\"新东方英语学校\",\"zhiwei\":\"英语口语高级讲师\",\"address\":\"北京\",\"zhengshu\":\"预留字段\",\"miaoshu\":\"预留字段\"}]', '自我评价啊,随便填', '5/1.ico', '2/2.xls', '2015-09-05 18:18:47', '2015-09-05 18:23:15', 'N');
 INSERT INTO `t_jianli` VALUES ('8', '4', '1我的简历标题2', '姓名', '女', '2015-09-05', '13607447461', 'sfa@163.com', '420202199012120000', '长沙市望城坡1-1301', '身高', '[{\"time\":\"2003/9-2006/6\",\"school\":\"湖南大学\",\"zhuanye\":\"会计学\",\"xueli\":\"本科\",\"miaoshu\":\"预留字段\"},{\"time\":\"2007/9-2010/6\",\"school\":\"北京大学\",\"zhuanye\":\"会计学\",\"xueli\":\"研究生\"},{\"time\":\"2010/9-2013/6\",\"school\":\"哈弗大学\",\"zhuanye\":\"财经管理\",\"xueli\":\"博士生\"}]', '[{\"time\":\"2013/9-2013/12\",\"company\":\"新东方厨师学院\",\"kecheng\":\"厨师高级班\",\"address\":\"长沙\",\"zhengshu\":\"国家级厨师专业三级\",\"miaoshu\":\"预留字段\"},{\"time\":\"2013/9-2013/12\",\"company\":\"某某飞行学校\",\"kecheng\":\"飞行驾驶员课程\",\"address\":\"上海\",\"zhengshu\":\"飞行员资格证书\"}]', '[{\"zhonglei\":\"英语\",\"dengji\":\"专业八级\",\"chengdu\":\"精通\",\"duxie\":\"一般\",\"tingshuo\":\"良好\"},{\"zhonglei\":\"日语\",\"dengji\":\"国家一级\",\"chengdu\":\"熟练\",\"duxie\":\"一般\",\"tingshuo\":\"良好\"},{\"zhonglei\":\"法语\",\"dengji\":\"一级\",\"chengdu\":\"熟练\",\"duxie\":\"一般\",\"tingshuo\":\"良好\"}]', '[{\"time\":\"2013/9\",\"name\":\"校级辩论赛一等奖\",\"dengji\":\"高级0\"},{\"time\":\"2003/9\",\"name\":\"1一等奖\",\"dengji\":\"高级1\"},{\"time\":\"2004/9\",\"name\":\"2一等奖\",\"dengji\":\"高级2\"},{\"time\":\"2014/9\",\"name\":\"3一等奖\",\"dengji\":\"高级3\"},{\"time\":\"2015/9\",\"name\":\"4一等奖\",\"dengji\":\"高级4\"},{\"time\":\"2013/10\",\"name\":\"5一等奖\",\"dengji\":\"高级5\"}]', '[{\"time\":\"2013/9-2015/12\",\"company\":\"新东方英语学校\",\"zhiwei\":\"英语口语高级讲师\",\"address\":\"北京\",\"zhengshu\":\"预留字段\",\"miaoshu\":\"预留字段1\"}]', '自我评价啊,随便填', '5/1.ico', '2/2.xls', '2015-09-05 18:18:47', '2015-09-05 18:23:15', 'N');
+INSERT INTO `t_jianli` VALUES ('9', '4', '??????3', '??', '?', '2015-09-01', '13607447461', 'sfa@163.com', '420202199012120000', '??????1-1301', '??', '[{\"time\":\"2003/9-2006/6\",\"school\":\"????\",\"zhuanye\":\"???\",\"xueli\":\"??\",\"miaoshu\":\"????\"},{\"time\":\"2007/9-2010/6\",\"school\":\"????\",\"zhuanye\":\"???\",\"xueli\":\"???\"},{\"time\":\"2010/9-2013/6\",\"school\":\"????\",\"zhuanye\":\"????\",\"xueli\":\"???\"}]', '[{\"time\":\"2013/9-2013/12\",\"company\":\"???????\",\"kecheng\":\"?????\",\"address\":\"??\",\"zhengshu\":\"?????????\",\"miaoshu\":\"????\"},{\"time\":\"2013/9-2013/12\",\"company\":\"??????\",\"kecheng\":\"???????\",\"address\":\"??\",\"zhengshu\":\"???????\"}]', '[{\"zhonglei\":\"??\",\"dengji\":\"????\",\"chengdu\":\"??\",\"duxie\":\"??\",\"tingshuo\":\"??\"},{\"zhonglei\":\"??\",\"dengji\":\"????\",\"chengdu\":\"??\",\"duxie\":\"??\",\"tingshuo\":\"??\"},{\"zhonglei\":\"??\",\"dengji\":\"??\",\"chengdu\":\"??\",\"duxie\":\"??\",\"tingshuo\":\"??\"}]', '[{\"time\":\"2013/9\",\"name\":\"????????\",\"dengji\":\"??0\"},{\"time\":\"2003/9\",\"name\":\"1???\",\"dengji\":\"??1\"},{\"time\":\"2004/9\",\"name\":\"2???\",\"dengji\":\"??2\"},{\"time\":\"2014/9\",\"name\":\"3???\",\"dengji\":\"??3\"},{\"time\":\"2015/9\",\"name\":\"4???\",\"dengji\":\"??4\"},{\"time\":\"2013/10\",\"name\":\"5???\",\"dengji\":\"??5\"}]', '[{\"time\":\"2013/9-2015/12\",\"company\":\"???????\",\"zhiwei\":\"????????\",\"address\":\"??\",\"zhengshu\":\"????\",\"miaoshu\":\"????\"}]', '?????,???', '5/1.ico', '2/2.xls', '2015-09-09 20:32:56', '2015-09-09 20:32:56', 'N');
+INSERT INTO `t_jianli` VALUES ('10', '4', '我的简历标题3', '姓名', '女', '2015-09-01', '13607447461', 'sfa@163.com', '420202199012120000', '长沙市望城坡1-1301', '身高', '[{\"time\":\"2003/9-2006/6\",\"school\":\"湖南大学\",\"zhuanye\":\"会计学\",\"xueli\":\"本科\",\"miaoshu\":\"预留字段\"},{\"time\":\"2007/9-2010/6\",\"school\":\"北京大学\",\"zhuanye\":\"会计学\",\"xueli\":\"研究生\"},{\"time\":\"2010/9-2013/6\",\"school\":\"哈弗大学\",\"zhuanye\":\"财经管理\",\"xueli\":\"博士生\"}]', '[{\"time\":\"2013/9-2013/12\",\"company\":\"新东方厨师学院\",\"kecheng\":\"厨师高级班\",\"address\":\"长沙\",\"zhengshu\":\"国家级厨师专业三级\",\"miaoshu\":\"预留字段\"},{\"time\":\"2013/9-2013/12\",\"company\":\"某某飞行学校\",\"kecheng\":\"飞行驾驶员课程\",\"address\":\"上海\",\"zhengshu\":\"飞行员资格证书\"}]', '[{\"zhonglei\":\"英语\",\"dengji\":\"专业八级\",\"chengdu\":\"精通\",\"duxie\":\"一般\",\"tingshuo\":\"良好\"},{\"zhonglei\":\"日语\",\"dengji\":\"国家一级\",\"chengdu\":\"熟练\",\"duxie\":\"一般\",\"tingshuo\":\"良好\"},{\"zhonglei\":\"法语\",\"dengji\":\"一级\",\"chengdu\":\"熟练\",\"duxie\":\"一般\",\"tingshuo\":\"良好\"}]', '[{\"time\":\"2013/9\",\"name\":\"校级辩论赛一等奖\",\"dengji\":\"高级0\"},{\"time\":\"2003/9\",\"name\":\"1一等奖\",\"dengji\":\"高级1\"},{\"time\":\"2004/9\",\"name\":\"2一等奖\",\"dengji\":\"高级2\"},{\"time\":\"2014/9\",\"name\":\"3一等奖\",\"dengji\":\"高级3\"},{\"time\":\"2015/9\",\"name\":\"4一等奖\",\"dengji\":\"高级4\"},{\"time\":\"2013/10\",\"name\":\"5一等奖\",\"dengji\":\"高级5\"}]', '[{\"time\":\"2013/9-2015/12\",\"company\":\"新东方英语学校\",\"zhiwei\":\"英语口语高级讲师\",\"address\":\"北京\",\"zhengshu\":\"预留字段\",\"miaoshu\":\"预留字段\"}]', '自我评价啊,随便填', '5/1.ico', '2/2.xls', '2015-09-09 20:37:06', '2015-09-09 20:37:06', 'N');
+INSERT INTO `t_jianli` VALUES ('11', '4', '我的简历标题3', '姓名', '女', '2015-09-01', '13607447461', 'sfa@163.com', '420202199012120000', '长沙市望城坡1-1301', '身高', '[{\"time\":\"2003/9-2006/6\",\"school\":\"湖南大学\",\"zhuanye\":\"会计学\",\"xueli\":\"本科\",\"miaoshu\":\"预留字段\"},{\"time\":\"2007/9-2010/6\",\"school\":\"北京大学\",\"zhuanye\":\"会计学\",\"xueli\":\"研究生\"},{\"time\":\"2010/9-2013/6\",\"school\":\"哈弗大学\",\"zhuanye\":\"财经管理\",\"xueli\":\"博士生\"}]', '[{\"time\":\"2013/9-2013/12\",\"company\":\"新东方厨师学院\",\"kecheng\":\"厨师高级班\",\"address\":\"长沙\",\"zhengshu\":\"国家级厨师专业三级\",\"miaoshu\":\"预留字段\"},{\"time\":\"2013/9-2013/12\",\"company\":\"某某飞行学校\",\"kecheng\":\"飞行驾驶员课程\",\"address\":\"上海\",\"zhengshu\":\"飞行员资格证书\"}]', '[{\"zhonglei\":\"英语\",\"dengji\":\"专业八级\",\"chengdu\":\"精通\",\"duxie\":\"一般\",\"tingshuo\":\"良好\"},{\"zhonglei\":\"日语\",\"dengji\":\"国家一级\",\"chengdu\":\"熟练\",\"duxie\":\"一般\",\"tingshuo\":\"良好\"},{\"zhonglei\":\"法语\",\"dengji\":\"一级\",\"chengdu\":\"熟练\",\"duxie\":\"一般\",\"tingshuo\":\"良好\"}]', '[{\"time\":\"2013/9\",\"name\":\"校级辩论赛一等奖\",\"dengji\":\"高级0\"},{\"time\":\"2003/9\",\"name\":\"1一等奖\",\"dengji\":\"高级1\"},{\"time\":\"2004/9\",\"name\":\"2一等奖\",\"dengji\":\"高级2\"},{\"time\":\"2014/9\",\"name\":\"3一等奖\",\"dengji\":\"高级3\"},{\"time\":\"2015/9\",\"name\":\"4一等奖\",\"dengji\":\"高级4\"},{\"time\":\"2013/10\",\"name\":\"5一等奖\",\"dengji\":\"高级5\"}]', '[{\"time\":\"2013/9-2015/12\",\"company\":\"新东方英语学校\",\"zhiwei\":\"英语口语高级讲师\",\"address\":\"北京\",\"zhengshu\":\"预留字段\",\"miaoshu\":\"预留字段\"}]', '自我评价啊,随便填', '5/1.ico', '2/2.xls', '2015-09-09 22:50:52', '2015-09-09 22:50:52', 'N');
 
 -- ----------------------------
 -- Table structure for `t_jianzhi`
@@ -256,7 +264,7 @@ CREATE TABLE `t_picture` (
   `pk` int(11) DEFAULT NULL COMMENT '其他业务表的主键',
   `path` varchar(200) DEFAULT NULL COMMENT '图片路径',
   PRIMARY KEY (`pictureid`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of t_picture
@@ -267,6 +275,8 @@ INSERT INTO `t_picture` VALUES ('3', 't_jianzhi', '5', '5.png');
 INSERT INTO `t_picture` VALUES ('4', 't_jianzhi', '4', '4.jpg');
 INSERT INTO `t_picture` VALUES ('5', 't_party', '5', '5_5.bpm');
 INSERT INTO `t_picture` VALUES ('6', 't_jianzhi', '4', '4_6.bpm');
+INSERT INTO `t_picture` VALUES ('7', 't_bbs', '4', '4_7.jpg');
+INSERT INTO `t_picture` VALUES ('8', 't_bbs', '4', '4_8.jpg');
 
 -- ----------------------------
 -- Table structure for `t_reply`
@@ -287,11 +297,12 @@ CREATE TABLE `t_reply` (
   KEY `FK_userid_8` (`replyUserid`),
   CONSTRAINT `FK_userid_7` FOREIGN KEY (`publishUserid`) REFERENCES `t_user` (`userid`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `FK_userid_8` FOREIGN KEY (`replyUserid`) REFERENCES `t_user` (`userid`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of t_reply
 -- ----------------------------
+INSERT INTO `t_reply` VALUES ('1', 't_bbs', '4', '5', '1', '用户1回复用户5，帖子是4', '2015-09-09 22:54:29', null, null);
 
 -- ----------------------------
 -- Table structure for `t_user`

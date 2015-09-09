@@ -10,6 +10,11 @@ public class ReplyExample extends BaseExample {
     protected String orderByClause;
 
     protected boolean distinct;
+    
+    /*
+     * 是否left join t_user
+     */
+    protected boolean leftJoinUser;
 
     protected List<Criteria> oredCriteria;
 
@@ -33,7 +38,15 @@ public class ReplyExample extends BaseExample {
         return distinct;
     }
 
-    public List<Criteria> getOredCriteria() {
+    public boolean isLeftJoinUser() {
+		return leftJoinUser;
+	}
+
+	public void setLeftJoinUser(boolean leftJoinUser) {
+		this.leftJoinUser = leftJoinUser;
+	}
+
+	public List<Criteria> getOredCriteria() {
         return oredCriteria;
     }
 

@@ -8,6 +8,7 @@ import com.dxsfw.common.base.jianli.ResJianLi;
 import com.dxsfw.common.constants.Constant;
 import com.dxsfw.jianzhi.model.Jianzhi;
 import com.dxsfw.party.model.Party;
+import com.dxsfw.pub.model.Reply;
 import com.dxsfw.pub.model.User;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -51,6 +52,12 @@ public class Res implements Serializable {
 	
 	@JsonInclude(Include.NON_NULL)
 	private List<Bbs> bbsList;
+	
+	@JsonInclude(Include.NON_NULL)
+	private Reply reply;
+	
+	@JsonInclude(Include.NON_NULL)
+	private List<Reply> replyList;
 
 	public Res() {}
 	
@@ -161,5 +168,21 @@ public class Res implements Serializable {
 
 	public void setBbsList(List<Bbs> bbsList) {
 		this.bbsList = bbsList;
+	}
+
+	public Reply getReply() {
+		return reply;
+	}
+
+	public void setReply(Reply reply) {
+		this.reply = reply;
+	}
+
+	public List<Reply> getReplyList() {
+		return replyList;
+	}
+
+	public void setReplyList(List<Reply> replyList) {
+		this.replyList = replyList;
 	}
 }

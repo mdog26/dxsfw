@@ -26,10 +26,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.dxsfw.bbs.model.Bbs;
+import com.dxsfw.bbs.service.BbsService;
 import com.dxsfw.common.base.Res;
 import com.dxsfw.common.base.jianli.ResJianLi;
 import com.dxsfw.common.constants.Constant;
 import com.dxsfw.common.constants.GlobalValue;
+import com.dxsfw.common.page.Pagination;
 import com.dxsfw.common.util.JsonUtil;
 import com.dxsfw.common.util.RandomUtil;
 import com.dxsfw.jianzhi.model.Jianzhi;
@@ -38,9 +41,13 @@ import com.dxsfw.party.model.Party;
 import com.dxsfw.party.service.PartyService;
 import com.dxsfw.pub.model.JianLi;
 import com.dxsfw.pub.model.Picture;
+import com.dxsfw.pub.model.Reply;
+import com.dxsfw.pub.model.ReplyExample;
+import com.dxsfw.pub.model.ReplyExample.Criteria;
 import com.dxsfw.pub.model.User;
 import com.dxsfw.pub.service.JianLiService;
 import com.dxsfw.pub.service.PubService;
+import com.dxsfw.pub.service.ReplyService;
 import com.dxsfw.pub.service.UserService;
 
 @Controller
@@ -58,6 +65,10 @@ public class PubController {
 	private JianzhiService jianzhiService;
 	@Autowired
 	private PartyService partyService;
+	@Autowired
+	private BbsService bbsService;
+	@Autowired
+	private ReplyService replyService;
 
 	// ---------------------------登录注册---------------------------start
 	/**
@@ -194,6 +205,28 @@ public class PubController {
 	// ---------------------------登录注册---------------------------end
 	
 	// ---------------------------个人---------------------------start
+	
+	/**
+	 * 获取个人信息
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("getUser")
+	public Res getUser(@RequestParam(value = "userid") Integer userid) {
+		Res responseJson = new Res();
+		User user = null;
+		try {
+			user = userService.getUser(userid);
+			responseJson.setMsg(Constant.MSG_OK_USER_GET);
+		} catch (Exception e) {
+			log.error("/getUser", e);
+			responseJson.setMsg(Constant.MSG_ERROR_USER_GET);
+			responseJson.setStatus(Constant.STATUS_ERROR_500);
+			user = null;
+		}
+		responseJson.setUser(user);
+		return responseJson;
+	}
 	
 	/**
 	 * 更新个人信息
@@ -696,6 +729,60 @@ public class PubController {
 				responseJson.setMsg(Constant.ADD + Constant.PICTURE + Constant.ERROR);
 				responseJson.setStatus(Constant.STATUS_ERROR_500);
 			}
+		} else if (GlobalValue.MODLE_BBS.equals(modlename)) {
+				Integer pictureid = null;
+				try {
+					//属于其他业务连带动作
+					Bbs bbs = new Bbs();
+					bbs.setBbsid(pk);
+					bbs = bbsService.findById(pk);
+					if (bbs != null) {
+						// #先保存表数据获取picture id
+						Picture p = new Picture();
+						p.setTablename("t_" + modlename);
+						p.setPk(pk);
+						p = pubService.addPicture(p);
+						pictureid = p.getPictureid();
+						
+						//设置 path
+						String fileName =  pk + "_" + pictureid + "." + type;;
+						//#更新picture表
+						p.setPath(fileName);
+						pubService.addorUpdatePicture(p);
+						//#保存图片到硬盘
+						// 文件夹绝对路径
+						String picturePath = GlobalValue.PATH_PICTURE + modlename + File.separator;
+						File targetFile = new File(picturePath);
+						if (!targetFile.exists()) {
+							targetFile.mkdirs();
+						}
+						// 保存
+						targetFile = new File(picturePath + fileName);
+						file.transferTo(targetFile);
+						
+						//#更新相应业务
+						String pcitures = bbs.getPictures();
+						if (StringUtils.isEmpty(pcitures)) {
+							pcitures = String.valueOf(pictureid);
+						} else {
+							pcitures += "," + pictureid;
+						}
+						bbs.setUpdatetime(new Date());
+						bbs.setPictures(pcitures);
+						bbsService.updateByIdSelective(bbs);
+					}
+					
+					responseJson.setMsg(Constant.ADD + Constant.PICTURE + Constant.OK);
+				} catch (Exception e) {
+					log.error("/uploadMore", e);
+					if (pictureid != null) {
+						Picture p = new Picture();
+						p.setPictureid(pictureid);
+						pubService.deletePicture(p);
+					}
+					responseJson.setMsg(Constant.ADD + Constant.PICTURE + Constant.ERROR);
+					responseJson.setStatus(Constant.STATUS_ERROR_500);
+				}
 		} else {
 			responseJson.setMsg(modlename + "模块不支持图片上传" );
 			responseJson.setStatus(Constant.STATUS_ERROR_500);
@@ -741,6 +828,80 @@ public class PubController {
 		//System.out.println(downLoadPath);
 		this.downloadFile(response, fileName, downLoadPath);
 		return null;
+	}
+	
+	/**
+	 * 公共回复
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	@ResponseBody
+	@RequestMapping("addReply/{modlename}")
+	public Res addReply(@PathVariable("modlename") String modlename, @RequestBody Reply reply) throws Exception {
+		Res responseJson = new Res();
+		reply.setTablename("t_" + modlename);
+		try {
+			reply = replyService.addReply(reply);
+			if (reply != null) {
+				responseJson.setMsg(Constant.ADD + Constant.REPLY + Constant.OK);
+			}
+		} catch (Exception e) {
+			log.error("/addReply", e);
+			reply = null;
+		}
+		if (reply == null) {
+			responseJson.setMsg(Constant.ADD + Constant.REPLY + Constant.ERROR);
+			responseJson.setStatus(Constant.STATUS_ERROR_500);
+		}
+		responseJson.setReply(reply);
+		return responseJson;
+	}
+	
+	/**
+	 * 获取公共的回复List
+	 * @param bbsid
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("{modlename}/ReplyList")
+	public Res replyList(@PathVariable("modlename") String modlename,
+			@RequestParam(value = "pk") Integer pk, 
+			@RequestParam(value = "leftJoinUser", required = false) Boolean leftJoinUser, 
+			@RequestParam(value = "pageNo") Integer pageNo,
+			@RequestParam(value = "pageSize", required = false) Integer pageSize
+			) {
+		Res responseJson = new Res();
+		try {
+			String tablename = "t_" + modlename;
+			if (GlobalValue.MODLE_BBS.equals(modlename)) {
+				ReplyExample example = new ReplyExample();
+				Criteria c = example.createCriteria().andTablenameEqualTo(tablename);
+				if (leftJoinUser != null && leftJoinUser) {
+					example.setLeftJoinUser(leftJoinUser);
+				}
+				if (pk != null) {
+					c.andPkEqualTo(pk);
+				}
+				Pagination p = new Pagination();
+				p.setPageNo(pageNo);
+				if (pageSize != null) {
+					p.setPageSize(pageSize);
+				}
+				example.setOrderByClause("time asc");
+				p = replyService.getReplyList(example, p);
+				responseJson.setList(p.getList());
+				responseJson.setMsg(Constant.SEARCH + Constant.REPLY + Constant.OK);
+			} else {
+				log.error(modlename + "模块不支持回复");
+				throw new Exception(modlename + "模块不支持回复");
+			}
+		} catch (Exception e) {
+			log.error("/myApplyList", e);
+			responseJson.setMsg(Constant.SEARCH + Constant.REPLY + Constant.ERROR);
+			responseJson.setStatus(Constant.STATUS_ERROR_500);
+		}
+		return responseJson;
 	}
 	// ---------------------------共用接口---------------------------end
 	
