@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : localhost
-Source Server Version : 50515
-Source Host           : localhost:3306
+Source Server         : 10.0.0.146
+Source Server Version : 50539
+Source Host           : 10.0.0.146:3306
 Source Database       : dxsfw
 
 Target Server Type    : MYSQL
-Target Server Version : 50515
+Target Server Version : 50539
 File Encoding         : 65001
 
-Date: 2015-09-08 00:04:14
+Date: 2015-09-09 18:40:21
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -267,6 +267,31 @@ INSERT INTO `t_picture` VALUES ('3', 't_jianzhi', '5', '5.png');
 INSERT INTO `t_picture` VALUES ('4', 't_jianzhi', '4', '4.jpg');
 INSERT INTO `t_picture` VALUES ('5', 't_party', '5', '5_5.bpm');
 INSERT INTO `t_picture` VALUES ('6', 't_jianzhi', '4', '4_6.bpm');
+
+-- ----------------------------
+-- Table structure for `t_reply`
+-- ----------------------------
+DROP TABLE IF EXISTS `t_reply`;
+CREATE TABLE `t_reply` (
+  `replyid` int(11) NOT NULL AUTO_INCREMENT,
+  `tablename` varchar(100) DEFAULT NULL COMMENT '模块表名',
+  `pk` int(11) DEFAULT NULL COMMENT '模块主键id',
+  `publishUserid` int(11) DEFAULT NULL COMMENT '发布人id（外键）',
+  `replyUserid` int(11) DEFAULT NULL COMMENT '回复人id（外键）',
+  `message` varchar(4000) DEFAULT NULL COMMENT '留言',
+  `time` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '回复时间',
+  `picture` varchar(1000) DEFAULT NULL COMMENT '回复图片',
+  `status` varchar(2) DEFAULT NULL COMMENT '状态',
+  PRIMARY KEY (`replyid`),
+  KEY `FK_userid_7` (`publishUserid`),
+  KEY `FK_userid_8` (`replyUserid`),
+  CONSTRAINT `FK_userid_7` FOREIGN KEY (`publishUserid`) REFERENCES `t_user` (`userid`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `FK_userid_8` FOREIGN KEY (`replyUserid`) REFERENCES `t_user` (`userid`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of t_reply
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for `t_user`

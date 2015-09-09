@@ -11,6 +11,8 @@ public class GlobalValue {
 	public final static String MODLE_JIANLI = "jianli";
 	public final static String MODLE_JIANZHI = "jianzhi";
 	public final static String MODLE_PARTY = "party";
+	public final static String MODLE_BBS = "bbs";
+	public final static String MODLE_REPLY = "reply";
 	/**
 	 * 记录用户登录的token信息
 	 * Map<sessionid, userid>
@@ -49,5 +51,6 @@ public class GlobalValue {
 
 	static {
 		TABLE_SET.add(MODLE_JIANZHI);
+		TABLE_SET.add(MODLE_REPLY);
 	}
 }

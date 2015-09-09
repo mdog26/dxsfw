@@ -49,6 +49,7 @@ public class Constant {
 	//模块消息
 	public final static String SEARCH = "检索";
 	public final static String PICTURE = "图片";
+	public final static String REPLY = "回复";
 	public final static String JIANLI = "简历";
 	public final static String USER_PICTURE = "个人头像";
 	public final static String JIANLI_PICTURE = "简历头像";
@@ -57,4 +58,6 @@ public class Constant {
 	public final static String JIANZHISHENGQING = "兼职申请";
 	public final static String PARTY = "活动";
 	public final static String PARTYSHENGQING = "活动申请";
+	public final static String BBS = "交流/授课";
+	public final static String BBSSHENGQING = "交流/授课申请";
 }

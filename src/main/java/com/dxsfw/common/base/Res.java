@@ -3,11 +3,11 @@ package com.dxsfw.common.base;
 import java.io.Serializable;
 import java.util.List;
 
+import com.dxsfw.bbs.model.Bbs;
 import com.dxsfw.common.base.jianli.ResJianLi;
 import com.dxsfw.common.constants.Constant;
 import com.dxsfw.jianzhi.model.Jianzhi;
 import com.dxsfw.party.model.Party;
-import com.dxsfw.pub.model.JianLi;
 import com.dxsfw.pub.model.User;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -45,6 +45,12 @@ public class Res implements Serializable {
 	
 	@JsonInclude(Include.NON_NULL)
 	private List<Party> partyList;
+	
+	@JsonInclude(Include.NON_NULL)
+	private Bbs bbs;
+	
+	@JsonInclude(Include.NON_NULL)
+	private List<Bbs> bbsList;
 
 	public Res() {}
 	
@@ -139,5 +145,21 @@ public class Res implements Serializable {
 
 	public void setPartyList(List<Party> partyList) {
 		this.partyList = partyList;
+	}
+
+	public Bbs getBbs() {
+		return bbs;
+	}
+
+	public void setBbs(Bbs bbs) {
+		this.bbs = bbs;
+	}
+
+	public List<Bbs> getBbsList() {
+		return bbsList;
+	}
+
+	public void setBbsList(List<Bbs> bbsList) {
+		this.bbsList = bbsList;
 	}
 }

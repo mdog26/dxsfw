@@ -262,6 +262,14 @@ public class PubControllerTest {
 		.andDo(MockMvcResultHandlers.print())
     	.andReturn();
     }
+    
+    @Test
+    public void replyList() throws Exception {
+    }
+    
+    @Test
+    public void addReply() throws Exception {
+    }
     // ---------------------------公共---------------------------end
     
 }
