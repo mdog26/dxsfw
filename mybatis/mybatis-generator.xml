@@ -16,7 +16,7 @@ CreateDate: 2013-7-10
 		</commentGenerator>
 		
 		<jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://localhost:3306/dxsfw"
-			userId="root" password="root">
+			userId="root" password="d0fcf5acf2">
 		</jdbcConnection>
 
 		<javaTypeResolver>
@@ -25,24 +25,24 @@ CreateDate: 2013-7-10
 
 
 
-        <javaModelGenerator targetPackage="com.dxsfw.pub.model"
+        <javaModelGenerator targetPackage="com.dxsfw.idea.model"
                             targetProject="../src/main/java">
             <property name="enableSubPackages" value="true" />
             <property name="trimStrings" value="true" />
         </javaModelGenerator>
 
 
-        <sqlMapGenerator targetPackage="mappers.pub"
+        <sqlMapGenerator targetPackage="mappers.idea"
                          targetProject="../src/main/resources">
             <property name="enableSubPackages" value="true" />
         </sqlMapGenerator>
 
         <javaClientGenerator type="XMLMAPPER"
-                             targetPackage="com.dxsfw.pub.dao"
+                             targetPackage="com.dxsfw.idea.dao"
                              targetProject="../src/main/java">
             <property name="enableSubPackages" value="true" />
         </javaClientGenerator>
         
-        <table schema="" tableName="t_jianli"  domainObjectName="JianLi"/>
+        <table schema="" tableName="t_zhengji"  domainObjectName="Zhengji"/>
 	</context>
 </generatorConfiguration>

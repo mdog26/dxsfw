@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dxsfw.pub.dao.FujianDao" >
+  <resultMap id="BaseResultMap" type="com.dxsfw.pub.model.Fujian" >
+    <id column="fujianid" property="fujianid" jdbcType="INTEGER" />
+    <result column="tablename" property="tablename" jdbcType="VARCHAR" />
+    <result column="pk" property="pk" jdbcType="INTEGER" />
+    <result column="path" property="path" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    fujianid, tablename, pk, path
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.dxsfw.pub.model.FujianExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_fujian
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_fujian
+    where fujianid = #{fujianid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_fujian
+    where fujianid = #{fujianid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.dxsfw.pub.model.FujianExample" >
+    delete from t_fujian
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.dxsfw.pub.model.Fujian" >
+    insert into t_fujian (fujianid, tablename, pk, 
+      path)
+    values (#{fujianid,jdbcType=INTEGER}, #{tablename,jdbcType=VARCHAR}, #{pk,jdbcType=INTEGER}, 
+      #{path,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dxsfw.pub.model.Fujian" >
+    insert into t_fujian
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="fujianid != null" >
+        fujianid,
+      </if>
+      <if test="tablename != null" >
+        tablename,
+      </if>
+      <if test="pk != null" >
+        pk,
+      </if>
+      <if test="path != null" >
+        path,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="fujianid != null" >
+        #{fujianid,jdbcType=INTEGER},
+      </if>
+      <if test="tablename != null" >
+        #{tablename,jdbcType=VARCHAR},
+      </if>
+      <if test="pk != null" >
+        #{pk,jdbcType=INTEGER},
+      </if>
+      <if test="path != null" >
+        #{path,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.dxsfw.pub.model.FujianExample" resultType="java.lang.Integer" >
+    select count(*) from t_fujian
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update t_fujian
+    <set >
+      <if test="record.fujianid != null" >
+        fujianid = #{record.fujianid,jdbcType=INTEGER},
+      </if>
+      <if test="record.tablename != null" >
+        tablename = #{record.tablename,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pk != null" >
+        pk = #{record.pk,jdbcType=INTEGER},
+      </if>
+      <if test="record.path != null" >
+        path = #{record.path,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update t_fujian
+    set fujianid = #{record.fujianid,jdbcType=INTEGER},
+      tablename = #{record.tablename,jdbcType=VARCHAR},
+      pk = #{record.pk,jdbcType=INTEGER},
+      path = #{record.path,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dxsfw.pub.model.Fujian" >
+    update t_fujian
+    <set >
+      <if test="tablename != null" >
+        tablename = #{tablename,jdbcType=VARCHAR},
+      </if>
+      <if test="pk != null" >
+        pk = #{pk,jdbcType=INTEGER},
+      </if>
+      <if test="path != null" >
+        path = #{path,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where fujianid = #{fujianid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dxsfw.pub.model.Fujian" >
+    update t_fujian
+    set tablename = #{tablename,jdbcType=VARCHAR},
+      pk = #{pk,jdbcType=INTEGER},
+      path = #{path,jdbcType=VARCHAR}
+    where fujianid = #{fujianid,jdbcType=INTEGER}
+  </update>
+</mapper>

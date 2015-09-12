@@ -28,6 +28,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.dxsfw.bbs.model.Bbs;
 import com.dxsfw.bbs.service.BbsService;
+import com.dxsfw.chuangye.model.ChuangYe;
+import com.dxsfw.chuangye.service.ChuangYeService;
 import com.dxsfw.common.base.Res;
 import com.dxsfw.common.base.jianli.ResJianLi;
 import com.dxsfw.common.constants.Constant;
@@ -35,10 +37,15 @@ import com.dxsfw.common.constants.GlobalValue;
 import com.dxsfw.common.page.Pagination;
 import com.dxsfw.common.util.JsonUtil;
 import com.dxsfw.common.util.RandomUtil;
+import com.dxsfw.idea.model.Idea;
+import com.dxsfw.idea.model.Zhengji;
+import com.dxsfw.idea.service.IdeaService;
+import com.dxsfw.idea.service.ZhengjiService;
 import com.dxsfw.jianzhi.model.Jianzhi;
 import com.dxsfw.jianzhi.service.JianzhiService;
 import com.dxsfw.party.model.Party;
 import com.dxsfw.party.service.PartyService;
+import com.dxsfw.pub.model.Fujian;
 import com.dxsfw.pub.model.JianLi;
 import com.dxsfw.pub.model.Picture;
 import com.dxsfw.pub.model.Reply;
@@ -69,6 +76,12 @@ public class PubController {
 	private BbsService bbsService;
 	@Autowired
 	private ReplyService replyService;
+	@Autowired
+	private ChuangYeService chuangyeService;
+	@Autowired
+	private IdeaService ideaService;
+	@Autowired
+	private ZhengjiService zhengjiService;
 
 	// ---------------------------登录注册---------------------------start
 	/**
@@ -612,7 +625,7 @@ public class PubController {
 			@RequestParam(value = "token") String token) {
 		Res responseJson = new Res();
 		// 验证模块是否支持
-		if (GlobalValue.TABLE_SET.contains(modlename)) {
+//		if (GlobalValue.TABLE_SET.contains(modlename)) {
 			try {
 				String tablename = "t_" + modlename;
 				// 文件名
@@ -654,8 +667,63 @@ public class PubController {
 				responseJson.setMsg(Constant.ADD + "/" + Constant.UPDATE + Constant.PICTURE + Constant.ERROR);
 				responseJson.setStatus(Constant.STATUS_ERROR_500);
 			}
+//		} else {
+//			responseJson.setMsg(modlename + "模块不支持单图片上传,请用uploadMore方式" );
+//			responseJson.setStatus(Constant.STATUS_ERROR_500);
+//		}
+		return responseJson;
+	}
+	
+	/**
+	 * 更新附件
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("uploadFujian/{modlename}/{pk:\\d+}")
+	public Res uploadPubFujian(@RequestParam(value = "file") MultipartFile file,
+			@PathVariable("modlename") String modlename, 
+			@PathVariable("pk") int pk,
+			@RequestParam(value = "type") String type,
+			@RequestParam(value = "fujianid", required = false) Integer fujianid,
+			@RequestParam(value = "token") String token) {
+		Res responseJson = new Res();
+		// 验证模块是否支持
+		if (GlobalValue.MODLE_CHUANGYE.contains(modlename)) {
+			try {
+				String tablename = "t_" + modlename;
+				// 文件名
+				String fileName = null;
+				if (fujianid == null) {
+					// 业务条目唯一图片
+					fileName = pk + "." + type;
+				} else {
+					// 业务条目多图片
+					fileName = pk + "_" + fujianid + "." + type;
+				}
+				// 文件夹绝对路径
+				String fujianPath = GlobalValue.PATH_FUJIAN + modlename + File.separator;
+				File targetFile = new File(fujianPath);
+				if (!targetFile.exists()) {
+					targetFile.mkdirs();
+				}
+				// 保存
+				targetFile = new File(fujianPath + fileName);
+				file.transferTo(targetFile);
+				
+				Fujian p = new Fujian();
+				p.setFujianid(fujianid);
+				p.setTablename(tablename);
+				p.setPk(pk);
+				p.setPath(fileName);
+				pubService.addorUpdateFujian(p);
+				responseJson.setMsg(Constant.ADD + "/" + Constant.UPDATE + Constant.FUJIAN + Constant.OK);
+			} catch (Exception e) {
+				log.error("/fujian", e);
+				responseJson.setMsg(Constant.ADD + "/" + Constant.UPDATE + Constant.FUJIAN + Constant.ERROR);
+				responseJson.setStatus(Constant.STATUS_ERROR_500);
+			}
 		} else {
-			responseJson.setMsg(modlename + "模块不支持单图片上传,请用uploadMore方式" );
+			responseJson.setMsg(modlename + "模块不支持上传更新" );
 			responseJson.setStatus(Constant.STATUS_ERROR_500);
 		}
 		return responseJson;
@@ -783,8 +851,245 @@ public class PubController {
 					responseJson.setMsg(Constant.ADD + Constant.PICTURE + Constant.ERROR);
 					responseJson.setStatus(Constant.STATUS_ERROR_500);
 				}
+		} else if (GlobalValue.MODLE_IDEA.equals(modlename)) {
+			Integer pictureid = null;
+			try {
+				//属于其他业务连带动作
+				Idea idea = new Idea();
+				idea.setIdeaid(pk);
+				idea = ideaService.findById(pk);
+				if (idea != null) {
+					// #先保存表数据获取picture id
+					Picture p = new Picture();
+					p.setTablename("t_" + modlename);
+					p.setPk(pk);
+					p = pubService.addPicture(p);
+					pictureid = p.getPictureid();
+					
+					//设置 path
+					String fileName =  pk + "_" + pictureid + "." + type;;
+					//#更新picture表
+					p.setPath(fileName);
+					pubService.addorUpdatePicture(p);
+					//#保存图片到硬盘
+					// 文件夹绝对路径
+					String picturePath = GlobalValue.PATH_PICTURE + modlename + File.separator;
+					File targetFile = new File(picturePath);
+					if (!targetFile.exists()) {
+						targetFile.mkdirs();
+					}
+					// 保存
+					targetFile = new File(picturePath + fileName);
+					file.transferTo(targetFile);
+					
+					//#更新相应业务
+					String pcitures = idea.getPictures();
+					if (StringUtils.isEmpty(pcitures)) {
+						pcitures = String.valueOf(pictureid);
+					} else {
+						pcitures += "," + pictureid;
+					}
+					idea.setUpdatetime(new Date());
+					idea.setPictures(pcitures);
+					ideaService.updateByIdSelective(idea);
+				}
+				
+				responseJson.setMsg(Constant.ADD + Constant.PICTURE + Constant.OK);
+			} catch (Exception e) {
+				log.error("/uploadMore", e);
+				if (pictureid != null) {
+					Picture p = new Picture();
+					p.setPictureid(pictureid);
+					pubService.deletePicture(p);
+				}
+				responseJson.setMsg(Constant.ADD + Constant.PICTURE + Constant.ERROR);
+				responseJson.setStatus(Constant.STATUS_ERROR_500);
+			}
+		} else if (GlobalValue.MODLE_ZHENGJI.equals(modlename)) {
+			Integer pictureid = null;
+			try {
+				//属于其他业务连带动作
+				Zhengji zhengji = new Zhengji();
+				zhengji.setZhengjiid(pk);
+				zhengji = zhengjiService.findById(pk);
+				if (zhengji != null) {
+					// #先保存表数据获取picture id
+					Picture p = new Picture();
+					p.setTablename("t_" + modlename);
+					p.setPk(pk);
+					p = pubService.addPicture(p);
+					pictureid = p.getPictureid();
+					
+					//设置 path
+					String fileName =  pk + "_" + pictureid + "." + type;;
+					//#更新picture表
+					p.setPath(fileName);
+					pubService.addorUpdatePicture(p);
+					//#保存图片到硬盘
+					// 文件夹绝对路径
+					String picturePath = GlobalValue.PATH_PICTURE + modlename + File.separator;
+					File targetFile = new File(picturePath);
+					if (!targetFile.exists()) {
+						targetFile.mkdirs();
+					}
+					// 保存
+					targetFile = new File(picturePath + fileName);
+					file.transferTo(targetFile);
+					
+					//#更新相应业务
+					String pcitures = zhengji.getPictures();
+					if (StringUtils.isEmpty(pcitures)) {
+						pcitures = String.valueOf(pictureid);
+					} else {
+						pcitures += "," + pictureid;
+					}
+					zhengji.setUpdatetime(new Date());
+					zhengji.setPictures(pcitures);
+					zhengjiService.updateByIdSelective(zhengji);
+				}
+				
+				responseJson.setMsg(Constant.ADD + Constant.PICTURE + Constant.OK);
+			} catch (Exception e) {
+				log.error("/uploadMore", e);
+				if (pictureid != null) {
+					Picture p = new Picture();
+					p.setPictureid(pictureid);
+					pubService.deletePicture(p);
+				}
+				responseJson.setMsg(Constant.ADD + Constant.PICTURE + Constant.ERROR);
+				responseJson.setStatus(Constant.STATUS_ERROR_500);
+			}
+		} else if (GlobalValue.MODLE_CHUANGYE.equals(modlename)) {
+			Integer pictureid = null;
+			try {
+				//属于其他业务连带动作
+				ChuangYe chuangye = new ChuangYe();
+				chuangye.setChuangyeid(pk);
+				chuangye = chuangyeService.findById(pk);
+				if (chuangye != null) {
+					// #先保存表数据获取picture id
+					Picture p = new Picture();
+					p.setTablename("t_" + modlename);
+					p.setPk(pk);
+					p = pubService.addPicture(p);
+					pictureid = p.getPictureid();
+					
+					//设置 path
+					String fileName =  pk + "_" + pictureid + "." + type;;
+					//#更新picture表
+					p.setPath(fileName);
+					pubService.addorUpdatePicture(p);
+					//#保存图片到硬盘
+					// 文件夹绝对路径
+					String picturePath = GlobalValue.PATH_PICTURE + modlename + File.separator;
+					File targetFile = new File(picturePath);
+					if (!targetFile.exists()) {
+						targetFile.mkdirs();
+					}
+					// 保存
+					targetFile = new File(picturePath + fileName);
+					file.transferTo(targetFile);
+					
+					//#更新相应业务
+					String pcitures = chuangye.getPictures();
+					if (StringUtils.isEmpty(pcitures)) {
+						pcitures = String.valueOf(pictureid);
+					} else {
+						pcitures += "," + pictureid;
+					}
+					chuangye.setUpdatetime(new Date());
+					chuangye.setPictures(pcitures);
+					chuangyeService.updateByIdSelective(chuangye);
+				}
+				
+				responseJson.setMsg(Constant.ADD + Constant.PICTURE + Constant.OK);
+			} catch (Exception e) {
+				log.error("/uploadMore", e);
+				if (pictureid != null) {
+					Picture p = new Picture();
+					p.setPictureid(pictureid);
+					pubService.deletePicture(p);
+				}
+				responseJson.setMsg(Constant.ADD + Constant.PICTURE + Constant.ERROR);
+				responseJson.setStatus(Constant.STATUS_ERROR_500);
+			}
 		} else {
 			responseJson.setMsg(modlename + "模块不支持图片上传" );
+			responseJson.setStatus(Constant.STATUS_ERROR_500);
+		}
+		return responseJson;
+	}
+	
+	/**
+	 * 上传1对多的附件接口，可添加返回该1对多fujianid list,然后一个一个下载
+	 * 增加添加图片接口
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("uploadMoreFujian/{modlename}/{pk:\\d+}")
+	public Res uploadMorePubFujian(@RequestParam(value = "file") MultipartFile file,
+			@PathVariable("modlename") String modlename, 
+			@PathVariable("pk") int pk,
+			@RequestParam(value = "type") String type,
+			@RequestParam(value = "token") String token) {
+		Res responseJson = new Res();
+		// 验证模块是否支持
+		if (GlobalValue.MODLE_CHUANGYE.equals(modlename)) {
+			Integer fujianid = null;
+			try {
+				//属于其他业务连带动作
+				ChuangYe chuangye = new ChuangYe();
+				chuangye.setChuangyeid(pk);
+				chuangye = chuangyeService.findById(pk);
+				if (chuangye != null) {
+					// #先保存表数据获取fujian id
+					Fujian p = new Fujian();
+					p.setTablename("t_" + modlename);
+					p.setPk(pk);
+					p = pubService.addFujian(p);
+					fujianid = p.getFujianid();
+					
+					//设置 path
+					String fileName =  pk + "_" + fujianid + "." + type;;
+					//#更新Fujian表
+					p.setPath(fileName);
+					pubService.addorUpdateFujian(p);
+					//#保存图片到硬盘
+					// 文件夹绝对路径
+					String fujianPath = GlobalValue.PATH_FUJIAN + modlename + File.separator;
+					File targetFile = new File(fujianPath);
+					if (!targetFile.exists()) {
+						targetFile.mkdirs();
+					}
+					// 保存
+					targetFile = new File(fujianPath + fileName);
+					file.transferTo(targetFile);
+					
+					//#更新相应业务
+					String fujian = chuangye.getFujian();
+					if (StringUtils.isEmpty(fujian)) {
+						fujian = String.valueOf(fujianid);
+					} else {
+						fujian += "," + fujianid;
+					}
+					chuangye.setUpdatetime(new Date());
+					chuangye.setFujian(fujian);
+					chuangyeService.updateByIdSelective(chuangye);
+				}
+				
+				responseJson.setMsg(Constant.ADD + Constant.FUJIAN + Constant.OK);
+			} catch (Exception e) {
+				log.error("/uploadMore", e);
+				if (fujianid != null) {
+					Fujian p = new Fujian();
+					p.setFujianid(fujianid);
+					pubService.deleteFujian(p);
+				}
+				responseJson.setMsg(Constant.ADD + Constant.FUJIAN + Constant.ERROR);
+				responseJson.setStatus(Constant.STATUS_ERROR_500);
+			}
+		} else {
+			responseJson.setMsg(modlename + "模块不支持附件上传" );
 			responseJson.setStatus(Constant.STATUS_ERROR_500);
 		}
 		return responseJson;
@@ -831,6 +1136,46 @@ public class PubController {
 	}
 	
 	/**
+	 * 下载公共附件
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "downloadFujian/{modlename}/{pk:\\d+}")
+	public ModelAndView downloadPubFujian(@PathVariable("modlename") String modlename, 
+			@PathVariable("pk") int pk,
+			@RequestParam(value = "fujianid", required = false) Integer fujianid, 
+			HttpServletResponse response)
+			throws Exception {
+		// 验证模块是否支持
+		Fujian p = null;
+		if (fujianid == null) {
+			// 单一模块图片逻辑
+			if (GlobalValue.MODLE_CHUANGYE.contains(modlename)) {
+				String tablename = "t_" + modlename;
+				p = new Fujian();
+				p.setTablename(tablename);
+				p.setPk(pk);
+				List<Fujian> list = pubService.getFujian(p);
+				if (list.size() > 0) {
+					p = list.get(0);
+				}
+			} else {
+				log.error(modlename + "模块不支持附件下载");
+				throw new Exception(modlename + "模块不支持附件下载");
+			}
+		} else {
+			p = pubService.getFujian(fujianid);
+		}
+		// 文件名
+		String fileName = p.getPath();
+		// 文件夹绝对路径
+		String downLoadPath = GlobalValue.PATH_FUJIAN + modlename + File.separator + fileName;
+		//System.out.println(downLoadPath);
+		this.downloadFile(response, fileName, downLoadPath);
+		return null;
+	}
+	
+	/**
 	 * 公共回复
 	 * 
 	 * @return
@@ -844,6 +1189,17 @@ public class PubController {
 		try {
 			reply = replyService.addReply(reply);
 			if (reply != null) {
+				if (GlobalValue.MODLE_BBS.contains(modlename)) {
+					Bbs bbs = bbsService.findById(reply.getPk());
+					Integer replyNum = bbs.getReplynumber();
+					if(replyNum == null){
+						replyNum = 1;
+					} else {
+						replyNum += 1;
+					}
+					bbs.setReplynumber(replyNum);
+					bbsService.updateByIdSelective(bbs);
+				}
 				responseJson.setMsg(Constant.ADD + Constant.REPLY + Constant.OK);
 			}
 		} catch (Exception e) {

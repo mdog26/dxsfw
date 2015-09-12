@@ -152,6 +152,8 @@ public class BbsServiceImp extends BaseServiceImpl<Bbs, Integer> implements BbsS
 					}
 				}
 			}
+		} else {
+			example.createCriteria().andTypeEqualTo(type);
 		}
 		
 		example.setOrderByClause("updatetime desc");

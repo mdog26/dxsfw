@@ -13,6 +13,9 @@ public class GlobalValue {
 	public final static String MODLE_PARTY = "party";
 	public final static String MODLE_BBS = "bbs";
 	public final static String MODLE_REPLY = "reply";
+	public final static String MODLE_CHUANGYE = "chuangye";
+	public final static String MODLE_IDEA = "idea";
+	public final static String MODLE_ZHENGJI = "zhengji";
 	/**
 	 * 记录用户登录的token信息
 	 * Map<sessionid, userid>
@@ -39,6 +42,9 @@ public class GlobalValue {
 	
 	//公共图片路径
 	public static String PATH_PICTURE = null;
+	
+	//公共附件路径
+	public static String PATH_FUJIAN = null;
 		
 	//个人头像路径
 	public static String PATH_USER_PICTURE = null;
@@ -52,5 +58,10 @@ public class GlobalValue {
 	static {
 		TABLE_SET.add(MODLE_JIANZHI);
 		TABLE_SET.add(MODLE_REPLY);
+		TABLE_SET.add(MODLE_PARTY);
+		TABLE_SET.add(MODLE_BBS);
+		TABLE_SET.add(MODLE_CHUANGYE);
+		TABLE_SET.add(MODLE_IDEA);
+		TABLE_SET.add(MODLE_ZHENGJI);
 	}
 }

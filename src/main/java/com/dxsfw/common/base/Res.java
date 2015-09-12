@@ -4,8 +4,11 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.dxsfw.bbs.model.Bbs;
+import com.dxsfw.chuangye.model.ChuangYe;
 import com.dxsfw.common.base.jianli.ResJianLi;
 import com.dxsfw.common.constants.Constant;
+import com.dxsfw.idea.model.Idea;
+import com.dxsfw.idea.model.Zhengji;
 import com.dxsfw.jianzhi.model.Jianzhi;
 import com.dxsfw.party.model.Party;
 import com.dxsfw.pub.model.Reply;
@@ -58,6 +61,24 @@ public class Res implements Serializable {
 	
 	@JsonInclude(Include.NON_NULL)
 	private List<Reply> replyList;
+	
+	@JsonInclude(Include.NON_NULL)
+	private ChuangYe chuangye;
+	
+	@JsonInclude(Include.NON_NULL)
+	private List<ChuangYe> chuangyeList;
+	
+	@JsonInclude(Include.NON_NULL)
+	private Idea idea;
+	
+	@JsonInclude(Include.NON_NULL)
+	private List<Idea> ideaList;
+	
+	@JsonInclude(Include.NON_NULL)
+	private Zhengji zhengji;
+	
+	@JsonInclude(Include.NON_NULL)
+	private List<Zhengji> zhengjiList;
 
 	public Res() {}
 	
@@ -184,5 +205,53 @@ public class Res implements Serializable {
 
 	public void setReplyList(List<Reply> replyList) {
 		this.replyList = replyList;
+	}
+
+	public ChuangYe getChuangye() {
+		return chuangye;
+	}
+
+	public void setChuangye(ChuangYe chuangye) {
+		this.chuangye = chuangye;
+	}
+
+	public List<ChuangYe> getChuangyeList() {
+		return chuangyeList;
+	}
+
+	public void setChuangyeList(List<ChuangYe> chuangyeList) {
+		this.chuangyeList = chuangyeList;
+	}
+
+	public Idea getIdea() {
+		return idea;
+	}
+
+	public void setIdea(Idea idea) {
+		this.idea = idea;
+	}
+
+	public List<Idea> getIdeaList() {
+		return ideaList;
+	}
+
+	public void setIdeaList(List<Idea> ideaList) {
+		this.ideaList = ideaList;
+	}
+
+	public Zhengji getZhengji() {
+		return zhengji;
+	}
+
+	public void setZhengji(Zhengji zhengji) {
+		this.zhengji = zhengji;
+	}
+
+	public List<Zhengji> getZhengjiList() {
+		return zhengjiList;
+	}
+
+	public void setZhengjiList(List<Zhengji> zhengjiList) {
+		this.zhengjiList = zhengjiList;
 	}
 }

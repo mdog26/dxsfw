@@ -58,7 +58,7 @@ public class BbsControllerTest extends BaseTest {
 	@Test
 	public void search() throws Exception {
 		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(action + "/search")
-				.param("keyword", "1").param("type", "2").param("pageNo", "1").param("pageSize", "2"))
+				.param("keyword", "").param("type", "1").param("pageNo", "1").param("pageSize", "5"))
 //				.param("pageNo", "1"))
 				.andDo(MockMvcResultHandlers.print())
 				.andReturn();

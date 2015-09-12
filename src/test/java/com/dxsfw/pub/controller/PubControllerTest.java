@@ -242,7 +242,10 @@ public class PubControllerTest {
     	//单一个图片业务模块新增或更新测试
 //    	mockMvc.perform(MockMvcRequestBuilders.fileUpload("/pub/upload/jianzhi/4").file("file", bytes).param("type", "jpg").param("token", "配合jsp页面测试spring")) //执行文件上传  
     	//多图片业务模块更新测试
-    	mockMvc.perform(MockMvcRequestBuilders.fileUpload("/pub/upload/party/5").file("file", bytes).param("pictureid", "5").param("type", "bpm").param("token", "配合jsp页面测试spring")) //执行文件上传  
+//    	mockMvc.perform(MockMvcRequestBuilders.fileUpload("/pub/upload/party/5").file("file", bytes).param("pictureid", "5").param("type", "bpm").param("token", "配合jsp页面测试spring")) //执行文件上传  
+//    	mockMvc.perform(MockMvcRequestBuilders.fileUpload("/pub/upload/chuangye/3").file("file", bytes).param("pictureid", "9").param("type", "bpm").param("token", "配合jsp页面测试spring")) //执行文件上传  
+//    	mockMvc.perform(MockMvcRequestBuilders.fileUpload("/pub/upload/idea/3").file("file", bytes).param("pictureid", "10").param("type", "bpm").param("token", "配合jsp页面测试spring")) //执行文件上传  
+    	mockMvc.perform(MockMvcRequestBuilders.fileUpload("/pub/upload/zhengji/3").file("file", bytes).param("pictureid", "11").param("type", "bpm").param("token", "配合jsp页面测试spring")) //执行文件上传  
     	.andDo(MockMvcResultHandlers.print())
     	.andReturn();
     }
@@ -257,7 +260,10 @@ public class PubControllerTest {
     	File file = new File("D:/workspace/xzl/picture/1.ico");
     	byte[] bytes = FileUtil.readAsByteArray(file);
 //    	mockMvc.perform(MockMvcRequestBuilders.fileUpload("/pub/uploadMore/party/5").file("file", bytes).param("type", "jpg").param("token", "配合jsp页面测试spring")) //执行文件上传  
-    	mockMvc.perform(MockMvcRequestBuilders.fileUpload("/pub/uploadMore/bbs/4").file("file", bytes).param("type", "jpg").param("token", "配合jsp页面测试spring")) //执行文件上传  
+//    	mockMvc.perform(MockMvcRequestBuilders.fileUpload("/pub/uploadMore/bbs/4").file("file", bytes).param("type", "jpg").param("token", "配合jsp页面测试spring")) //执行文件上传  
+//    	mockMvc.perform(MockMvcRequestBuilders.fileUpload("/pub/uploadMore/chuangye/3").file("file", bytes).param("type", "jpg").param("token", "配合jsp页面测试spring")) //执行文件上传  
+//    	mockMvc.perform(MockMvcRequestBuilders.fileUpload("/pub/uploadMore/idea/3").file("file", bytes).param("type", "jpg").param("token", "配合jsp页面测试spring")) //执行文件上传  
+    	mockMvc.perform(MockMvcRequestBuilders.fileUpload("/pub/uploadMore/zhengji/3").file("file", bytes).param("type", "jpg").param("token", "配合jsp页面测试spring")) //执行文件上传  
     	.andDo(MockMvcResultHandlers.print())
     	.andReturn();
     }
@@ -268,7 +274,47 @@ public class PubControllerTest {
 //    	mockMvc.perform(MockMvcRequestBuilders.get("/pub/download/jianzhi/5").contentType(MediaType.MULTIPART_FORM_DATA))
     	//多图片业务模块更新测试
 //    	mockMvc.perform(MockMvcRequestBuilders.get("/pub/download/party/1").param("pictureid", "5").contentType(MediaType.MULTIPART_FORM_DATA))
-    	mockMvc.perform(MockMvcRequestBuilders.get("/pub/download/bbs/4").param("pictureid", "7").contentType(MediaType.MULTIPART_FORM_DATA))
+//    	mockMvc.perform(MockMvcRequestBuilders.get("/pub/download/bbs/4").param("pictureid", "7").contentType(MediaType.MULTIPART_FORM_DATA))
+//    	mockMvc.perform(MockMvcRequestBuilders.get("/pub/download/chuangye/3").param("pictureid", "9").contentType(MediaType.MULTIPART_FORM_DATA))
+//    	mockMvc.perform(MockMvcRequestBuilders.get("/pub/download/idea/3").param("pictureid", "10").contentType(MediaType.MULTIPART_FORM_DATA))
+    	mockMvc.perform(MockMvcRequestBuilders.get("/pub/download/zhengji/3").param("pictureid", "11").contentType(MediaType.MULTIPART_FORM_DATA))
+		.andDo(MockMvcResultHandlers.print())
+    	.andReturn();
+    }
+    
+    /**
+     * 业务模块单一附件更新测试
+     * @throws Exception
+     */
+    @Test
+    public void uploadFujian() throws Exception {
+    	//文件上传  
+    	File file = new File("D:/workspace/xzl/fujian/1.docx");
+    	byte[] bytes = FileUtil.readAsByteArray(file);
+    	//多附件业务模块更新测试
+    	mockMvc.perform(MockMvcRequestBuilders.fileUpload("/pub/uploadFujian/chuangye/3").file("file", bytes).param("fujianid", "1").param("type", "docx").param("token", "配合jsp页面测试spring")) //执行文件上传  
+    	.andDo(MockMvcResultHandlers.print())
+    	.andReturn();
+    }
+    
+    /**
+     * 业务模块多附件测试
+     * @throws Exception
+     */
+    @Test
+    public void uploadMoreFujian() throws Exception {
+    	//文件上传  
+    	File file = new File("D:/workspace/xzl/fujian/1.pptx");
+    	byte[] bytes = FileUtil.readAsByteArray(file);
+    	mockMvc.perform(MockMvcRequestBuilders.fileUpload("/pub/uploadMoreFujian/chuangye/3").file("file", bytes).param("type", "pptx").param("token", "配合jsp页面测试spring")) //执行文件上传  
+    	.andDo(MockMvcResultHandlers.print())
+    	.andReturn();
+    }
+    
+    @Test
+    public void downloadFujian() throws Exception {
+    	//多附件业务模块更新测试
+    	mockMvc.perform(MockMvcRequestBuilders.get("/pub/downloadFujian/chuangye/3").param("fujianid", "1").contentType(MediaType.MULTIPART_FORM_DATA))
 		.andDo(MockMvcResultHandlers.print())
     	.andReturn();
     }

@@ -23,6 +23,7 @@ public class AllInterceptor extends HandlerInterceptorAdapter {
 		} else if (action.equals("")){
 			//测试代码 会在此逻辑
 			GlobalValue.PATH_PICTURE = "D:/workspace/xzl/dxsfw_file/picture/";
+			GlobalValue.PATH_FUJIAN = "D:/workspace/xzl/dxsfw_file/fujian/";
 			GlobalValue.PATH_USER_PICTURE = "D:/workspace/xzl/dxsfw_file/user/picture/";
 			GlobalValue.PATH_JIANLI_PICTURE = "D:/workspace/xzl/dxsfw_file/jianli/picture/";
 			GlobalValue.PATH_JIANLI_FUJIAN = "D:/workspace/xzl/dxsfw_file/jianli/fujian/";

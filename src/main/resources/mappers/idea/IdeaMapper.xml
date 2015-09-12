@@ -1,0 +1,465 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dxsfw.idea.dao.IdeaDao" >
+  <resultMap id="BaseResultMap" type="com.dxsfw.idea.model.Idea" >
+    <id column="ideaid" property="ideaid" jdbcType="INTEGER" />
+    <result column="userid" property="userid" jdbcType="INTEGER" />
+    <result column="payuserid" property="payuserid" jdbcType="INTEGER" />
+    <result column="feeid" property="feeid" jdbcType="INTEGER" />
+    <result column="zhengjiid" property="zhengjiid" jdbcType="INTEGER" />
+    <result column="createtime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="expiretime" property="expiretime" jdbcType="TIMESTAMP" />
+    <result column="updatetime" property="updatetime" jdbcType="TIMESTAMP" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="level" property="level" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="jieshao" property="jieshao" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="jiami" property="jiami" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DOUBLE" />
+    <result column="sellstatus" property="sellstatus" jdbcType="VARCHAR" />
+    <result column="pingjia" property="pingjia" jdbcType="VARCHAR" />
+    <result column="pingjiafenshu" property="pingjiafenshu" jdbcType="INTEGER" />
+    <result column="tag" property="tag" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="pictures" property="pictures" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ideaid, userid, payuserid, feeid, zhengjiid, createtime, expiretime, updatetime, 
+    type, level, title, jieshao, content, jiami, price, sellstatus, pingjia, pingjiafenshu, 
+    tag, status, pictures
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.dxsfw.idea.model.IdeaExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_idea
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_idea
+    where ideaid = #{ideaid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_idea
+    where ideaid = #{ideaid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.dxsfw.idea.model.IdeaExample" >
+    delete from t_idea
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.dxsfw.idea.model.Idea" >
+    insert into t_idea (ideaid, userid, payuserid, 
+      feeid, zhengjiid, createtime, 
+      expiretime, updatetime, type, 
+      level, title, jieshao, 
+      content, jiami, price, 
+      sellstatus, pingjia, pingjiafenshu, 
+      tag, status, pictures
+      )
+    values (#{ideaid,jdbcType=INTEGER}, #{userid,jdbcType=INTEGER}, #{payuserid,jdbcType=INTEGER}, 
+      #{feeid,jdbcType=INTEGER}, #{zhengjiid,jdbcType=INTEGER}, #{createtime,jdbcType=TIMESTAMP}, 
+      #{expiretime,jdbcType=TIMESTAMP}, #{updatetime,jdbcType=TIMESTAMP}, #{type,jdbcType=VARCHAR}, 
+      #{level,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{jieshao,jdbcType=VARCHAR}, 
+      #{content,jdbcType=VARCHAR}, #{jiami,jdbcType=VARCHAR}, #{price,jdbcType=DOUBLE}, 
+      #{sellstatus,jdbcType=VARCHAR}, #{pingjia,jdbcType=VARCHAR}, #{pingjiafenshu,jdbcType=INTEGER}, 
+      #{tag,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{pictures,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.dxsfw.idea.model.Idea" >
+    insert into t_idea
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="ideaid != null" >
+        ideaid,
+      </if>
+      <if test="userid != null" >
+        userid,
+      </if>
+      <if test="payuserid != null" >
+        payuserid,
+      </if>
+      <if test="feeid != null" >
+        feeid,
+      </if>
+      <if test="zhengjiid != null" >
+        zhengjiid,
+      </if>
+      <if test="createtime != null" >
+        createtime,
+      </if>
+      <if test="expiretime != null" >
+        expiretime,
+      </if>
+      <if test="updatetime != null" >
+        updatetime,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="level != null" >
+        level,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="jieshao != null" >
+        jieshao,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="jiami != null" >
+        jiami,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="sellstatus != null" >
+        sellstatus,
+      </if>
+      <if test="pingjia != null" >
+        pingjia,
+      </if>
+      <if test="pingjiafenshu != null" >
+        pingjiafenshu,
+      </if>
+      <if test="tag != null" >
+        tag,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="pictures != null" >
+        pictures,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="ideaid != null" >
+        #{ideaid,jdbcType=INTEGER},
+      </if>
+      <if test="userid != null" >
+        #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="payuserid != null" >
+        #{payuserid,jdbcType=INTEGER},
+      </if>
+      <if test="feeid != null" >
+        #{feeid,jdbcType=INTEGER},
+      </if>
+      <if test="zhengjiid != null" >
+        #{zhengjiid,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expiretime != null" >
+        #{expiretime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null" >
+        #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="jieshao != null" >
+        #{jieshao,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="jiami != null" >
+        #{jiami,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="sellstatus != null" >
+        #{sellstatus,jdbcType=VARCHAR},
+      </if>
+      <if test="pingjia != null" >
+        #{pingjia,jdbcType=VARCHAR},
+      </if>
+      <if test="pingjiafenshu != null" >
+        #{pingjiafenshu,jdbcType=INTEGER},
+      </if>
+      <if test="tag != null" >
+        #{tag,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="pictures != null" >
+        #{pictures,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.dxsfw.idea.model.IdeaExample" resultType="java.lang.Integer" >
+    select count(*) from t_idea
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update t_idea
+    <set >
+      <if test="record.ideaid != null" >
+        ideaid = #{record.ideaid,jdbcType=INTEGER},
+      </if>
+      <if test="record.userid != null" >
+        userid = #{record.userid,jdbcType=INTEGER},
+      </if>
+      <if test="record.payuserid != null" >
+        payuserid = #{record.payuserid,jdbcType=INTEGER},
+      </if>
+      <if test="record.feeid != null" >
+        feeid = #{record.feeid,jdbcType=INTEGER},
+      </if>
+      <if test="record.zhengjiid != null" >
+        zhengjiid = #{record.zhengjiid,jdbcType=INTEGER},
+      </if>
+      <if test="record.createtime != null" >
+        createtime = #{record.createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.expiretime != null" >
+        expiretime = #{record.expiretime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updatetime != null" >
+        updatetime = #{record.updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.type != null" >
+        type = #{record.type,jdbcType=VARCHAR},
+      </if>
+      <if test="record.level != null" >
+        level = #{record.level,jdbcType=VARCHAR},
+      </if>
+      <if test="record.title != null" >
+        title = #{record.title,jdbcType=VARCHAR},
+      </if>
+      <if test="record.jieshao != null" >
+        jieshao = #{record.jieshao,jdbcType=VARCHAR},
+      </if>
+      <if test="record.content != null" >
+        content = #{record.content,jdbcType=VARCHAR},
+      </if>
+      <if test="record.jiami != null" >
+        jiami = #{record.jiami,jdbcType=VARCHAR},
+      </if>
+      <if test="record.price != null" >
+        price = #{record.price,jdbcType=DOUBLE},
+      </if>
+      <if test="record.sellstatus != null" >
+        sellstatus = #{record.sellstatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pingjia != null" >
+        pingjia = #{record.pingjia,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pingjiafenshu != null" >
+        pingjiafenshu = #{record.pingjiafenshu,jdbcType=INTEGER},
+      </if>
+      <if test="record.tag != null" >
+        tag = #{record.tag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        status = #{record.status,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pictures != null" >
+        pictures = #{record.pictures,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update t_idea
+    set ideaid = #{record.ideaid,jdbcType=INTEGER},
+      userid = #{record.userid,jdbcType=INTEGER},
+      payuserid = #{record.payuserid,jdbcType=INTEGER},
+      feeid = #{record.feeid,jdbcType=INTEGER},
+      zhengjiid = #{record.zhengjiid,jdbcType=INTEGER},
+      createtime = #{record.createtime,jdbcType=TIMESTAMP},
+      expiretime = #{record.expiretime,jdbcType=TIMESTAMP},
+      updatetime = #{record.updatetime,jdbcType=TIMESTAMP},
+      type = #{record.type,jdbcType=VARCHAR},
+      level = #{record.level,jdbcType=VARCHAR},
+      title = #{record.title,jdbcType=VARCHAR},
+      jieshao = #{record.jieshao,jdbcType=VARCHAR},
+      content = #{record.content,jdbcType=VARCHAR},
+      jiami = #{record.jiami,jdbcType=VARCHAR},
+      price = #{record.price,jdbcType=DOUBLE},
+      sellstatus = #{record.sellstatus,jdbcType=VARCHAR},
+      pingjia = #{record.pingjia,jdbcType=VARCHAR},
+      pingjiafenshu = #{record.pingjiafenshu,jdbcType=INTEGER},
+      tag = #{record.tag,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=VARCHAR},
+      pictures = #{record.pictures,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dxsfw.idea.model.Idea" >
+    update t_idea
+    <set >
+      <if test="userid != null" >
+        userid = #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="payuserid != null" >
+        payuserid = #{payuserid,jdbcType=INTEGER},
+      </if>
+      <if test="feeid != null" >
+        feeid = #{feeid,jdbcType=INTEGER},
+      </if>
+      <if test="zhengjiid != null" >
+        zhengjiid = #{zhengjiid,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null" >
+        createtime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expiretime != null" >
+        expiretime = #{expiretime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null" >
+        updatetime = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null" >
+        level = #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="jieshao != null" >
+        jieshao = #{jieshao,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="jiami != null" >
+        jiami = #{jiami,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="sellstatus != null" >
+        sellstatus = #{sellstatus,jdbcType=VARCHAR},
+      </if>
+      <if test="pingjia != null" >
+        pingjia = #{pingjia,jdbcType=VARCHAR},
+      </if>
+      <if test="pingjiafenshu != null" >
+        pingjiafenshu = #{pingjiafenshu,jdbcType=INTEGER},
+      </if>
+      <if test="tag != null" >
+        tag = #{tag,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="pictures != null" >
+        pictures = #{pictures,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ideaid = #{ideaid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dxsfw.idea.model.Idea" >
+    update t_idea
+    set userid = #{userid,jdbcType=INTEGER},
+      payuserid = #{payuserid,jdbcType=INTEGER},
+      feeid = #{feeid,jdbcType=INTEGER},
+      zhengjiid = #{zhengjiid,jdbcType=INTEGER},
+      createtime = #{createtime,jdbcType=TIMESTAMP},
+      expiretime = #{expiretime,jdbcType=TIMESTAMP},
+      updatetime = #{updatetime,jdbcType=TIMESTAMP},
+      type = #{type,jdbcType=VARCHAR},
+      level = #{level,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      jieshao = #{jieshao,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      jiami = #{jiami,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DOUBLE},
+      sellstatus = #{sellstatus,jdbcType=VARCHAR},
+      pingjia = #{pingjia,jdbcType=VARCHAR},
+      pingjiafenshu = #{pingjiafenshu,jdbcType=INTEGER},
+      tag = #{tag,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      pictures = #{pictures,jdbcType=VARCHAR}
+    where ideaid = #{ideaid,jdbcType=INTEGER}
+  </update>
+</mapper>

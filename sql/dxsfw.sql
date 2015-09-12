@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50515
 File Encoding         : 65001
 
-Date: 2015-09-10 00:23:41
+Date: 2015-09-12 12:18:04
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -35,7 +35,7 @@ CREATE TABLE `t_bbs` (
   `content` varchar(8000) DEFAULT NULL COMMENT '交流/授课内容介绍',
   `teachtime` varchar(500) DEFAULT NULL COMMENT '授课开始时间',
   `people` int(11) DEFAULT NULL COMMENT '授课可参与人数',
-  `replynumber` int(11) DEFAULT NULL COMMENT '报名人数/回贴数量',
+  `replynumber` int(11) DEFAULT NULL COMMENT '回贴数量',
   `clicknumber` int(11) DEFAULT NULL COMMENT '点击量',
   `tag` varchar(200) DEFAULT NULL COMMENT '标签(可用于检索)',
   `status` varchar(2) DEFAULT NULL COMMENT '状态(预留字段)',
@@ -49,7 +49,7 @@ CREATE TABLE `t_bbs` (
 -- ----------------------------
 INSERT INTO `t_bbs` VALUES ('2', '5', null, '2015-09-09 20:30:10', null, '2015-09-09 22:36:24', '1', '标题1', null, null, null, null, '内容', null, null, null, '2', '?', null, null, null);
 INSERT INTO `t_bbs` VALUES ('3', '5', null, '2015-09-09 20:31:08', null, '2015-09-09 22:36:27', '1', '标题1', null, null, null, null, '内容', null, null, null, null, '?', null, null, null);
-INSERT INTO `t_bbs` VALUES ('4', '5', null, '2015-09-09 20:37:43', null, '2015-09-09 22:50:53', '1', '交流1update', null, null, null, null, '交流内容，学生学术交流', null, null, null, null, '学术 交流', null, '7,8', null);
+INSERT INTO `t_bbs` VALUES ('4', '5', null, '2015-09-09 20:37:43', null, '2015-09-09 22:50:53', '1', '交流1update', null, null, null, null, '交流内容，学生学术交流', null, null, '2', null, '学术 交流', null, '7,8', null);
 INSERT INTO `t_bbs` VALUES ('5', '4', null, '2015-09-09 20:44:04', null, '2015-09-09 21:31:37', '2', '授课1', null, null, null, '1对1面授', '高数补课', '周六下午4点-6点', '1', null, null, '数学', null, null, null);
 
 -- ----------------------------
@@ -78,6 +78,97 @@ CREATE TABLE `t_bbsshengqing` (
 -- Records of t_bbsshengqing
 -- ----------------------------
 INSERT INTO `t_bbsshengqing` VALUES ('1', '5', '1', '7', null, '2015-09-09 21:31:36', null, null);
+
+-- ----------------------------
+-- Table structure for `t_chuangye`
+-- ----------------------------
+DROP TABLE IF EXISTS `t_chuangye`;
+CREATE TABLE `t_chuangye` (
+  `chuangyeid` int(11) NOT NULL AUTO_INCREMENT,
+  `userid` int(11) DEFAULT NULL COMMENT '发布人id(外键)',
+  `payuserid` int(11) DEFAULT NULL COMMENT '支付人id',
+  `feeid` int(11) DEFAULT NULL COMMENT '收费id(外键)',
+  `createtime` timestamp NULL DEFAULT NULL COMMENT '发布时间',
+  `expiretime` timestamp NULL DEFAULT NULL COMMENT '过期时间',
+  `updatetime` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `type` varchar(200) DEFAULT NULL COMMENT '创业分类',
+  `level` varchar(200) DEFAULT NULL COMMENT '创业等级',
+  `title` varchar(200) DEFAULT NULL COMMENT '标题',
+  `jieshao` varchar(4000) DEFAULT NULL COMMENT '引言介绍',
+  `content` varchar(8000) DEFAULT NULL COMMENT '具体内容(加密的,只对支付人和自己显示)',
+  `jiami` varchar(2) DEFAULT NULL COMMENT '加密开关{ Y, N}',
+  `price` double(11,2) DEFAULT NULL COMMENT '价格',
+  `sellstatus` varchar(2) DEFAULT NULL COMMENT '售卖状态{ Y, N}',
+  `pingjia` varchar(200) DEFAULT NULL COMMENT '售卖评价',
+  `pingjiafenshu` int(11) DEFAULT NULL COMMENT '评价分数',
+  `tag` varchar(200) DEFAULT NULL COMMENT '标签(可用于检索)',
+  `status` varchar(2) DEFAULT NULL COMMENT '状态(预留字段)',
+  `pictures` varchar(1000) DEFAULT NULL COMMENT '图片集{1,23,50 "公共图片表id组合"}',
+  `fujian` varchar(1000) DEFAULT NULL COMMENT '附件集{1,23,50 "公共附件表id组合"}',
+  PRIMARY KEY (`chuangyeid`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of t_chuangye
+-- ----------------------------
+INSERT INTO `t_chuangye` VALUES ('2', '5', null, null, '2015-09-11 22:11:32', null, '2015-09-11 22:11:32', '餐饮业', null, '黄焖鸡加盟', '介绍内容，所有人可显示', '具体内容(加密的,只对支付人和自己显示)', null, '12.00', null, null, null, '黄焖鸡 饮食', null, null, null);
+INSERT INTO `t_chuangye` VALUES ('3', '5', '1', null, '2015-09-11 22:12:08', null, '2015-09-11 23:28:37', '汽车', null, '二手车买卖创业', '车介绍内容，所有人可显示', '车具体内容(加密的,只对支付人和自己显示)', null, '1000.12', 'Y', '好评，给五星', '5', '汽车', null, '9', '1,2');
+INSERT INTO `t_chuangye` VALUES ('4', '4', null, null, '2015-09-11 22:20:47', null, '2015-09-11 22:20:47', '4餐饮业', null, '黄焖鸡4加盟', '介绍内容，所有人可显示', '具体内容(加密的,只对支付人和自己显示)', null, '12.50', null, null, null, '黄焖鸡 饮食4', null, null, null);
+
+-- ----------------------------
+-- Table structure for `t_fujian`
+-- ----------------------------
+DROP TABLE IF EXISTS `t_fujian`;
+CREATE TABLE `t_fujian` (
+  `fujianid` int(11) NOT NULL AUTO_INCREMENT COMMENT '附件id',
+  `tablename` varchar(100) DEFAULT NULL COMMENT '其他业务模块表名',
+  `pk` int(11) DEFAULT NULL COMMENT '其他业务表的主键',
+  `path` varchar(200) DEFAULT NULL COMMENT '附件路径',
+  PRIMARY KEY (`fujianid`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of t_fujian
+-- ----------------------------
+INSERT INTO `t_fujian` VALUES ('1', 't_chuangye', '3', '3_1.docx');
+INSERT INTO `t_fujian` VALUES ('2', 't_chuangye', '3', '3_2.pptx');
+
+-- ----------------------------
+-- Table structure for `t_idea`
+-- ----------------------------
+DROP TABLE IF EXISTS `t_idea`;
+CREATE TABLE `t_idea` (
+  `ideaid` int(11) NOT NULL AUTO_INCREMENT,
+  `userid` int(11) DEFAULT NULL COMMENT '发布人id(外键)',
+  `payuserid` int(11) DEFAULT NULL,
+  `feeid` int(11) DEFAULT NULL COMMENT '收费id(外键)',
+  `zhengjiid` int(11) DEFAULT NULL COMMENT '征集id(外键)',
+  `createtime` timestamp NULL DEFAULT NULL COMMENT '发布时间',
+  `expiretime` timestamp NULL DEFAULT NULL COMMENT '过期时间',
+  `updatetime` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `type` varchar(200) DEFAULT NULL COMMENT '创意分类',
+  `level` varchar(200) DEFAULT NULL COMMENT '创意等级',
+  `title` varchar(200) DEFAULT NULL COMMENT '标题',
+  `jieshao` varchar(4000) DEFAULT NULL COMMENT '引言介绍',
+  `content` varchar(8000) DEFAULT NULL COMMENT '具体内容(加密的,只对支付人和自己显示)',
+  `jiami` varchar(2) DEFAULT NULL COMMENT '加密开关{ Y, N}',
+  `price` double(11,2) DEFAULT NULL COMMENT '价格',
+  `sellstatus` varchar(2) DEFAULT NULL COMMENT '售卖状态{ Y, N}',
+  `pingjia` varchar(200) DEFAULT NULL COMMENT '售卖评价',
+  `pingjiafenshu` int(11) DEFAULT NULL COMMENT '评价分数',
+  `tag` varchar(200) DEFAULT NULL COMMENT '标签(可用于检索)',
+  `status` varchar(2) DEFAULT NULL COMMENT '状态(预留字段)',
+  `pictures` varchar(1000) DEFAULT NULL COMMENT '图片集{1,23,50 "公共图片表id组合"}',
+  PRIMARY KEY (`ideaid`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of t_idea
+-- ----------------------------
+INSERT INTO `t_idea` VALUES ('1', '5', null, null, null, '2015-09-12 10:41:07', null, '2015-09-12 10:45:31', '汽车', null, '二手车买卖创意', '车介绍内容，所有人可显示', '车具体内容(加密的,只对支付人和自己显示)', null, '1000.00', null, null, null, '汽车', null, null);
+INSERT INTO `t_idea` VALUES ('3', '4', '1', null, null, '2015-09-12 10:46:47', null, '2015-09-12 10:55:18', '4餐饮业', null, '黄焖鸡4加盟', '介绍内容，所有人可显示', '具体内容(加密的,只对支付人和自己显示)', null, '12.00', 'Y', '好评，给五星', '5', '黄焖鸡 饮食4', null, '10');
+INSERT INTO `t_idea` VALUES ('4', '1', '6', null, '3', '2015-09-12 11:59:57', null, '2015-09-12 11:59:57', '4餐饮业', null, '黄焖鸡4加盟', '介绍内容，所有人可显示', '具体内容(加密的,只对支付人和自己显示)', null, '12.50', 'Y', null, null, '黄焖鸡 饮食4', null, null);
+INSERT INTO `t_idea` VALUES ('5', '7', null, null, '3', '2015-09-12 12:11:16', null, '2015-09-12 12:11:16', '4餐饮业', null, '投标啦4加盟', '介绍内容，所有人可显示投标啦', '投标啦具体内容(加密的,只对支付人和自己显示)', null, '12.50', null, null, null, '投标啦', null, null);
 
 -- ----------------------------
 -- Table structure for `t_jianli`
@@ -131,7 +222,7 @@ CREATE TABLE `t_jianzhi` (
   `userid` int(11) DEFAULT NULL COMMENT '发布人id（外键）',
   `createtime` timestamp NULL DEFAULT NULL COMMENT '发布时间,创建时间',
   `expiretime` timestamp NULL DEFAULT NULL COMMENT '过期时间/失效时间,如果当前系统时间超过失效时间,兼职信息失效',
-  `updatetime` timestamp NULL DEFAULT NULL COMMENT '更新时间(发布着可以更新、申请人申请动作可以更新、排序用)',
+  `updatetime` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间(发布着可以更新、申请人申请动作可以更新、排序用)',
   `expire` varchar(2) DEFAULT NULL COMMENT '是否过期，或者被锁定',
   `title` varchar(200) DEFAULT NULL COMMENT '职位标题、职位名称',
   `tag` varchar(200) DEFAULT NULL COMMENT '标签(可用于检索)eg:java 工程师 j2ee(中间用空格隔开)',
@@ -196,7 +287,7 @@ CREATE TABLE `t_party` (
   `feeid` int(11) DEFAULT NULL COMMENT '收费id（外键）',
   `createtime` timestamp NULL DEFAULT NULL COMMENT '发布时间',
   `expiretime` timestamp NULL DEFAULT NULL COMMENT '过期时间',
-  `updatetime` timestamp NULL DEFAULT NULL COMMENT '更新时间',
+  `updatetime` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `title` varchar(200) DEFAULT NULL COMMENT '活动主题，标题',
   `address` varchar(500) DEFAULT NULL COMMENT '活动地址',
   `cost` varchar(200) DEFAULT NULL COMMENT '活动花费｛AA、大概费用50到100等｝',
@@ -264,7 +355,7 @@ CREATE TABLE `t_picture` (
   `pk` int(11) DEFAULT NULL COMMENT '其他业务表的主键',
   `path` varchar(200) DEFAULT NULL COMMENT '图片路径',
   PRIMARY KEY (`pictureid`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of t_picture
@@ -277,6 +368,9 @@ INSERT INTO `t_picture` VALUES ('5', 't_party', '5', '5_5.bpm');
 INSERT INTO `t_picture` VALUES ('6', 't_jianzhi', '4', '4_6.bpm');
 INSERT INTO `t_picture` VALUES ('7', 't_bbs', '4', '4_7.jpg');
 INSERT INTO `t_picture` VALUES ('8', 't_bbs', '4', '4_8.jpg');
+INSERT INTO `t_picture` VALUES ('9', 't_chuangye', '3', '3_9.bpm');
+INSERT INTO `t_picture` VALUES ('10', 't_idea', '3', '3_10.bpm');
+INSERT INTO `t_picture` VALUES ('11', 't_zhengji', '3', '3_11.bpm');
 
 -- ----------------------------
 -- Table structure for `t_reply`
@@ -297,12 +391,14 @@ CREATE TABLE `t_reply` (
   KEY `FK_userid_8` (`replyUserid`),
   CONSTRAINT `FK_userid_7` FOREIGN KEY (`publishUserid`) REFERENCES `t_user` (`userid`) ON DELETE CASCADE ON UPDATE NO ACTION,
   CONSTRAINT `FK_userid_8` FOREIGN KEY (`replyUserid`) REFERENCES `t_user` (`userid`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of t_reply
 -- ----------------------------
 INSERT INTO `t_reply` VALUES ('1', 't_bbs', '4', '5', '1', '用户1回复用户5，帖子是4', '2015-09-09 22:54:29', null, null);
+INSERT INTO `t_reply` VALUES ('2', 't_bbs', '4', '5', '1', '用户1回复用户5，帖子是4', '2015-09-12 11:41:35', null, null);
+INSERT INTO `t_reply` VALUES ('3', 't_bbs', '4', '5', '1', '用户1回复用户5，帖子是4', '2015-09-12 11:42:01', null, null);
 
 -- ----------------------------
 -- Table structure for `t_user`
@@ -334,3 +430,29 @@ INSERT INTO `t_user` VALUES ('4', null, '中午', '2', null, '1', null, null, nu
 INSERT INTO `t_user` VALUES ('5', null, '', 'pwd', '', '18000000', '', '', '', '', '', '', '', '');
 INSERT INTO `t_user` VALUES ('6', '1', null, 'pwd', null, '13607447461', null, null, null, null, null, null, null, null);
 INSERT INTO `t_user` VALUES ('7', '2', null, 'pwd', null, '15010842975', null, null, null, null, null, null, null, null);
+
+-- ----------------------------
+-- Table structure for `t_zhengji`
+-- ----------------------------
+DROP TABLE IF EXISTS `t_zhengji`;
+CREATE TABLE `t_zhengji` (
+  `zhengjiid` int(11) NOT NULL AUTO_INCREMENT,
+  `userid` int(11) DEFAULT NULL COMMENT '发布人id（外键）',
+  `selluserid` int(11) DEFAULT NULL COMMENT '收款人id（外键）',
+  `feeid` int(11) DEFAULT NULL COMMENT '收费id（外键）',
+  `createtime` timestamp NULL DEFAULT NULL,
+  `updatetime` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `title` varchar(200) CHARACTER SET utf8 DEFAULT NULL COMMENT '主题',
+  `content` varchar(8000) CHARACTER SET utf8 DEFAULT NULL COMMENT '描述内容',
+  `sellstatus` varchar(2) CHARACTER SET utf8 DEFAULT NULL COMMENT '售卖状态',
+  `tag` varchar(1000) CHARACTER SET utf8 DEFAULT NULL COMMENT '标签',
+  `pictures` varchar(1000) CHARACTER SET utf8 DEFAULT NULL COMMENT '图片集{1,23,50 "公共图片表id组合"}',
+  `status` varchar(2) CHARACTER SET utf8 DEFAULT NULL COMMENT '状态(预留字段)',
+  PRIMARY KEY (`zhengjiid`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+-- Records of t_zhengji
+-- ----------------------------
+INSERT INTO `t_zhengji` VALUES ('2', '7', null, null, '2015-09-12 11:26:22', '2015-09-12 11:29:00', '征集标题1', '1征集创意的具体内容', null, '1黄焖鸡 饮食', null, null);
+INSERT INTO `t_zhengji` VALUES ('3', '6', '1', null, '2015-09-12 11:28:13', '2015-09-12 11:46:31', '征集标题4', '征集创意的具体内容', 'Y', '黄焖鸡 饮食', '11', null);
