@@ -42,7 +42,7 @@ public class JianzhiControllerTest extends BaseTest {
 
 	@Test
 	public void get() throws Exception {
-		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(action + "/get/3"))
+		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(action + "/get/4"))
     			.andDo(MockMvcResultHandlers.print())
     			.andReturn();
 	}

@@ -340,6 +340,26 @@ public class PubControllerTest {
                     .andDo(MockMvcResultHandlers.print())
         		.andReturn();
     }
+    
+    @Test
+    public void deletePicture() throws Exception {
+    	//多附件业务模块更新测试
+//    	mockMvc.perform(MockMvcRequestBuilders.get("/pub/deletePicture/party/5").param("pictureid", "5"))
+//    	mockMvc.perform(MockMvcRequestBuilders.get("/pub/deletePicture/jianzhi/4"))
+//    	mockMvc.perform(MockMvcRequestBuilders.get("/pub/deletePicture/user/1"))
+    	mockMvc.perform(MockMvcRequestBuilders.get("/pub/deletePicture/jianli/1"))
+		.andDo(MockMvcResultHandlers.print())
+    	.andReturn();
+    }
+    
+    @Test
+    public void deleteFujian() throws Exception {
+    	//多附件业务模块更新测试
+//    	mockMvc.perform(MockMvcRequestBuilders.get("/pub/deleteFujian/chuangye/3").param("fujianid", "1"))
+    	mockMvc.perform(MockMvcRequestBuilders.get("/pub/deleteFujian/jianli/11"))
+    	.andDo(MockMvcResultHandlers.print())
+    	.andReturn();
+    }
     // ---------------------------公共---------------------------end
     
 }

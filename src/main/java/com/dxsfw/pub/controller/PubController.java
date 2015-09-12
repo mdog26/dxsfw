@@ -5,6 +5,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -1136,6 +1137,91 @@ public class PubController {
 	}
 	
 	/**
+	 * 删除公共图片
+	 * @return
+	 * @throws Exception
+	 */
+	@ResponseBody
+	@RequestMapping(value = "deletePicture/{modlename}/{pk:\\d+}")
+	public Res deletePicture(@PathVariable("modlename") String modlename, 
+			@PathVariable("pk") int pk,
+			@RequestParam(value = "pictureid", required = false) Integer pictureid, 
+			HttpServletResponse response)
+					throws Exception {
+		Res responseJson = new Res();
+		//更新附带表
+		if (GlobalValue.MODLE_USER.equals(modlename)) {
+			//简历是图片字段 存的path
+			User entity = userService.getUser(pk);
+			entity.setPicture("");
+			userService.updateUser(entity);
+			responseJson.setMsg("删除图片成功" );
+			return responseJson;
+		} else if (GlobalValue.MODLE_JIANLI.equals(modlename)) {
+			//简历是图片字段 存的path
+			JianLi entity = jianLiService.getJianLi(pk);
+			entity.setPicture("");
+			jianLiService.updateJianLi(entity);
+			responseJson.setMsg("删除图片成功" );
+			return responseJson;
+		} else if (GlobalValue.MODLE_JIANZHI.equals(modlename)) {
+			//兼职是单图片模块
+			Picture p = p = new Picture();;
+			p.setTablename("t_" + GlobalValue.MODLE_JIANZHI);
+			p.setPk(pk);
+			pubService.deletePicture(p);
+			responseJson.setMsg("删除图片成功");
+			return responseJson;
+		} else if (GlobalValue.MODLE_PARTY.equals(modlename)) {
+			Party entity = partyService.findById(pk);
+			String pictures = entity.getPictures();
+			pictures = this.removePictureid(pictureid, pictures);
+			entity.setPictures(pictures);
+			partyService.updateById(entity);
+		} else if (GlobalValue.MODLE_BBS.equals(modlename)) {
+			Bbs entity = bbsService.findById(pk);
+			String pictures = entity.getPictures();
+			pictures = this.removePictureid(pictureid, pictures);
+			entity.setPictures(pictures);
+			bbsService.updateById(entity);
+		} else if (GlobalValue.MODLE_REPLY.equals(modlename)) {
+			Reply entity = replyService.findById(pk);
+			String pictures = entity.getPicture();
+			pictures = this.removePictureid(pictureid, pictures);
+			entity.setPicture(pictures);
+			replyService.updateById(entity);
+		} else if (GlobalValue.MODLE_CHUANGYE.equals(modlename)) {
+			ChuangYe entity = chuangyeService.findById(pk);
+			String pictures = entity.getPictures();
+			pictures = this.removePictureid(pictureid, pictures);
+			entity.setPictures(pictures);
+			chuangyeService.updateById(entity);
+		} else if (GlobalValue.MODLE_IDEA.equals(modlename)) {
+			Idea entity = ideaService.findById(pk);
+			String pictures = entity.getPictures();
+			pictures = this.removePictureid(pictureid, pictures);
+			entity.setPictures(pictures);
+			ideaService.updateById(entity);
+		} else if (GlobalValue.MODLE_ZHENGJI.equals(modlename)) {
+			Zhengji entity = zhengjiService.findById(pk);
+			String pictures = entity.getPictures();
+			pictures = this.removePictureid(pictureid, pictures);
+			entity.setPictures(pictures);
+			zhengjiService.updateById(entity);
+		} else {
+			responseJson.setMsg(modlename + "不支持图片删除" );
+			responseJson.setStatus(Constant.STATUS_ERROR_500);
+			return responseJson;
+		}
+		// 删除
+		Picture p = p = new Picture();
+		p.setPictureid(pictureid);
+		pubService.deletePicture(p);
+		responseJson.setMsg("删除图片成功");
+		return responseJson;
+	}
+
+	/**
 	 * 下载公共附件
 	 * @return
 	 * @throws Exception
@@ -1173,6 +1259,44 @@ public class PubController {
 		//System.out.println(downLoadPath);
 		this.downloadFile(response, fileName, downLoadPath);
 		return null;
+	}
+	
+	/**
+	 * 删除公共附件
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "deleteFujian/{modlename}/{pk:\\d+}")
+	public Res deleteFujian(@PathVariable("modlename") String modlename, 
+			@PathVariable("pk") int pk,
+			@RequestParam(value = "fujianid", required = false) Integer fujianid, 
+			HttpServletResponse response)
+					throws Exception {
+		Res responseJson = new Res();
+		//更新附带表
+		if (GlobalValue.MODLE_CHUANGYE.equals(modlename)) {
+			ChuangYe entity = chuangyeService.findById(pk);
+			String fujians = entity.getFujian();
+			fujians = this.removePictureid(fujianid, fujians);
+			entity.setFujian(fujians);
+			chuangyeService.updateById(entity);
+		} else if (GlobalValue.MODLE_JIANLI.equals(modlename)) {
+			JianLi entity = jianLiService.getJianLi(pk);
+			entity.setFujian("");;
+			jianLiService.updateJianLi(entity);
+			responseJson.setMsg("删除附件成功" );
+			return responseJson;
+		} else {
+			responseJson.setMsg(modlename + "不支持附件删除" );
+			responseJson.setStatus(Constant.STATUS_ERROR_500);
+			return responseJson;
+		}
+		// 删除
+		Fujian p = p = new Fujian();;
+		p.setFujianid(fujianid);
+		pubService.deleteFujian(p);
+		responseJson.setMsg("删除附件成功" );
+		return responseJson;
 	}
 	
 	/**
@@ -1259,6 +1383,7 @@ public class PubController {
 		}
 		return responseJson;
 	}
+	
 	// ---------------------------共用接口---------------------------end
 	
 	// ---------------------------辅助方法---------------------------end
@@ -1295,5 +1420,30 @@ public class PubController {
 			if (bos != null)
 				bos.close();
 		}
+	}
+	
+	private static String removePictureid(Integer pictureid, String pictures) {
+		if (pictures != null) {
+			ArrayList<String> list = new ArrayList<String>();
+			String[] arr = pictures.split(",");
+			for (String string : arr) {
+				if (!string.equals(String.valueOf(pictureid))) {
+					list.add(string);
+				}
+			}
+			pictures = "";
+			for (int i = 0; i < list.size(); i++) {
+				if (i == list.size() - 1) {
+					pictures += list.get(i);
+				} else {
+					pictures += list.get(i) + ",";
+
+				}
+			}
+			if (StringUtils.isEmpty(pictures)) {
+				pictures = null;
+			}
+		}
+		return pictures;
 	}
 }

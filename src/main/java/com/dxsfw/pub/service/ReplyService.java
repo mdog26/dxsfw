@@ -1,5 +1,6 @@
 package com.dxsfw.pub.service;
 
+import com.dxsfw.common.base.BaseService;
 import com.dxsfw.common.page.Pagination;
 import com.dxsfw.pub.model.Reply;
 import com.dxsfw.pub.model.ReplyExample;
@@ -10,7 +11,7 @@ import com.dxsfw.pub.model.ReplyExample;
  * @author riven
  *
  */
-public interface ReplyService {
+public interface ReplyService extends BaseService<Reply, Integer> {
 
 	Reply addReply(Reply reply);
 	

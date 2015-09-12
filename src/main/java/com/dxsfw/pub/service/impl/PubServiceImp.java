@@ -74,16 +74,11 @@ public class PubServiceImp implements PubService {
 	 */
 	@Override
 	public void deletePicture(Picture p) {
-		if (p.getPictureid() == null) {
-			// 如果没有唯一id
+		if (p.getPictureid() == null && p.getTablename() != null && p.getPk() != null) {
+			// 如果没有唯一id, 那么删除对应的所有图片（包括单图片）
 			PictureExample example = new PictureExample();
-			example.createCriteria().andPathEqualTo(p.getPath());
-			List<Picture> list = pictureDao.selectByExample(example);
-			if (list.size() > 0) {
-				pictureDao.deleteByPrimaryKey(list.get(0).getPictureid());
-			} else {
-				pictureDao.deleteByPrimaryKey(p.getPictureid());
-			}
+			example.createCriteria().andTablenameEqualTo(p.getTablename()).andPkEqualTo(p.getPk());
+			pictureDao.deleteByExample(example);
 		} else {
 			// 如果有唯一id, 证明肯定有数据
 			pictureDao.deleteByPrimaryKey(p.getPictureid());
@@ -150,7 +145,7 @@ public class PubServiceImp implements PubService {
 	 */
 	@Override
 	public void deleteFujian(Fujian p) {
-		if (p.getFujianid() == null) {
+		if (p.getFujianid() == null && p.getPath() != null) {
 			// 如果没有唯一id
 			FujianExample example = new FujianExample();
 			example.createCriteria().andPathEqualTo(p.getPath());
