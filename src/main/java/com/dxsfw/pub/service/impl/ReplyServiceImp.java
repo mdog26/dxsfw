@@ -45,8 +45,8 @@ public class ReplyServiceImp extends BaseServiceImpl<Reply, Integer> implements 
 			ReplyExample example = new ReplyExample();
 			example.createCriteria().andTablenameEqualTo(reply.getTablename())
 					.andPkEqualTo(reply.getPk())
-					.andReplyidEqualTo(reply.getReplyuserid());
-			example.setOrderByClause("replyUserid desc");
+					.andReplyuseridEqualTo(reply.getReplyuserid());
+			example.setOrderByClause("time desc");
 			List<Reply> list = replyDao.selectByExample(example);
 			if (list.size() > 0) {
 				return list.get(0);

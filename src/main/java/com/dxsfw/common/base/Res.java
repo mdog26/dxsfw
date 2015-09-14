@@ -4,15 +4,20 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.dxsfw.bbs.model.Bbs;
+import com.dxsfw.bbs.model.BbsShengqing;
 import com.dxsfw.chuangye.model.ChuangYe;
 import com.dxsfw.common.base.jianli.ResJianLi;
+import com.dxsfw.common.base.reply.ResReply;
 import com.dxsfw.common.constants.Constant;
+import com.dxsfw.common.spring.SpringContextHolder;
 import com.dxsfw.idea.model.Idea;
 import com.dxsfw.idea.model.Zhengji;
 import com.dxsfw.jianzhi.model.Jianzhi;
 import com.dxsfw.party.model.Party;
+import com.dxsfw.party.model.PartyShengqing;
 import com.dxsfw.pub.model.Reply;
 import com.dxsfw.pub.model.User;
+import com.dxsfw.pub.service.UserService;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -156,6 +161,72 @@ public class Res implements Serializable {
 	}
 
 	public void setList(List<?> list) {
+		if (list != null && list.size() > 0) {
+			UserService s = SpringContextHolder.getBean("userService");
+			User u = null;
+			for (Object entity : list) {
+				//活动
+				if (list.get(0) instanceof Party) {
+					Party v = (Party)entity;
+					int userid = v.getUserid();
+					u = s.getUser(userid);
+					v.setUser(u);
+				}
+				if (list.get(0) instanceof PartyShengqing) {
+					PartyShengqing v = (PartyShengqing)entity;
+					int userid = v.getShengqinguserid();
+					u = s.getUser(userid);
+					v.setUser(u);
+				}
+				//bbs（回复）
+				if (list.get(0) instanceof Bbs) {
+					Bbs v = (Bbs)entity;
+					int userid = v.getUserid();
+					u = s.getUser(userid);
+					v.setUser(u);
+				}
+				if (list.get(0) instanceof BbsShengqing) {
+					BbsShengqing v = (BbsShengqing)entity;
+					int userid = v.getShengqinguserid();
+					u = s.getUser(userid);
+					v.setUser(u);
+				}
+				//创意（征集）
+				if (list.get(0) instanceof Idea) {
+					Idea v = (Idea)entity;
+					int userid = v.getUserid();
+					u = s.getUser(userid);
+					v.setUser(u);
+				}
+				if (list.get(0) instanceof Zhengji) {
+					Zhengji v = (Zhengji)entity;
+					int userid = v.getUserid();
+					u = s.getUser(userid);
+					v.setUser(u);
+				}
+				//创业
+				if (list.get(0) instanceof ChuangYe) {
+					ChuangYe v = (ChuangYe)entity;
+					int userid = v.getUserid();
+					u = s.getUser(userid);
+					v.setUser(u);
+				}
+				
+				//公共回复
+				if (list.get(0) instanceof Reply) {
+					Reply v = (Reply)entity;
+					int userid = v.getReplyuserid();
+					u = s.getUser(userid);
+					v.setUser(u);
+				}
+				if (list.get(0) instanceof ResReply) {
+					ResReply v = (ResReply)entity;
+					int userid = v.getReplyuserid();
+					u = s.getUser(userid);
+					v.setUser(u);
+				}
+			}
+		}
 		this.list = list;
 	}
 

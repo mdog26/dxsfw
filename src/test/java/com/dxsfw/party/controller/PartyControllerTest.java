@@ -56,7 +56,7 @@ public class PartyControllerTest extends BaseTest {
 	@Test
 	public void search() throws Exception {
 		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(action + "/search")
-				.param("keyword", "会").param("pageNo", "2").param("pageSize", "2"))
+				.param("keyword", "").param("pageNo", "2").param("pageSize", "2"))
 //				.param("pageNo", "1"))
 				.andDo(MockMvcResultHandlers.print())
 				.andReturn();

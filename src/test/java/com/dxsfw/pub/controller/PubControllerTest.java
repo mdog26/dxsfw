@@ -190,8 +190,7 @@ public class PubControllerTest {
     public void tesupdateUser() throws Exception {
 //        String requestBody = "{\"userid\":1,\"type\":3,\"name\":\"开发人员\",\"password\":\"pwd\",\"email\":null,\"mobile\":\"15207109571\",\"nickname\":null,\"organization\":null,\"introduction\":null,\"card\":null,\"sex\":null,\"weixin\":null,\"zhifubao\":null}"; 
     	//没属性和null，将不更新。值""可以更新。
-//        String requestBody = "{\"userid\":1,\"type\":null,\"name\":\"开发人员\",\"email\":\"email2\"}";
-        String requestBody = "{\"email\":\"xiazl1987@163.com\"}";
+        String requestBody = "{\"userid\":1,\"type\":null,\"name\":\"开发人员\",\"email\":\"email2\"}";
         mockMvc.perform(MockMvcRequestBuilders.post("/pub/updateUser?a=a HTTP/1.1").param("token", "aaaa").param("userid", "1")
                     .contentType(MediaType.APPLICATION_JSON).content(requestBody)
 //                    .accept(MediaType.APPLICATION_JSON)) //执行请求

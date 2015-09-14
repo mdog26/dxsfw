@@ -12,7 +12,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -172,12 +171,9 @@ public class IOLHttpClient {
 	}
 	
 	public static void main(String[] args) {
-//		Map map=new HashMap();
-//		map.put("userid ", "1");
-//		String url = "http://120.25.58.3:8080/dxsfw/pub/updateUser?token=0113F592410463C2DA4BA8AABB09FD4A";
-		String url = "http://127.0.0.1:8080/dxsfw/pub/updateUser?token=6BEFB92F1EBD55723EBA8565B17D2580";
+		String url = "http://120.25.102.25:8080/dxsfw/pub/updateUser?token=4173D89A3322E9B5AE0384E582782549";
+//		String url = "http://127.0.0.1:8080/dxsfw/pub/updateUser?token=6BEFB92F1EBD55723EBA8565B17D2580";
 //		String s=IOLHttpClient.sendPostRequest(url,map);
-//		System.out.println("www--- " + s);
 		String params = "{\"userid\": 1, \"name\":\"中午\"}";
 		
 		HttpClient httpClient = new HttpClient();
